@@ -6,9 +6,8 @@ You can read more about this method in these papers [PAPER link PLACEHOLDER].
 ## General workflow 
 ```mermaid
 graph TD
-    A[Start] --> B{Is it working?}
-    B -- Yes --> C[Great!]
-    B -- No --> D[Fix it]
-    D --> B
+    A[Cleaning experimental PDBs] --> B[Deconstruct topology into raw entanglements]
+    B -- EXP structure --> C[Map resids to Uniprot canon] --> D[Remove pure slipknots] --> E[Cluster into unique entanglements]
+    B -- AF structure --> F[Remove low-quality entanglments] --> D
 ``` 
 
