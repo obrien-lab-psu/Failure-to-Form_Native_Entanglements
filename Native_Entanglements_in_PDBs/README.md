@@ -14,7 +14,7 @@ graph TD
     click B "#deconstructing-structure-topology-into-raw-entanglements"
 ``` 
 
-### Cleaning PDBs  
+### Cleaning PDBs
 We do not provide code explicitly to clean a PDB file but the following should be done to ensure the pipeline runs smoothly.
 1. Separate each chain into a separate PDB file.  
 2. Ensure there are no duplicate residues present.  
