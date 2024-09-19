@@ -9,8 +9,8 @@ graph TD
     A[Cleaning PDBs] --> B[Deconstruct topology]
     B -- EXP structure --> C[Mapping] --> D[Remove slipknots] --> E[Clustering]
     B -- AF structure --> F[Remove LQ ents] --> D
-    click A "#cleaning-pdbs"
-    click B "#deconstructing-structure-topology-into-raw-entanglements"
+    click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#cleaning-pdbs"
+    click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#deconstructing-structure-topology-into-raw-entanglements"
 ``` 
 
 ### Cleaning PDBs
