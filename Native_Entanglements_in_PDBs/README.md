@@ -10,8 +10,8 @@ graph TD
     B -- EXP structure --> C[Mapping] --> D[Remove slipknots] --> E[Clustering]
     B -- AF structure --> F[Remove LQ ents] --> D
 
-    click A "###Cleaning-PDBs"
-    click B "###Deconstructing-structure-topology-into-raw-entanglements"
+    click A "#cleaning-pdbs"
+    click B "#deconstructing-structure-topology-into-raw-entanglements"
 ``` 
 
 ### Cleaning PDBs  
