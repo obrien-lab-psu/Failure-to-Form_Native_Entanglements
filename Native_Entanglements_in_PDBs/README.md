@@ -14,6 +14,7 @@ graph TD
     click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#mapping-of-experimental-pdb-resid-to-uniprot-canon"
     click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#remove-slipknots-from-experimental-pdb-entanglements"
     click F "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#remove-low-quality-entanglements-and-slipknots-from-alphafold-structure-entanglements"
+    click E "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#clustering-raw-entanglements-to-representative-entanglements"
 ``` 
 
 ## Cleaning PDBs
