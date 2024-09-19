@@ -47,7 +47,7 @@ class Analyzer:
 
     #################################################################################################################
     #################################################################################################################
-    def get_GE_contact_lib(self,):
+    def get_mapping(self,):
 
         # Load unique ent files
         uent_files = glob.glob(os.path.join(self.uent_files, '*'))
@@ -123,12 +123,12 @@ def main():
 
     # Parse the user supplied arguments
     parser = argparse.ArgumentParser(description="Process user specified arguments")
-    parser.add_argument("-e", "--uent_files", type=str, required=True, help="path to unique entanglement files")
+    parser.add_argument("-e", "--ent_files", type=str, required=True, help="path to entanglement files")
     parser.add_argument("-o", "--outpath", type=str, required=True, help="path to output directory. will be made if doesnt exist")
-    parser.add_argument("-m", "--mapping", type=str, required=True, help="mapping files or None")
+    parser.add_argument("-m", "--mapping", type=str, required=True, help="directory containing mapping files")
     args = parser.parse_args()
 
-    uent_files = args.uent_files
+    uent_files = args.ent_files
     outpath = args.outpath
     mapping = args.mapping
 
@@ -142,7 +142,7 @@ def main():
     print(f'analysis: {analysis}')
 
     # check entanglement files for nonmapped entanglements
-    analysis.get_GE_contact_lib()
+    analysis.get_mapping()
 
 
 

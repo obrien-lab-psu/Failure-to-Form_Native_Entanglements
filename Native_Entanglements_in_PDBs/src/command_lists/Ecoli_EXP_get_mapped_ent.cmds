@@ -1,0 +1,1 @@
+python src/data/get_mapped_ent.py -e path-to-slug/Native_Entanglements_in_PDBs/Entanglements/Ecoli/EXP/unmapped_GE/ -o path-to-slug/Native_Entanglements_in_PDBs/Entanglements/Ecoli/EXP/mapped_GE/ -m path-to-slug/Native_Entanglements_in_PDBs/Representative_experimental_structures/Ecoli/PDBs/ > logs/Ecoli_EXP_get_mapped_ent.log
