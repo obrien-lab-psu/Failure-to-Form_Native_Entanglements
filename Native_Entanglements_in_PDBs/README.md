@@ -13,7 +13,7 @@ graph TD
     click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#deconstructing-structure-topology-into-raw-entanglements"
 ``` 
 
-### Cleaning PDBs
+## Cleaning PDBs
 We do not provide code explicitly to clean a PDB file but the following should be done to ensure the pipeline runs smoothly.
 1. Separate each chain into a separate PDB file.  
 2. Ensure there are no duplicate residues present.  
@@ -25,12 +25,12 @@ If you have the [PLACE HOLDER FOR TAR BALL] you can see examples in /path/to/slu
 AlphaFold structures do not require cleaning and are good to use as is.  
   
   
-### Deconstructing structure topology into raw entanglements
+## Deconstructing structure topology into raw entanglements
 Here we take a protein structure file (PDB) and deconstruct it into all possible loops closed by native contacts that have threading events (entanglements) identified by the Gauss Linking Integration method.  
 For the theory of how this works please see [PAPER link PLACEHOLDER].  
 The script is standalone and can be applied to any PDB [gaussian_entanglement.py](src/data/gaussian_entanglement.py). 
 
-#### Usage
+### Usage
 ```
 usage: gaussian_entanglement.py [-h] --PDB PDB [--GLN_threshold GLN_THRESHOLD] [--Calpha CALPHA] [--topoly_density TOPOLY_DENSITY]
 
@@ -49,6 +49,6 @@ options:
 
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/) to reproduce the initial set of raw entanglements used in this work. Please replace the "path-to-slug" with your own relative path and modify any other pathing as necessary. 
 
-#### Standalone examples
+### Standalone examples
 There is a standalone example for experimentally derived structures located [here](examples/EXP/) and for AlphaFold structures [here](examples/AF/).  
 
