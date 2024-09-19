@@ -8,7 +8,7 @@ You can read more about this method in these papers [PAPER link PLACEHOLDER].
 graph TD
     A[Cleaning PDBs] --> B[Deconstruct topology]
     B -- EXP structure --> C[Mapping] --> D[Remove slipknots] --> E[Clustering]
-    B -- AF structure --> F[Remove LQ ents and slipknots] --> E
+    B -- AF structure --> F[Remove LQ ents & slipknots] --> E
     click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#cleaning-pdbs"
     click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#deconstructing-structure-topology-into-raw-entanglements"
     click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#mapping-of-experimental-pdb-resid-to-uniprot-canon"
