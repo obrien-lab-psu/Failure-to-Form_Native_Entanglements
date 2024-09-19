@@ -319,12 +319,12 @@ def main():
 
     # Parse the user supplied arguments
     parser = argparse.ArgumentParser(description="Process user specified arguments")
-    parser.add_argument("-e", "--uent_files", type=str, required=True, help="path to unique entanglement files")
+    parser.add_argument("-e", "--ent_files", type=str, required=True, help="path to entanglement files directory")
     parser.add_argument("-o", "--outpath", type=str, required=True, help="path to output directory. will be made if doesnt exist")
     parser.add_argument("-p", "--AFpdbs", type=str, required=True, help="path to AF pdbs files or None")
     args = parser.parse_args()
 
-    uent_files = args.uent_files
+    uent_files = args.ent_files
     outpath = args.outpath
     AFpdbs = args.AFpdbs
 
