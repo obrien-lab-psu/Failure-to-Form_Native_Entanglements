@@ -5,11 +5,12 @@ As many of the source data files are very large this repo only contains the code
 To recreate the data from the paper please download the tar-ball located here [TARBALL PLACEHOLDER] and place it in a directory that will be sourced by each script.  
 
 ## Environment setup
-Please install a new miniconda environment using the provided environment.yml file
+Please install a new Miniconda environment using the provided [environment.yml](environment.yml) file.
 ```python
 conda env create -f environment.yml -n new_env_name
 conda activate new_env_name
 ```
+if you need help installing a Miniconda you can find instructions [here](https://docs.anaconda.com/miniconda/miniconda-install/) 
 
 ## Analysis sections 
 
