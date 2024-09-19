@@ -148,7 +148,7 @@ Similar to the experimental structures we remove entanglements that are slipknot
 
 This processes ensures we keep only those structures with an overall high quality of prediction and removes any individual entanglements with low-quality predictions.  
 
-The script used to map the results from [gaussian_entanglement.py](src/data/gaussian_entanglement.py) is [get_HQ_AF_structures.py](src/data/get_HQ_AF_structures.py).  
+The script used to refine the results from [gaussian_entanglement.py](src/data/gaussian_entanglement.py) is [get_HQ_AF_structures.py](src/data/get_HQ_AF_structures.py).  
 
 ### Usage of [get_HQ_AF_structures.py](src/data/get_HQ_AF_structures.py) 
 ```
@@ -172,3 +172,36 @@ A file containing the \<pLDDT> for each AlphaFold structure is located [here](da
 
 ### Standalone examples
 There is a standalone example for experimentally derived structures located [here](examples/AF/).  
+
+## Clustering raw entanglements to representative entanglements
+For each protein structure there are many degenerate entanglements and therefore we seek to derive a set of unique representative entanglements through a clustering algorithm we divised in [PATH TO VIRAJ PAPER]. In a high level description this algorithm has three main steps:
+1. Cluster together loops that share the same crosings identified by topoly and choose the smallest loop to be the representative loop of each subcluster. 
+2. Then merge subclusters based on meeting three criteria.
+    - the crossings between the two sets of entanglements is spatially close. (the details of this are complex and denoted in the cited paper)
+    - loops overlap to any extent.
+    - no crossing from either entanglement consideredis within the loops of another in the cluster. 
+3. Finally subclusters are merged based on whether the distance between their representative native contacts and crossings is less than a treshold defined by examining handcurated sets of entanglements.  
+See the cited paper for much more detail regarding this algorithm. 
+
+
+The script used to cluster the raw entangleents is [clustering.py](src/data/clustering.py).  
+
+### Usage of [clustering.py](src/data/clustering.py) 
+```
+usage: clustering.py [-h] --prot_GE_file PROT_GE_FILE -o OUTPATH --organism ORGANISM
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  --prot_GE_file PROT_GE_FILE
+                        Path to entanglement files to cluster created by gaussian_entanglement.py
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory
+  --organism ORGANISM   Human, Ecoli, Yeast
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Ecoli_EXP_mapped_NoSlipKNots_clustering.cmds) to reproduce the the clustering of the experimental structure derived entanglements and [here](src/command_lists/Ecoli_HQ-AF_HQ-GE_clustering.cmds) for the set of high-quality AF structures and entanglements used in this work. Please replace the "path-to-slug" with your own relative path and modify any other pathing as necessary. 
+
+### Standalone examples
+There is a standalone example for experimentally derived structures located [here](examples/EXP/) and for AlphaFold structures [here](examples/AF/). 

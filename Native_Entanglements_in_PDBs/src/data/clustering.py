@@ -705,12 +705,12 @@ if __name__ == "__main__":
     #input_data = [(GE_file, 57) for GE_file in os.listdir("unmapped_GE/")]
     #unmapped_GE/P00490_1QM5_A_GE.txt
     parser = argparse.ArgumentParser(description="Process user specified arguments")
-    parser.add_argument("--prot_unmapped_GE_file", type=str, required=True, help="Path to unmapped_GE file created by gaussian_entanglement.py for the protein you want to cluster")
+    parser.add_argument("--prot_GE_file", type=str, required=True, help="Path to entanglement files to cluster created by gaussian_entanglement.py")
     parser.add_argument("-o", "--outpath", type=str, required=True, help="Path to output directory")
     parser.add_argument("--organism", type=str, required=True, help="Human, Ecoli, Yeast")
     args = parser.parse_args()
 
-    input_data = args.prot_unmapped_GE_file
+    input_data = args.prot_GE_file
     outpath = args.outpath
     #protein = input_data.split('/')[-1].split('_')[0]
     protein = input_data.split('/')[-1].replace('_GE.txt', '')
