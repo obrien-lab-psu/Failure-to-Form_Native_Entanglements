@@ -12,6 +12,7 @@ graph TD
     click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#cleaning-pdbs"
     click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#deconstructing-structure-topology-into-raw-entanglements"
     click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#mapping-of-experimental-pdb-resid-to-uniprot-canon"
+    click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs#remove-slipknots-from-experimental-pdb-entanglements"
 ``` 
 
 ## Cleaning PDBs
@@ -88,7 +89,7 @@ The script used to map the results from [gaussian_entanglement.py](src/data/gaus
 
 ### Usage of [get_mapped_ent.py](src/data/get_mapped_ent.py) 
 ```
-usage: get_mapped_ent.py [-h] -e UENT_FILES -o OUTPATH -m MAPPING
+usage: get_mapped_ent.py [-h] -e ENT_FILES -o OUTPATH -m MAPPING
 
 Process user specified arguments
 
@@ -105,14 +106,14 @@ options:
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Ecoli_EXP_get_mapped_ent.cmds) to reproduce the mapping of the initial set of raw entanglements derived from experimental structures used in this work. Please replace the "path-to-slug" with your own relative path and modify any other pathing as necessary. 
 
 ### Standalone examples
-There is a standalone example for experimentally derived structures located [here](examples/EXP/) and for AlphaFold structures [here](examples/AF/).  
+There is a standalone example for experimentally derived structures located [here](examples/EXP/).  
 
 ## Remove slipknots from experimental PDB entanglements
 While we have a threshold on the |Gauss linking value| >= 0.6 to be considered an entanglement there can rarely be slipknots that violate this threshold. Therefore we explicitly remove any entanglement that meets either of the following criteria:
 1. the sum of the signs of crossings identified by the [Topoly](https://topoly.cent.uw.edu.pl/documentation.html) package is equal to 0.  
 2. there are identical crossings with same sign (an error in topoly assignment we take to indicate uncertainty in the crossing of the loop plane).  
 
-The script used to map the results from [gaussian_entanglement.py](src/data/gaussian_entanglement.py) is [get_mapped_ent.py](src/data/get_mapped_ent.py).  
+The script used to remove slipknots and duplicate crossings entanglements from the results of [get_mapped_ent.py](src/data/get_mapped_ent.py) is [remove_EXP_slipknots.py](src/data/remove_EXP_slipknots.py).  
 
 ### Usage of [remove_EXP_slipknots.py ](src/data/remove_EXP_slipknots.py ) 
 ```
@@ -122,7 +123,7 @@ Process user specified arguments
 
 options:
   -h, --help            show this help message and exit
-  -e ENT_FILES, --uent_files ENT_FILES
+  -e ENT_FILES, --ent_files ENT_FILES
                         path to entanglement files (mapped or unmapped) directory
   -o OUTPATH, --outpath OUTPATH
                         path to output directory. will be made if doesnt exist
@@ -131,4 +132,42 @@ options:
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Ecoli_EXP_remove_slipknots.cmds) to reproduce the removal of slipknots from the mapped or unmapped set of raw entanglements derived from experimental structures used in this work. Please replace the "path-to-slug" with your own relative path and modify any other pathing as necessary. 
 
 ### Standalone examples
-There is a standalone example for experimentally derived structures located [here](examples/EXP/) and for AlphaFold structures [here](examples/AF/). 
+There is a standalone example for experimentally derived structures located [here](examples/EXP/). 
+
+## Remove low-quality entanglements and slipknots from AlphaFold structure entanglements
+Similar to the experimental structures we remove entanglements that are slipknots and or contain uncertain crossings with both chiralities. Furthermore, for Alphafold structures we also remove entanglements with low-quality predictions as judged by the [pLDDT](https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/plddt-understanding-local-confidence/). Therefore the following criteria must be met to keep an AlphaFold structure and its entanglements. 
+1. The structure must have an overall \<pLDDT> greater than or equal to 70. If not the whole structure is discarded.  
+2. The loop closing native contacts of a entanglement (i, j) must have a pLDDT >= 70.  
+3. The crossings must meet the following high quality order conditions: 
+    1. For a given termini that has an entanglement present start at the loop base and in order examine each crossing. 
+    2. If the first crossing has a pLDDT >= 70 it is kept and then you move onto the next. 
+    3. The first instance of a crossing where the pLDDT < 70 you discard this crossing and any other crossings after it. (if the first crossing after the loop base is low-quality we disregard the whole entanglement with that temrini)
+4. After removal of low-quality crossings if the sum of the chirality signs does not equal 0 keep the entanglement. 
+5. if there are not identical crossings with same sign. 
+
+This processes ensures we keep only those structures with an overall high quality of prediction and removes any individual entanglements with low-quality predictions.  
+
+The script used to map the results from [gaussian_entanglement.py](src/data/gaussian_entanglement.py) is [get_HQ_AF_structures.py](src/data/get_HQ_AF_structures.py).  
+
+### Usage of [get_HQ_AF_structures.py](src/data/get_HQ_AF_structures.py) 
+```
+usage: get_HQ_AF_structures.py [-h] -e ENT_FILES -o OUTPATH -p AFPDBS
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -e ENT_FILES, --ent_files ENT_FILES
+                        path to entanglement files directory
+  -o OUTPATH, --outpath OUTPATH
+                        path to output directory. will be made if doesnt exist
+  -p AFPDBS, --AFpdbs AFPDBS
+                        path to AF pdbs files
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Ecoli_get_HQ_AF_structures.cmds) to reproduce the the selection of high-quality AF structures and entanglements used in this work. Please replace the "path-to-slug" with your own relative path and modify any other pathing as necessary. 
+
+A file containing the \<pLDDT> for each AlphaFold structure is located [here](data/avg_pLDDT_AF_structs.csv)
+
+### Standalone examples
+There is a standalone example for experimentally derived structures located [here](examples/AF/).  

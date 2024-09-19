@@ -1,0 +1,1 @@
+python src/data/get_HQ_AF_structures.py -e path-to-slug/Native_Entanglements_in_PDBs/Entanglements/Ecoli/AF/unmapped_GE/ -o path-to-slug/Native_Entanglements_in_PDBs/Entanglements/Ecoli/AF/unmapped_HQ-AF_HQ-GE/ -p path-to-slug/Native_Entanglements_in_PDBs/Alphafold_structures/Ecoli/PDBs/  > logs/Ecoli_AF_get_HQ_AF_structures.log
