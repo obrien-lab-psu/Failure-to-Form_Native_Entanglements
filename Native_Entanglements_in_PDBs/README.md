@@ -86,7 +86,7 @@ Example of the file are located [here](examples/EXP/PDBs/)
 
 The script used to map the results from [gaussian_entanglement.py](src/data/gaussian_entanglement.py) is [get_mapped_ent.py](src/data/get_mapped_ent.py).  
 
-### Usage of [get_mapped_ent.py](src/data/get_mapped_ent) 
+### Usage of [get_mapped_ent.py](src/data/get_mapped_ent.py) 
 ```
 usage: get_mapped_ent.py [-h] -e UENT_FILES -o OUTPATH -m MAPPING
 
@@ -107,3 +107,28 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 ### Standalone examples
 There is a standalone example for experimentally derived structures located [here](examples/EXP/) and for AlphaFold structures [here](examples/AF/).  
 
+## Remove slipknots from experimental PDB entanglements
+While we have a threshold on the |Gauss linking value| >= 0.6 to be considered an entanglement there can rarely be slipknots that violate this threshold. Therefore we explicitly remove any entanglement that meets either of the following criteria:
+1. the sum of the signs of crossings identified by the [Topoly](https://topoly.cent.uw.edu.pl/documentation.html) package is equal to 0.  
+2. there are identical crossings with same sign (an error in topoly assignment we take to indicate uncertainty in the crossing of the loop plane).  
+
+The script used to map the results from [gaussian_entanglement.py](src/data/gaussian_entanglement.py) is [get_mapped_ent.py](src/data/get_mapped_ent.py).  
+
+### Usage of [remove_EXP_slipknots.py ](src/data/remove_EXP_slipknots.py ) 
+```
+usage: remove_EXP_slipknots.py [-h] -e ENT_FILES -o OUTPATH
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -e ENT_FILES, --uent_files ENT_FILES
+                        path to entanglement files (mapped or unmapped) directory
+  -o OUTPATH, --outpath OUTPATH
+                        path to output directory. will be made if doesnt exist
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Ecoli_EXP_remove_slipknots.cmds) to reproduce the removal of slipknots from the mapped or unmapped set of raw entanglements derived from experimental structures used in this work. Please replace the "path-to-slug" with your own relative path and modify any other pathing as necessary. 
+
+### Standalone examples
+There is a standalone example for experimentally derived structures located [here](examples/EXP/) and for AlphaFold structures [here](examples/AF/). 

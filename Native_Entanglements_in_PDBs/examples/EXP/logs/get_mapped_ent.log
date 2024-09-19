@@ -1,0 +1,13 @@
+analysis: <__main__.Analyzer object at 0x14a14621d910>
+Number of uent files: 12
+
+##################################################
+ 0 P00934 1VB3 A unmapped_GE/P00934-1VB3_A_GE.txt
+map_file: ['PDBs/P00934-1VB3_A_resid_mapping.txt']
+SAVED: mapped_GE/P00934_1VB3_A_GE.txt
+
+##################################################
+ 1 P0AD61 4YNG C unmapped_GE/P0AD61-4YNG_C_GE.txt
+map_file: ['PDBs/P0AD61-4YNG_C_resid_mapping.txt']
+SAVED: mapped_GE/P0AD61_4YNG_C_GE.txt
+NORMAL TERMINATION: 0.02223801612854004

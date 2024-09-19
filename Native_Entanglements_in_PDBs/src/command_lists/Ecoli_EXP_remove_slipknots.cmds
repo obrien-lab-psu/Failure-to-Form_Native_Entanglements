@@ -1,0 +1,1 @@
+python src/data/remove_slipknots.py -e path-to-slug/Native_Entanglements_in_PDBs/Entanglements/Ecoli/EXP/mapped_GE/ -o path-to-slug/Native_Entanglements_in_PDBs/Entanglements/Ecoli/EXP/mapped_NoSlipKNots_GE/ > logs/Ecoli_EXP_remove_slipknots.log
