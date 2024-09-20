@@ -1,0 +1,8 @@
+pdb_dir = ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Native_Entanglements_in_PDBs/Alphafold_structures/Ecoli/PDBs/
+mapping_dir = None
+clustered_ent_files = ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Native_Entanglements_in_PDBs/Entanglements/Ecoli/AF/unmapped_HQ-AF_HQ-GE_clustered/
+scope_defs_file = data/cop-cla-defs.txt
+scope_file = data/cop-cla-latest.txt
+essential_genes_file = data/deg_annotation_p.csv
+path_to_disprot = data/DisProt_release_2023_12_with_ambiguous_evidences.tsv
+path_to_contact_pt = data/*_contact_potential.csv
