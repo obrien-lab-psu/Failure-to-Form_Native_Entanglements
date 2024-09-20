@@ -672,12 +672,6 @@ class Analyzer:
         haystack_alpha_carbon_indices = traj.top.select('name CA')
         print(f'haystack_alpha_carbon_indices: {haystack_alpha_carbon_indices}')
 
-        ## load clustered entanglements from summary file
-        #../failure_to_form/bioinformatics/get_entanglements/entanglements_0.6g/clustered_unmapped_GE/P0AD61_clustered_GE.txt
-        ent_file = f'{cntrl_data["clustered_ent_files"]}{cntrl_data["gene"]}_clustered_GE.txt'
-        print(f'ent_file: {ent_file}')
-
-        ## parse lines to get native contacts, crossings,
         ent_present = True
         rbuffer = 3
         pdb_NC_list = [] # list of PDB native contact residues +/- rbuffer
@@ -686,7 +680,17 @@ class Analyzer:
         pdb_crossing_core_list = [] # list of PDB crossing residues
         total_ent_res = set()
         resid_dict = {}
-        if os.path.exists(ent_file):
+        ## load clustered entanglements from summary file
+        #../failure_to_form/bioinformatics/get_entanglements/entanglements_0.6g/clustered_unmapped_GE/P0AD61_clustered_GE.txt
+        ent_file = glob(f'{cntrl_data["clustered_ent_files"]}{cntrl_data["gene"]}_*clustered_GE.txt')
+        print(f'ent_file: {ent_file}')
+
+        if len(ent_file) > 1:
+            raise ValueError(f'There should only be 1 or 0 ent files! {ent_file}')
+        elif len(ent_file) != 0:
+            ent_file = ent_file[0]
+            ## parse lines to get native contacts, crossings,
+            #if os.path.exists(ent_file):
             ent_data = np.asarray([x.strip('\n') for x in open(ent_file, 'r').readlines()])
 
             for index, line in enumerate(ent_data):

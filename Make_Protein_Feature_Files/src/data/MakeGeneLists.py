@@ -65,6 +65,7 @@ parser.add_argument("-th", "--threshold", type=int, required=True, help="thresho
 parser.add_argument("-tp", "--timepoint", type=str, required=True, help="R1min, R5min, R2hr, Rall")
 parser.add_argument("-m", "--mask", type=str, required=False, help='Global mask for genes. if present no gene will pass unless in mask regardless of other filters')
 parser.add_argument("-c", "--lipms_cov_threshold", type=int, required=True, help="threshold for either LiPMS-COV: 0 - 90 in 10 int steps")
+parser.add_argument("-k", "--knots", type=str, required=True, help="List of genes to ignore that contain knots")
 args = parser.parse_args()
 
 feature_files = args.feature_files
@@ -77,6 +78,9 @@ threshold = args.threshold
 mask = args.mask
 lipms_covs_file = args.lipms_covs_file
 lipms_cov_threshold = args.lipms_cov_threshold
+knots = pd.read_csv(args.knots, sep=';')
+print('Knots:\n{knots}')
+
 if timepoint == 'Rall':
     timepoints = ['R1min', 'R5min', 'R2hr']
 else:
@@ -100,7 +104,7 @@ if not os.path.exists(f'{outpath}'):
 ###Load PSM data and get genes that only meet the PSM percentile specified by the user
 if buff in ['C', 'CD', 'CG']:
     express_data = load_express_data(express_file, buff, timepoint, threshold)
-    print(f'express_data: {express_data}, {len(express_data)}')
+    #print(f'express_data: {express_data}, {len(express_data)}')
 
 elif buff in ['Total']:
     threshold = 'Total'
@@ -140,7 +144,19 @@ for f_i, feature_file in enumerate(glob.glob(os.path.join(feature_files, '*'))):
     #print(feature_data[['gene', 'ent_present', 'essential', 'cut_str']])
 
     gene = feature_file.split('/')[-1].split('_')[0]
-    print(f'gene: {gene}')
+    pdb = feature_file.split('/')[-1].split('_')[1]
+    chain = feature_file.split('/')[-1].split('_')[2]
+    print(f'gene: {gene} pdb: {pdb} chain: {chain}')
+    if pdb != 'AF':
+        knots_df = knots[(knots['pdbid'] == pdb.lower()) & (knots['chain'] == chain)]
+        if len(knots_df) != 0:
+            print(f'Knot found for {gene} {pdb} {chain} and will be ignored\n{knots_df}')
+            continue
+    else:
+        knots_df = knots[knots['gene'] == gene]
+        if len(knots_df) != 0:
+            print(f'Knot found for {gene} {pdb} {chain} and will be ignored\n{knots_df}')
+            continue       
 
     ## Check if gene is in mask
     if gene in mask:

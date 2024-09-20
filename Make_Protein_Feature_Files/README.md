@@ -5,6 +5,8 @@ This analysis generates a feature file for each protein in your dataset and then
 ```mermaid
 graph TD
     A[Gen Feature Files] --> B[Make Gene lists]
+    click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Make_Protein_Feature_Files#generate-feature-files"
+    click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Make_Protein_Feature_Files#generate-gene-lists-for-all-other-analysis"
 ``` 
 
 ## Generate Feature Files
@@ -68,13 +70,14 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 ## Generate Gene Lists for all other analysis
 Here we generate all lists of genes used in this analysis by applying all combinations of several thresholds to the Feature Files.
 1. We threshold the Sum of the Peptide Abundance (SPA) for each protein observed in the original Limited Proteolysis Mass Spec (LiP-MS) experiments native samples in 10-percentile incriments along the CDFs for each buffer system: [Cyto-serum](Figures/SPA_CDFs/C_Rall_CDF_vs_spa.png) [Cyto-serum+DnaK](Figures/SPA_CDFs/CD_Rall_CDF_vs_spa.png) [Cyto-serum+GroEl](Figures/SPA_CDFs/CD_Rall_CDF_vs_spa.png)
-2. We threshold the coverage observed in the experiments (COV) in 10-percentile incriments along the CDFs for each buffer system: [Cyto-serum](Figures/LiPMScov_CDFs/C_Rall_CDF_vs_spa.png) [Cyto-serum+DnaK](Figures/LiPMScov_CDFs/CD_Rall_CDF_vs_spa.png) [Cyto-serum+GroEl](Figures/LiPMScov_CDFs/CD_Rall_CDF_vs_spa.png)
+2. We threshold the coverage observed in the experiments (COV) in 10-percentile incriments along the CDFs for each buffer system: [Cyto-serum](Figures/LiPMScov_CDFs/C_Rall_CDF_vs_cov.png) [Cyto-serum+DnaK](Figures/LiPMScov_CDFs/CD_Rall_CDF_vs_cov.png) [Cyto-serum+GroEl](Figures/LiPMScov_CDFs/CD_Rall_CDF_vs_cov.png)
 3. We separate genes into essential and non-essential based on the knock-out dataset reported in the [DEG](http://origin.tubic.org/deg/public/index.php) database.
 4. We separate genes into refoldable and non-refoldable based on if they have atleast 1 significant change in proteolysis suseptibility after refolding. We control for FDR using the BH method proteome wide and therefore any change in structure still observed is most likely not a false postive where as others have corrected on a per protein basis and thus use a higher threshold to determine non-refoldability. We also only consider half-tryptic peptides and neglect full-tryptic peptides entirely as the interpreation of changes in structure resulting from them is still poorly concieved in the feild. 
+5. We remove proteins with known Knots from the dataset as reported in [KnotProt2.0](https://knotprot.cent.uw.edu.pl/) and [AlphaKnot](https://alphaknot.cent.uw.edu.pl/). The specific database files we used are located [here](data/KnotProt2.0.txt) for experimental structrues and [here](data/AlphaKnotProt.txt) for Alphafold structures. 
 
 ### Usage of [src/data/MakeGeneLists.py](src/data/MakeGeneLists.py)
 ```
-usage: MakeGeneLists.py [-h] -f FEATURE_FILES -o OUTPATH -t TAG -e EXPRESS_FILE -l LIPMS_COVS_FILE -b BUFFER -th THRESHOLD -tp TIMEPOINT [-m MASK] -c LIPMS_COV_THRESHOLD
+usage: MakeGeneLists.py [-h] -f FEATURE_FILES -o OUTPATH -t TAG -e EXPRESS_FILE -l LIPMS_COVS_FILE -b BUFFER -th THRESHOLD -tp TIMEPOINT [-m MASK] -c LIPMS_COV_THRESHOLD -k KNOTS
 
 Process user specified arguments
 
@@ -98,6 +101,10 @@ options:
   -m MASK, --mask MASK  Global mask for genes. if present no gene will pass unless in mask regardless of other filters
   -c LIPMS_COV_THRESHOLD, --lipms_cov_threshold LIPMS_COV_THRESHOLD
                         threshold for either LiPMS-COV: 0 - 90 in 10 int steps
+  -k KNOTS, --knots KNOTS
+                        List of genes to ignore that contain knots
 ```
 
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/MakeGeneLists_EXP.cmds) to reproduce the gene lists used in this work for the experimental structures and [here](src/command_lists/MakeGeneLists_EXP.cmds) for the AlphaFold structures. Please modify any other pathing as necessary. 
+
+The count statistics of each gene list can be found [here](data/Combined_genelist_counts_EXP.csv) for the experimental dataset and [here](data/Combined_genelist_counts_AF.csv) for the Alphafold datasets. 
