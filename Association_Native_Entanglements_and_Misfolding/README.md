@@ -57,11 +57,3 @@ We observe a statisitcally significant positive association between the presence
 When considering all observed proteins with atleast 50% coverage in the LiP-MS experiments [here](Figures/entanglement_and_nonrefoldability_Fisher_results_all_genes.png)
 ![All proteins observed](Figures/entanglement_and_nonrefoldability_Fisher_results_all_genes.png)
 Raw analysis data can be viewed [here](data/entanglement_and_nonrefoldability_plot_data_all_genes.csv)
-
-When considering all essential observed proteins with atleast 50% coverage in the LiP-MS experiments [here](Figures/entanglement_and_nonrefoldability_Fisher_results_essential_genes.png)
-![Essential proteins observed](Figures/entanglement_and_nonrefoldability_Fisher_results_essential_genes.png)
-Raw analysis data can be viewed [here](data/entanglement_and_nonrefoldability_plot_data_essential_genes.csv)
-
-When considering all non-essential observed proteins with atleast 50% coverage in the LiP-MS experiments [here](Figures/entanglement_and_nonrefoldability_Fisher_results_nonessential_genes.png)
-![Essential proteins observed](Figures/entanglement_and_nonrefoldability_Fisher_results_nonessential_genes.png)
-Raw analysis data can be viewed [here](data/entanglement_and_nonrefoldability_plot_data_nonessential_genes.csv)
