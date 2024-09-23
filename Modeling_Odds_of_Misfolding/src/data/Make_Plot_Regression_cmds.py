@@ -15,7 +15,7 @@ for set_type in ['EXP', 'AF']:
         for gene_tag in gene_tags:
 
             script = f'python src/data/Plot_Regression_results.py'
-            reg_res = f'-f {path_to_slug}/Modeling_Odds_of_Misfolding/Regressions/{set_type}/whole_proteome/regression_results_region_all_genes_C\*_{timepoint}_\*.csv'
+            reg_res = f'-f {path_to_slug}/Modeling_Odds_of_Misfolding/Regressions/{set_type}/whole_proteome/regression_results_region_{gene_tag}_C\*_{timepoint}_\*.csv'
             outpath = f'-o {path_to_slug}/Modeling_Odds_of_Misfolding/Regressions/Plots/{set_type}/whole_proteome/'
             misc = f'-t {gene_tag}_{timepoint} -r region'
             #log = f'> {path_to_slug}/Modeling_Odds_of_Misfolding/Regressions/logs/{set_type}_whole_{buff}_{timepoint}_spa{spa}_LiPMScov{cov}_{gene_tag}_region.log'
