@@ -5,9 +5,11 @@ Here we asses the statistical association known DnaK and GroEL clients with gene
 ```mermaid
 graph TD
     A[Assoc. essentiality and client] --> C[Plot Assoc. ess V client]
-    B[DnaK binding site]
+    B[DnaK binding site] --> D[Plot DnaK binding site anal.]
     click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Chaperone_Client_Associations#usage-of-assoc_client_n_essentialpy"
+    click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Chaperone_Client_Associations#presence-of-dnak-binding-sites-in-entangled-regions"
     click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Chaperone_Client_Associations#usage-of-plot_assoc_client_n_essentialpy"
+    click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Chaperone_Client_Associations#usage-of-plot_dnak_simple_motif_scanpy"
 ``` 
 
 ## Association of gene essentiality and client status
