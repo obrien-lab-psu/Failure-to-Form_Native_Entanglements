@@ -131,6 +131,8 @@ options:
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_Dnak_simple_motif_scan.cmds) to plot the results for both the experimental and Alphafold datasets used in this work. Please modify any other pathing as necessary. 
 
 ### Results of DnaK binding site scans
+We observe no statistical enrichement of DnaK binding sites in entangled regions of essential proteins relative to non-essential proteins regardless of the motif used. 
+
 | Motif        | Structure type | Figure                                                                                     |
 |--------------|----------------|--------------------------------------------------------------------------------------------|
 | Bukau4       | AF             | [Bukau4_ENTonly-True_AF.png](Figures/Dnak_simple_motif_scan/Bukau4_ENTonly-True_AF.png)     |
