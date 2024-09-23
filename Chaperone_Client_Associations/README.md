@@ -63,9 +63,9 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 
 ### Results of Fisher exact test for association of gene essentiality and client status
 For the association between protein essentiality and client status DnaK   
-![Association bewteen protein essentiality and client status](Plots/Essentiality_and_client_Fisher_results_Knockout_clientType-DnaKonly.png)
+![Association bewteen protein essentiality and client status](Figures/Assoc_Client_n_Essential/Essentiality_and_client_Fisher_results_Knockout_clientType-DnaKonly.png)
 [raw plot data](data/Assoc_Client_n_Essential/Assoc_Client_n_Essential_plot_data_Knockout_clientType-DnaKonly.csv)  
  
 For the association between protein essentiality and client status GroEL   
-![Association bewteen protein essentiality and client status](Plots/Essentiality_and_client_Fisher_results_Knockout_clientType-GroELonly.png)  
+![Association bewteen protein essentiality and client status](Figures/Assoc_Client_n_Essential/Essentiality_and_client_Fisher_results_Knockout_clientType-GroELonly.png)  
 [raw plot data](data/Assoc_Client_n_Essential/Assoc_Client_n_Essential_plot_data_Knockout_clientType-GroELonly.csv)  
