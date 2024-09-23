@@ -12,6 +12,9 @@ graph TD
     A --> C[Plot Model Results]
     B --> D[Plot PSM Results]
     click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Modeling_Odds_of_Misfolding#binomial-logistic-regression"
+    click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Modeling_Odds_of_Misfolding#propensity-score-matching-to-control-for-residue-burial"
+    click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Modeling_Odds_of_Misfolding#usage-of-plot_regression_resultspy"
+    click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Modeling_Odds_of_Misfolding#usage-of-plot_regression_resultspy-1"
 ``` 
 
 ## Binomial logistic regression
