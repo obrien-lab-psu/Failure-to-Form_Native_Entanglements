@@ -4,11 +4,12 @@ Here we asses the statistical association known DnaK and GroEL clients with gene
 ## General workflow
 ```mermaid
 graph TD
-    A[Assoc. essentiality and client]
+    A[Assoc. essentiality and client] --> C[Plot Assoc. ess V client]
     B[DnaK binding site]
+    click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Chaperone_Client_Associations#usage-of-assoc_client_n_essentialpy"
 ``` 
 
-## Association of gene essentiality and clien status
+## Association of gene essentiality and client status
 We use the Fisher exact test to determine if there is any statistically significant associaiton between proteins being essential and a chaperone client. 
 The contingency table is designed as follows:  
 | | Client Yes | Client No 
@@ -43,3 +44,28 @@ options:
 ```
 
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Assoc_Client_n_Essential.cmds) to reproduce the Fisher exact test used in this work to determine the association between protein essentiality and client state in the experimental data set and the AlphaFold structures. Please modify any other pathing as necessary. 
+
+### Usage of [Plot_Assoc_Client_n_Essential.py](src/data/Plot_Assoc_Client_n_Essential.py)
+```
+usage: Plot_Assoc_Client_n_Essential.py [-h] -f INP_FILES -o OUTPATH -t TAG
+
+Process regression data and generate plots.
+
+options:
+  -h, --help            show this help message and exit
+  -f INP_FILES, --inp_files INP_FILES
+                        Input file pattern for regression data.
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory.
+  -t TAG, --tag TAG     tag for final output image
+```
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_Assoc_Client_n_Essential.cmds) to plot the results for both the experimental and Alphafold datasets used in this work. Please modify any other pathing as necessary. 
+
+### Results of Fisher exact test for association of gene essentiality and client status
+For the association between protein essentiality and client status DnaK   
+![Association bewteen protein essentiality and client status](Plots/Essentiality_and_client_Fisher_results_Knockout_clientType-DnaKonly.png)
+[raw plot data](data/Assoc_Client_n_Essential/Assoc_Client_n_Essential_plot_data_Knockout_clientType-DnaKonly.csv)  
+ 
+For the association between protein essentiality and client status GroEL   
+![Association bewteen protein essentiality and client status](Plots/Essentiality_and_client_Fisher_results_Knockout_clientType-GroELonly.png)  
+[raw plot data](data/Assoc_Client_n_Essential/Assoc_Client_n_Essential_plot_data_Knockout_clientType-GroELonly.csv)  
