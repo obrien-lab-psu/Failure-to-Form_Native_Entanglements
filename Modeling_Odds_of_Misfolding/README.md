@@ -9,10 +9,12 @@ $$
 ```mermaid
 graph TD
     A[Fit Model] --> B[Propensity Score Matching]
+    A --> C[Plot Model Results]
+    B --> D[Plot PSM Results]
+    click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Modeling_Odds_of_Misfolding#binomial-logistic-regression"
 ``` 
 
 ## Binomial logistic regression
-
 
 
 ### Usage of [src/data/Regression.py](src/data/Regression.py)
@@ -42,8 +44,26 @@ options:
                         Variable to hold constant while calculating odds
 ```
 
-
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Regressions_whole_proteome.cmds) to reproduce the binomial logistic regressions used in this work to fit the experimental data and the AlphaFold structures. Please modify any other pathing as necessary. 
+
+### Usage of [Plot_Regression_results.py](src/data/Plot_Regression_results.py)
+```
+usage: Plot_Regression_results.py [-h] -f INP_FILES -o OUTPATH -t TAG -r REGRESSION_VAR
+
+Process regression data and generate plots.
+
+options:
+  -h, --help            show this help message and exit
+  -f INP_FILES, --inp_files INP_FILES
+                        Input file pattern for regression data.
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory.
+  -t TAG, --tag TAG     Tag for output filenames.
+  -r REGRESSION_VAR, --regression_var REGRESSION_VAR
+                        regression variable you wish to plot
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_Regression_whole_proteome.cmds) to plot the results for both the experimental and Alphafold datasets used in this work. Please modify any other pathing as necessary. 
 
 ### Results 
 When considering only those proteins with native entanglements we observe a statistically significant greater odds of misfolding in the entangled region of proteins rather than not. Even in the presence of DnaK and GroEL.  
@@ -110,3 +130,50 @@ Below is a table of all our results across both the sets of experimentally deriv
 | nonessential           | Rall      | AF            | No-ENT              | [nonessential_genes_Rall](Figures/Regressions/whole_proteome/AF/nonessential_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png) |
 
 
+## Propensity score matching to control for residue burial
+We control for the extent of burial between the entangled and non-entangled regions of proteins in our dataset using propensity score matching [CITE A PAPER]. 
+
+### Usage of [PSM.py](src/data/PSM.py)
+```
+usage: PSM.py [-h] -f INPFILES -l LOGFILE -o OUTPATH -m MATCH_VAR -n NMATCH
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -f INPFILES, --inpfiles INPFILES
+                        Path to residue feature files
+  -l LOGFILE, --logfile LOGFILE
+                        Path to log file
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory
+  -m MATCH_VAR, --match_var MATCH_VAR
+                        Variable to match
+  -n NMATCH, --nmatch NMATCH
+                        Number of matches to attempt
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/PSM.cmds) to reproduce the propensity score matching used in this work to fit the experimental data and the AlphaFold structures. Please modify any other pathing as necessary. 
+
+### Usage of [Plot_Regression_results.py](src/data/Plot_Regression_results.py)
+```
+usage: Plot_PSM_results.py [-h] -p PRE_INPFILES -f POST_INPFILES -o OUTPATH -t TAG
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -p PRE_INPFILES, --pre_inpfiles PRE_INPFILES
+                        Path to pre-matched residue feature files
+  -f POST_INPFILES, --post_inpfiles POST_INPFILES
+                        Path to propensity score matched residue feature files
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory
+  -t TAG, --tag TAG     Tag for figure title
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_Regression_whole_proteome.cmds) to plot the results for both the experimental and Alphafold datasets used in this work. Please modify any other pathing as necessary. 
+
+### Results of PSM
+The distribution of SASA of residues in the entangled and non-entangled regions of proteins across the set of experimental structures before (left) and after PSM (right).
+![Distribution of SASA](Figures/PSM/EXP_matched_residue_features.png)
