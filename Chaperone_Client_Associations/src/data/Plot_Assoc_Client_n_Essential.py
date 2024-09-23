@@ -42,7 +42,7 @@ class DataLoader:
         print(f'Data loaded and consolidated. {len(files)} files processed.')
         print(self.data)
         outfile_csv = os.path.join(self.outpath, f'Assoc_Client_n_Essential_plot_data_{self.tag}.csv')
-        self.data.to_csv(outfile_csv, sep='|', index=False)
+        self.data.to_csv(outfile_csv, index=False)
         print(f'SAVED: {outfile_csv}')
 
 class Plotter:
