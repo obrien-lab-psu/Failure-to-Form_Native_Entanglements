@@ -157,3 +157,6 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 | Emperical5   | EXP            | [Emperical5_ENTonly-True_EXP.png](Figures/Dnak_simple_motif_scan/Emperical5_ENTonly-True_EXP.png) |
 | Emperical5LF | EXP            | [Emperical5LF_ENTonly-True_EXP.png](Figures/Dnak_simple_motif_scan/Emperical5LF_ENTonly-True_EXP.png) |
 | Emperical5RF | EXP            | [Emperical5RF_ENTonly-True_EXP.png](Figures/Dnak_simple_motif_scan/Emperical5RF_ENTonly-True_EXP.png) |
+
+[Raw plot data EXP](data/Dnak_simple_motif_scan/consolidated_Dnak_binding_data_EXP.csv)
+[Raw plot data AF](data/Dnak_simple_motif_scan/consolidated_Dnak_binding_data_AF.csv)
