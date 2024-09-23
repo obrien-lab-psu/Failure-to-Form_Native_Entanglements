@@ -1,0 +1,3 @@
+python src/data/Plot_Dnak_simple_motif_scan.py -f ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Chaperone_Client_Associations/Dnak_simple_motif_scan/EXP/C_\*.csv -o ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Chaperone_Client_Associations/Dnak_simple_motif_scan/Plots/ -t EXP
+
+python src/data/Plot_Dnak_simple_motif_scan.py -f ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Chaperone_Client_Associations/Dnak_simple_motif_scan/AF/C_\*.csv -o ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Chaperone_Client_Associations/Dnak_simple_motif_scan/Plots/ -t AF
