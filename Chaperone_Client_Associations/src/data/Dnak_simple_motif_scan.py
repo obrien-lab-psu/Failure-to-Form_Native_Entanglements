@@ -220,8 +220,13 @@ class MotifScanner:
                 ent_present = True
 
                 # map clustered entangled residues to uniprot mapping so i can slice fasta file
-                cent_ijr = [ast.literal_eval(ijr) for ijr in pd.read_csv(gene_cent_file[0], sep='|')['ijr'].values]
+                #cent_ijr = [ast.literal_eval(ijr) for ijr in pd.read_csv(gene_cent_file[0], sep='|')['ijr'].values]
+                df = pd.read_csv(gene_cent_file[0], sep='|')
+                df = df[df['CCBond'] == False]
+                print(df.to_string())
+                cent_ijr = [ast.literal_eval(ijr) for ijr in df['ijr'].values]
                 print(f'cent_ijr: {cent_ijr}')
+ 
                 
                 threads_seq = []
                 threads_seq_start = []
