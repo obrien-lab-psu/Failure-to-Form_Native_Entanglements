@@ -5,10 +5,12 @@
 graph TD
     A[Hydropathy Anal.] --> B[Plotting]
     C[Contact Enrich. Anal.] --> D[Plotting]
+    E[OR Trend Anal.]
     click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#hydropathy-analysis-of-loop-forming-contacts"
     click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#usage-of-plot_hydropathy_resultspy"
     click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#loop-forming-contact-enrichment"
     click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#usage-of-plot_energetics_results_with_permutationpy"
+    click E "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#trend-analysis-in-loop-forming-contacts"
 ``` 
 
 ## Hydropathy Analysis of Loop Forming Contacts
