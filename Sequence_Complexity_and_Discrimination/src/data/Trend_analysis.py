@@ -215,7 +215,7 @@ Test 2: Is the OR (misfolding Y/N, entangled region Y/N) dependant on the number
             ax[3].scatter(x, y2_size, label='NonEssential')
             ax[3].set_ylabel('Sample size', fontsize=7)
             ax[3].tick_params(axis='both', labelsize=7)
-            ax[3].set_yscale('log')
+            #ax[3].set_yscale('log')
 
             # R3tate the x-axis tick labels by 45 degrees for all subplots
             plt.setp(ax[3].get_xticklabels(), rotation=45, ha="right", fontsize=7)            

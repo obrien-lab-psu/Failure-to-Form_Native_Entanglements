@@ -58,6 +58,7 @@ class Analyzer:
         'VAL': 'V'}
         
         self.contact_files = glob(os.path.join(contact_files, '*'))
+        print(f'number of contact files: {len(self.contact_files)}')
         self.uent_files = glob(os.path.join(uent_files, '*'))
         print(f'number of entanglement files: {len(self.uent_files)}')
         
@@ -145,8 +146,7 @@ class Analyzer:
 
                 uent_df = pd.read_csv(f, sep='|')
                 uent_df = uent_df[uent_df['CCBond'] == False]
-                print(uent_df)
-                quit()
+                #print(uent_df)
                 uent_df = uent_df['contacts'].values
                 uent_df = ';'.join(uent_df)
                 logging.info(uent_df)
@@ -269,10 +269,10 @@ class Analyzer:
         sig_contacts['NegCharged-NegCharged'] = [str(s) for s in sig_contacts['NegCharged-NegCharged']]
         outdf['NegCharged-NegCharged'] = []
 
-        ## get group 6 significant contact defs (any F-F, F-Y, T-Y, S-Y contacts)
-        sig_contacts['FF-FY-SY-TY'] = [('F', 'F'), ('F', 'Y'), ('Y', 'F'), ('S', 'Y'), ('Y', 'S'), ('T', 'Y'), ('Y', 'T')]
-        sig_contacts['FF-FY-SY-TY'] = [str(s) for s in sig_contacts['FF-FY-SY-TY']]
-        outdf['FF-FY-SY-TY'] = []
+        ## get group 6 significant contact defs (any F-F, F-Y, T-Y, S-Y H-C contacts)
+        sig_contacts['FF-FY-SY-TY-HC'] = [('F', 'F'), ('F', 'Y'), ('Y', 'F'), ('S', 'Y'), ('Y', 'S'), ('T', 'Y'), ('Y', 'T'), ('H', 'C'), ('C', 'H')]
+        sig_contacts['FF-FY-SY-TY-HC'] = [str(s) for s in sig_contacts['FF-FY-SY-TY-HC']]
+        outdf['FF-FY-SY-TY-HC'] = []
 
         ## get group 6 significant contact defs (any F-F contacts)
         sig_contacts['FF'] = [('F', 'F')]
@@ -294,7 +294,12 @@ class Analyzer:
         sig_contacts['SY'] = [str(s) for s in sig_contacts['SY']]
         outdf['SY'] = []
 
-        ## get group 7 significant contact defs (any charge hydrophobic contacts)
+        ## get group 7 significant contact defs (any S-Y contacts)
+        sig_contacts['HC'] = [('H', 'C'), ('C', 'H')]
+        sig_contacts['HC'] = [str(s) for s in sig_contacts['SY']]
+        outdf['HC'] = []
+
+        ## get group 8 significant contact defs (any charge hydrophobic contacts)
         sig_contacts['MR'] = [('M', 'R'), ('R', 'M')]
         sig_contacts['MR'] = [str(s) for s in sig_contacts['MR']]
         outdf['MR'] = []

@@ -170,8 +170,32 @@ For the cyto-serum + GroEL only set of observal proteins using 100k permutations
 Raw data for plotting can be found [here](data/Contact_Enrichment/AF/CG_50_p100000/)  
   
 ## Trend analysis in loop forming contacts 
+From the loop forming contact enrichement analysis we observe that F-F, F-Y, T-Y, S-Y, and H-C loop forming contacts are enriched in non-essential proteins across all three LiPMS experimental conditions. 
+
+### Usage of [Gen_SigContact_df.py](src/data/Gen_SigContact_df.py)
+This script creates a dataframe with counts of all the loop forming contacts that match F-F, F-Y, T-Y, S-Y, and H-C for ech gene. 
+
+```
+usage: Gen_SigContact_df.py [-h] -l LOG_FILE -c CONTACT_FILES -e UENT_FILES -o OUTPATH
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -l LOG_FILE, --log_file LOG_FILE
+                        Path to logging file
+  -c CONTACT_FILES, --contact_files CONTACT_FILES
+                        path to native contact files
+  -e UENT_FILES, --uent_files UENT_FILES
+                        path to unique entanglement files
+  -o OUTPATH, --outpath OUTPATH
+                        path to output directory. will be made if doesnt exist
+```
+If you have the [SLUG] then you can use the command files located [here](/src/command_lists/Gen_SigContact_df.cmds) to reproduce the per gene significant contact count dataframe used in this work in the experimental data set and the AlphaFold structures. Please modify any other pathing as necessary. 
+
 
 ### Usage of [Trend_analysis.py](src/data/Trend_analysis.py)
+
 ```
 usage: Trend_analysis.py [-h] -g GENE_LIST -Eg ESS_GENE_LIST -NEg NONESS_GENE_LIST -r RESFEAT_FILES -c LOOPCONTACT_DF -o OUTPATH -t TAG -b BUFF -s SPA --LiPMScov LIPMSCOV -l LOG_FILE
 
@@ -199,4 +223,13 @@ options:
                         Path to logging file
 ```
 
-If you have the [SLUG] then you can use the command files located [here](src/command_lists/compare_hydropathy.cmds) to reproduce loop forming contact hydropathy analysis used in this work in the experimental data set and the AlphaFold structures. Please modify any other pathing as necessary. 
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Trend_analysis.cmds) to reproduce the trend analysis for the significant loop forming contacts found in this work in the experimental data set and the AlphaFold structures. Please modify any other pathing as necessary. 
+
+### Results of Trend analysis in number of significant loop forming contacts
+#### Experimental structures
+Fraction of proteins with atleast 1 of a loop closing contact type  
+![Fraction of proteins with atleast 1 of a loop closing contact type](Figures/Trend_analysis/FractionGenes_w_LoopContacts/EXP/EssVSNonEss_stats_atleast_n1_LFC_EXP_C_spa50_C_spa50_LiPMScov50.png)  
+
+#### Alphafold structures
+Fraction of proteins with atleast 1 of a loop closing contact type  
+![Fraction of proteins with atleast 1 of a loop closing contact type](Figures/Trend_analysis/FractionGenes_w_LoopContacts/AF/EssVSNonEss_stats_atleast_n1_LFC_AF_C_spa50_C_spa50_LiPMScov50.png)  

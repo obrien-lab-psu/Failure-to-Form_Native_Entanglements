@@ -17,14 +17,14 @@ for set_type in ['EXP', 'AF']:
             script = f'python src/data/Trend_analysis.py'
             outpath = f'-o {path_to_slug}/Sequence_Complexity_and_Discrimination/Trend_analysis/{set_type}/'
 
-            res_feats = f'-c {path_to_slug}/Make_Protein_Feature_Files/Gen_proteome_features_{set_type}/res_features_lib/'       
+            res_feats = f'-r {path_to_slug}/Make_Protein_Feature_Files/Gen_proteome_features_{set_type}/res_features_lib/'       
             g = f'-g {path_to_slug}/Make_Protein_Feature_Files/Gene_lists/{set_type}/{set_type}_0.6g_{buff}_Rall_spa{spa}_LiPMScov50_ent_genes.txt' 
             Eg = f'-Eg {path_to_slug}/Make_Protein_Feature_Files/Gene_lists/{set_type}/{set_type}_0.6g_{buff}_Rall_spa{spa}_LiPMScov50_essential_ent_genes.txt'
             NEg = f'-NEg {path_to_slug}/Make_Protein_Feature_Files/Gene_lists/{set_type}/{set_type}_0.6g_{buff}_Rall_spa{spa}_LiPMScov50_nonessential_ent_genes.txt'
             logs = f'-l {path_to_slug}/Sequence_Complexity_and_Discrimination/Trend_analysis/logs/{set_type}_{buff}_{spa}.log'
-            tag  = f'-t {set_type}_{buff}_spa{spa} -b {buff} -s {spa}'
-            contact_df = f'-c '
-            cmd = ' '.join([script, outpath, res_feats, g, Eg, NEg, tag, logs])
+            tag  = f'-t {set_type}_{buff}_spa{spa} -b {buff} -s {spa} --LiPMScov 50'
+            contact_df = f'-c data/SigContact_df/{set_type}/LoopformingContactsClassification.csv'
+            cmd = ' '.join([script, outpath, res_feats, g, Eg, NEg, tag, contact_df, logs])
             print(cmd)
         
         
