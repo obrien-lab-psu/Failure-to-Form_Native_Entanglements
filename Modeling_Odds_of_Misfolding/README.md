@@ -68,7 +68,7 @@ options:
 
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_Regression_whole_proteome.cmds) to plot the results for both the experimental and Alphafold datasets used in this work. Please modify any other pathing as necessary. 
 
-### Results 
+### Results of modeling log-odds of misfolding
 When considering only those proteins with native entanglements we observe a statistically significant greater odds of misfolding in the entangled region of proteins rather than not. Even in the presence of DnaK and GroEL.  
 ![All proteins with native entanglements](Figures/Regressions/whole_proteome/EXP/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)    
   
@@ -175,9 +175,41 @@ options:
   -t TAG, --tag TAG     Tag for figure title
 ```
 
-If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_Regression_whole_proteome.cmds) to plot the results for both the experimental and Alphafold datasets used in this work. Please modify any other pathing as necessary. 
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_PSM.cmds) to plot the results for both the experimental and Alphafold datasets used in this work. Please modify any other pathing as necessary. 
 
 ### Results of PSM
 The distribution of SASA of residues in the entangled and non-entangled regions of proteins across the set of experimental structures before (left) and after PSM (right).  
 
-![Distribution of SASA](Figures/PSM/EXP_matched_residue_features.png)
+![Distribution of SASA](Figures/PSM/EXP_matched_residue_features.png)  
+
+Controlling for the burial of entangled residues also does not affect the statisitcaly signifincant increase in oddds of misfolding involving native entanglements rather than not.  
+![Ent genes regression results - PSM](Figures/Regressions/PSM/EXP/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)  
+![Ent genes regression results - PSM](Figures/Regressions/PSM/EXP/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)  
+![Ent genes regression results - PSM](Figures/Regressions/PSM/EXP/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)   
+  
+| Set Type               | Timepoint | Structure Type | Entangled Only | Link to File                                                                                   |
+|------------------------|-----------|----------------|-----------------|------------------------------------------------------------------------------------------------|
+| all                    | R1min     | EXP            | No-ENT              | [all_genes_R1min](Figures/Regressions/PSM/EXP/all_genes_R1min_binomial_regression_results_var-region_LiPMScov50.png)       |
+| essential_ent           | R1min     | EXP            | Yes-ENT             | [essential_ent_genes_R1min](Figures/Regressions/PSM/EXP/essential_ent_genes_R1min_binomial_regression_results_var-region_LiPMScov50.png) |
+| nonessential_ent        | R1min     | EXP            | Yes-ENT             | [nonessential_ent_genes_R1min](Figures/Regressions/PSM/EXP/nonessential_ent_genes_R1min_binomial_regression_results_var-region_LiPMScov50.png) |
+| ent                    | R1min     | EXP            | Yes-ENT             | [ent_genes_R1min](Figures/Regressions/PSM/EXP/ent_genes_R1min_binomial_regression_results_var-region_LiPMScov50.png)         |
+| essential              | R1min     | EXP            | No-ENT              | [essential_genes_R1min](Figures/Regressions/PSM/EXP/essential_genes_R1min_binomial_regression_results_var-region_LiPMScov50.png) |
+| nonessential           | R1min     | EXP            | No-ENT              | [nonessential_genes_R1min](Figures/Regressions/PSM/EXP/nonessential_genes_R1min_binomial_regression_results_var-region_LiPMScov50.png) |
+| all                    | R5min     | EXP            | No-ENT              | [all_genes_R5min](Figures/Regressions/PSM/EXP/all_genes_R5min_binomial_regression_results_var-region_LiPMScov50.png)     |
+| essential_ent           | R5min     | EXP            | Yes-ENT             | [essential_ent_genes_R5min](Figures/Regressions/PSM/EXP/essential_ent_genes_R5min_binomial_regression_results_var-region_LiPMScov50.png) |
+| nonessential_ent        | R5min     | EXP            | Yes-ENT             | [nonessential_ent_genes_R5min](Figures/Regressions/PSM/EXP/nonessential_ent_genes_R5min_binomial_regression_results_var-region_LiPMScov50.png) |
+| ent                    | R5min     | EXP            | Yes-ENT             | [ent_genes_R5min](Figures/Regressions/PSM/EXP/ent_genes_R5min_binomial_regression_results_var-region_LiPMScov50.png)         |
+| essential              | R5min     | EXP            | No-ENT              | [essential_genes_R5min](Figures/Regressions/PSM/EXP/essential_genes_R5min_binomial_regression_results_var-region_LiPMScov50.png) |
+| nonessential           | R5min     | EXP            | No-ENT              | [nonessential_genes_R5min](Figures/Regressions/PSM/EXP/nonessential_genes_R5min_binomial_regression_results_var-region_LiPMScov50.png) |
+| all                    | R2hr      | EXP            | No-ENT              | [all_genes_R2hr](Figures/Regressions/PSM/EXP/all_genes_R2hr_binomial_regression_results_var-region_LiPMScov50.png)       |
+| essential_ent           | R2hr      | EXP            | Yes-ENT             | [essential_ent_genes_R2hr](Figures/Regressions/PSM/EXP/essential_ent_genes_R2hr_binomial_regression_results_var-region_LiPMScov50.png) |
+| nonessential_ent        | R2hr      | EXP            | Yes-ENT             | [nonessential_ent_genes_R2hr](Figures/Regressions/PSM/EXP/nonessential_ent_genes_R2hr_binomial_regression_results_var-region_LiPMScov50.png) |
+| ent                    | R2hr      | EXP            | Yes-ENT             | [ent_genes_R2hr](Figures/Regressions/PSM/EXP/ent_genes_R2hr_binomial_regression_results_var-region_LiPMScov50.png)         |
+| essential              | R2hr      | EXP            | No-ENT              | [essential_genes_R2hr](Figures/Regressions/PSM/EXP/essential_genes_R2hr_binomial_regression_results_var-region_LiPMScov50.png) |
+| nonessential           | R2hr      | EXP            | No-ENT              | [nonessential_genes_R2hr](Figures/Regressions/PSM/EXP/nonessential_genes_R2hr_binomial_regression_results_var-region_LiPMScov50.png) |
+| all                    | Rall      | EXP            | No-ENT              | [all_genes_Rall](Figures/Regressions/PSM/EXP/all_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)        |
+| essential_ent           | Rall      | EXP            | Yes-ENT             | [essential_ent_genes_Rall](Figures/Regressions/PSM/EXP/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png) |
+| nonessential_ent        | Rall      | EXP            | Yes-ENT             | [nonessential_ent_genes_Rall](Figures/Regressions/PSM/EXP/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png) |
+| ent                    | Rall      | EXP            | Yes-ENT             | [ent_genes_Rall](Figures/Regressions/PSM/EXP/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)         |
+| essential              | Rall      | EXP            | No-ENT              | [essential_genes_Rall](Figures/Regressions/PSM/EXP/essential_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png) |
+| nonessential           | Rall      | EXP            | No-ENT              | [nonessential_genes_Rall](Figures/Regressions/PSM/EXP/nonessential_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png) |
