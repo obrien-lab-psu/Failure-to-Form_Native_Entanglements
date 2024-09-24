@@ -7,6 +7,8 @@ graph TD
     C[Contact Enrich. Anal.] --> D[Plotting]
     click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#hydropathy-analysis-of-loop-forming-contacts"
     click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#usage-of-plot_hydropathy_resultspy"
+    click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#loop-forming-contact-enrichment"
+    click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Sequence_Complexity_and_Discrimination#usage-of-plot_energetics_results_with_permutationpy"
 ``` 
 
 ## Hydropathy Analysis of Loop Forming Contacts
@@ -142,26 +144,28 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 #### Experimental structures
 For the cyto-serum only set of observal proteins using 100k permutations  
 ![Cyto-serum loop forming contact enrichment](Figures/Contact_Enrichment/EXP/deltaDeltaE_C_50_p100000_EXP.png)  
-  
+Raw data for plotting can be found [here](data/Contact_Enrichment/EXP/C_50_p100000/)  
+
 For the cyto-serum + Dnak only set of observal proteins using 100k permutations  
-![Cyto-serum + DnaK loop forming contact enrichment](Figures/Contact_Enrichment/EXP/deltaDeltaE_CD_50_p100000_EXP.png)  
+![Cyto-serum + DnaK loop forming contact enrichment](Figures/Contact_Enrichment/EXP/deltaDeltaE_CD_50_p100000_EXP.png) 
+Raw data for plotting can be found [here](data/Contact_Enrichment/EXP/CD_50_p100000/)  
   
 For the cyto-serum + GroEL only set of observal proteins using 100k permutations  
 ![Cyto-serum + GroEL loop forming contact enrichment](Figures/Contact_Enrichment/EXP/deltaDeltaE_CG_50_p100000_EXP.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment/EXP/CG_50_p100000/)  
   
-For the total set of proteins in the dataset using 100k permutations  
-![Total loop forming contact enrichment](Figures/Contact_Enrichment/EXP/deltaDeltaE_Total_p100000_EXP.png)  
   
 
 #### Alphafold structures
 For the cyto-serum only set of observal proteins using 100k permutations  
 ![Cyto-serum loop forming contact enrichment](Figures/Contact_Enrichment/AF/deltaDeltaE_C_50_p100000_AF.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment/AF/C_50_p100000/)  
   
 For the cyto-serum + Dnak only set of observal proteins using 100k permutations  
 ![Cyto-serum + DnaK loop forming contact enrichment](Figures/Contact_Enrichment/AF/deltaDeltaE_CD_50_p100000_AF.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment/AF/CD_50_p100000/)  
   
 For the cyto-serum + GroEL only set of observal proteins using 100k permutations  
 ![Cyto-serum + GroEL loop forming contact enrichment](Figures/Contact_Enrichment/AF/deltaDeltaE_CG_50_p100000_AF.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment/AF/CG_50_p100000/)  
   
-For the total set of proteins in the dataset using 100k permutations  
-![Total loop forming contact enrichment](Figures/Contact_Enrichment/AF/deltaDeltaE_Total_p100000_AF.png)  
