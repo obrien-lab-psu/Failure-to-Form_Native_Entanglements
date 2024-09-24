@@ -176,7 +176,27 @@ options:
 ```
 
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_PSM.cmds) to plot the results for both the experimental and Alphafold datasets used in this work. Please modify any other pathing as necessary. 
+  
+### Usage of [Plot_Regression_PSM_results.py](src/data/Plot_Regression_PSM_results.py)
+Use to plot the regression results from the propensity score matched data. 
+```
+usage: Plot_Regression_PSM_results.py [-h] -f INP_FILES -o OUTPATH -t TAG -r REGRESSION_VAR
 
+Process regression data and generate plots.
+
+options:
+  -h, --help            show this help message and exit
+  -f INP_FILES, --inp_files INP_FILES
+                        Input file pattern for regression data.
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory.
+  -t TAG, --tag TAG     Tag for output filenames.
+  -r REGRESSION_VAR, --regression_var REGRESSION_VAR
+                        regression variable you wish to plot
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_Regression_PSM.cmds) to plot the regression results for both the experimental structure propensity score matched dataset used in this work. Please modify any other pathing as necessary.  
+  
 ### Results of PSM
 The distribution of SASA of residues in the entangled and non-entangled regions of proteins across the set of experimental structures before (left) and after PSM (right).  
 
