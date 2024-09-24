@@ -6,7 +6,8 @@ Here we examine a set of set of [topological complexity measures](docs/entanglem
 ```mermaid
 graph TD
     A[Entanglement Complexity LASSO reg] --> C[Plotting]
-    
+    click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Entanglement_Topological_Complexity_and_Discrimination#entanglement-topological-complexity-in-lasso-regression"
+    click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Entanglement_Topological_Complexity_and_Discrimination#usage-of-plot_complexity_metricspy"
 ``` 
 
 ## Entanglement Topological Complexity in LASSO Regression
