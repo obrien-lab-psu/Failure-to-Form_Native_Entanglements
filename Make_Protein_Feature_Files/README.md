@@ -105,6 +105,6 @@ options:
                         List of genes to ignore that contain knots
 ```
 
-If you have the [SLUG] then you can use the command files located [here](src/command_lists/MakeGeneLists_EXP.cmds) to reproduce the gene lists used in this work for the experimental structures and [here](src/command_lists/MakeGeneLists_EXP.cmds) for the AlphaFold structures. Please modify any other pathing as necessary. 
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/MakeGeneLists_EXP_Rall.cmds) to reproduce the gene lists used in this work for the experimental structures and [here](src/command_lists/MakeGeneLists_EXP_Rall.cmds) for the AlphaFold structures. Please modify any other pathing as necessary. 
 
 The count statistics of each gene list can be found [here](data/Combined_genelist_counts_EXP.csv) for the experimental dataset and [here](data/Combined_genelist_counts_AF.csv) for the Alphafold datasets. 
