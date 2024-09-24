@@ -74,7 +74,7 @@ Comparing the entanglement complexity metric distribution medians (Experimental 
   
   
 Comparing the entanglement complexity metric distribution means (Alphafold results)  
-![Comparing complexity metric distribution means](Figures/Compare_metrics/AF/Complexity_measures_EXP_50_mean.png)
+![Comparing complexity metric distribution means](Figures/Compare_metrics/AF/Complexity_measures_AF_50_mean.png)
 
 Comparing the entanglement complexity metric distribution medians (Alphafold results)  
-![Comparing complexity metric distribution medians](Figures/Compare_metrics/AF/Complexity_measures_EXP_50_median.png)
+![Comparing complexity metric distribution medians](Figures/Compare_metrics/AF/Complexity_measures_AF_50_median.png)
