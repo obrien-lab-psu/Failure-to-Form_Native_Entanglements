@@ -583,7 +583,7 @@ Test 2: Is the OR (misfolding Y/N, entangled region Y/N) dependant on the number
             #x = n_loopcontacts_reg_class['nContacts'].values
             #n_prot = n_loopcontacts_reg_class['n_prot'].values
             outfile = os.path.join(self.OR_trendsOutpath, f'n_loopcontacts_ORdiff_linear_reg_{LoopContactClass}_{self.tag}_{self.buff}_spa{self.spa}_LiPMScov{self.LiPMScov}.png')
-            fit_res, slope, p_value = self.linear_fit_and_plot(x, y, yerr, n_prot, f'Exactly n {LoopContactClass} Loop forming contacts', outfile, ylabel=f'OR(n) - OR(n=0)')
+            fit_res, slope, p_value = self.linear_fit_and_plot(x, y, yerr, n_prot, f'Exactly n {LoopContactClass} LFC | {self.tag}', outfile, ylabel=f'OR(n) - OR(n=0)')
             #print(fit_res)
             
             outdf['LoopContactClass'] += [LoopContactClass]
@@ -613,7 +613,7 @@ Test 2: Is the OR (misfolding Y/N, entangled region Y/N) dependant on the number
             #x = atleast_n_loopcontacts_reg_class['nContacts'].values
             #n_prot = atleast_n_loopcontacts_reg_class['n_prot'].values
             outfile = os.path.join(self.OR_trendsOutpath, f'atleast_n_loopcontacts_ORdiff_linear_reg_{LoopContactClass}_{self.tag}_{self.buff}_spa{self.spa}_LiPMScov{self.LiPMScov}.png')
-            fit_res, slope, p_value = self.linear_fit_and_plot(x, y, yerr, n_prot, f'atleast n {LoopContactClass} Loop forming contacts', outfile, ylabel='OR(atleast-n) - OR(n=0)')
+            fit_res, slope, p_value = self.linear_fit_and_plot(x, y, yerr, n_prot, f'atleast n {LoopContactClass} LFC | {self.tag}', outfile, ylabel='OR(atleast-n) - OR(n=0)')
             #print(fit_res)
             
             outdf['LoopContactClass'] += [LoopContactClass]
