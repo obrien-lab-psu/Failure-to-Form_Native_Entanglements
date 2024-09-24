@@ -1,0 +1,2 @@
+python src/data/Plot_hydropathy_results.py -f ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Sequence_Complexity_and_Discrimination/hydropathy/EXP/ -o ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Sequence_Complexity_and_Discrimination/hydropathy/Plots/EXP/
+python src/data/Plot_hydropathy_results.py -f ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Sequence_Complexity_and_Discrimination/hydropathy/AF/ -o ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Sequence_Complexity_and_Discrimination/hydropathy/Plots/AF/
