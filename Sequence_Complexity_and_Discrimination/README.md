@@ -230,6 +230,12 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 Fraction of proteins with atleast 1 of a loop closing contact type  
 ![Fraction of proteins with atleast 1 of a loop closing contact type](Figures/Trend_analysis/FractionGenes_w_LoopContacts/EXP/EssVSNonEss_stats_atleast_n1_LFC_EXP_C_spa50_C_spa50_LiPMScov50.png)  
 
+<p float="left">
+  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_C_spa50_C_spa50_LiPMScov50.png" width="300" />
+</p>
+
 #### Alphafold structures
 Fraction of proteins with atleast 1 of a loop closing contact type  
 ![Fraction of proteins with atleast 1 of a loop closing contact type](Figures/Trend_analysis/FractionGenes_w_LoopContacts/AF/EssVSNonEss_stats_atleast_n1_LFC_AF_C_spa50_C_spa50_LiPMScov50.png)  
