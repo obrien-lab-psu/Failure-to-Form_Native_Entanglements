@@ -237,7 +237,10 @@ class FrequencyGenerator:
                 gene_contacts = contact_df[contact_df['gene'] == gene]
                 print(gene_contacts)
 
-                uent_df = pd.read_csv(f, sep='|')['contacts'].values
+                #uent_df = pd.read_csv(f, sep='|')['contacts'].values
+                uent_df = pd.read_csv(f, sep='|')
+                uent_df = uent_df[uent_df['CCBond'] == False]
+                uent_df = uent_df['contacts'].values
                 uent_df = ';'.join(uent_df)
                 #print(uent_df)
                 

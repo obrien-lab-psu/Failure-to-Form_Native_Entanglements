@@ -169,3 +169,34 @@ For the cyto-serum + GroEL only set of observal proteins using 100k permutations
 ![Cyto-serum + GroEL loop forming contact enrichment](Figures/Contact_Enrichment/AF/deltaDeltaE_CG_50_p100000_AF.png)  
 Raw data for plotting can be found [here](data/Contact_Enrichment/AF/CG_50_p100000/)  
   
+## Trend analysis in loop forming contacts 
+
+### Usage of [Trend_analysis.py](src/data/Trend_analysis.py)
+```
+usage: Trend_analysis.py [-h] -g GENE_LIST -Eg ESS_GENE_LIST -NEg NONESS_GENE_LIST -r RESFEAT_FILES -c LOOPCONTACT_DF -o OUTPATH -t TAG -b BUFF -s SPA --LiPMScov LIPMSCOV -l LOG_FILE
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -g GENE_LIST, --gene_list GENE_LIST
+                        path to all ent gene list use
+  -Eg ESS_GENE_LIST, --ess_gene_list ESS_GENE_LIST
+                        path to essentail ent gene list use
+  -NEg NONESS_GENE_LIST, --noness_gene_list NONESS_GENE_LIST
+                        path to nonessentail ent gene list use
+  -r RESFEAT_FILES, --resFeat_files RESFEAT_FILES
+                        path to residue Feature files
+  -c LOOPCONTACT_DF, --loopcontact_df LOOPCONTACT_DF
+                        path to dataframe containing loop contact classifications
+  -o OUTPATH, --outpath OUTPATH
+                        path to output directory. will be made if doesnt exist
+  -t TAG, --tag TAG     tag for final output image
+  -b BUFF, --buff BUFF  buffer used C CD CG
+  -s SPA, --spa SPA     spa used 0, 10, 20, 30, 40, 50, 60, 70, 80, 90
+  --LiPMScov LIPMSCOV   LiPMS coverage used 0, 10, 20, 30, 40, 50, 60, 70, 80, 90
+  -l LOG_FILE, --log_file LOG_FILE
+                        Path to logging file
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/compare_hydropathy.cmds) to reproduce loop forming contact hydropathy analysis used in this work in the experimental data set and the AlphaFold structures. Please modify any other pathing as necessary. 
