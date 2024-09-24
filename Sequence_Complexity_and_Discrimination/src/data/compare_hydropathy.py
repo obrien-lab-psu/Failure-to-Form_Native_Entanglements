@@ -83,9 +83,13 @@ class HydropathyAnalyzer:
             if gene not in gene_mask:
                 continue
 
-            uent_df = pd.read_csv(f, sep='|')['contacts'].values
+            #uent_df = pd.read_csv(f, sep='|')['contacts'].values
+            uent_df = pd.read_csv(f, sep='|')
+            uent_df = uent_df[uent_df['CCBond'] == False]
+            print(uent_df)
+            uent_df = uent_df['contacts'].values
             uent_df = ';'.join(uent_df)
-            #print(uent_df)
+            print(uent_df)
             
             loop_contacts = [[x.split('-')[0], x.split('-')[1]] for x in uent_df.split(';') if len(x.split('-')) == 2]
             #print(loop_contacts)
