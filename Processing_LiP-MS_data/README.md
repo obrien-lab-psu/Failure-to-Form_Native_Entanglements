@@ -4,6 +4,11 @@
 ```mermaid
 graph TD
     A[FLiPPR] --> B[FDR] --> C[Thresholding] --> D[Timepoint Overlap]
+    click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#flippr"
+    click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#false-discovery-rate-correction"
+    click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#thresholding-observed-proteins-by-spa-and-lipms-coverage"
+    click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#overlap-of-misfolded-genes-and-pk-sites-across-1min-5min-and-2hr-of-refolding-in-lip-ms-experiments"
+
 ``` 
 
 ## FLiPPR
@@ -96,10 +101,19 @@ options:
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Overlap.cmds) to reproduce the analysis of overlap of genes and PK-cutsites at various refolding times done in this work. Please modify any other pathing as necessary.  
 
 ### Results of overlap analysis
-#### Gene overlap 
-##### Experimental 
+Here we analyze the overlap of those genes that had a native SPA greater thant the 50th percentile and atleast 50% of their canonical uniprot sequence resolved in the experiment in the absence of any chaperones. We observe a stastically signifcant overlap of 67.9% across all three refolding times and 76.6% when considering the 5min and 2hr timepoints.   
+
+#### Gene overlap (Experimental)
 ![EXP GeneOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/GeneOverlap/EXP/GeneOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png)
 ![EXP GeneOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/GeneOverlap/EXP/GeneOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png) 
-##### Alphafold 
+#### Gene overlap (Alphafold) 
 ![AF GeneOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/GeneOverlap/AF/GeneOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png)
-![AF GeneOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/GeneOverlap/AF/GeneOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png)
+![AF GeneOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/GeneOverlap/AF/GeneOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png) 
+
+
+#### PK site overlap (Experimental)
+![EXP PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/EXP/PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png)
+![EXP PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/EXP/PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png) 
+#### PK site overlap (Alphafold)
+![AF PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/AF/PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png)
+![AF PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/AF/PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png) 
