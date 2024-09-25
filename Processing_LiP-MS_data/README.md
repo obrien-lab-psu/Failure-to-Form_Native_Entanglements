@@ -112,8 +112,8 @@ Here we analyze the overlap of those genes that had a native SPA greater thant t
 
 
 #### PK site overlap (Experimental)
-![EXP PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/EXP/PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png)
-![EXP PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/EXP/PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png) 
+![EXP PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/EXP/PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png)
+![EXP PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/EXP/PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png) 
 #### PK site overlap (Alphafold)
-![AF PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/AF/PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png)
-![AF PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/AF/PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png) 
+![AF PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/AF/PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png)
+![AF PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/AF/PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png) 
