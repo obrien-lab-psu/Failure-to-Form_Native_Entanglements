@@ -1,0 +1,2 @@
+python src/data/thresholding.py -i ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Processing_LiP-MS_data/processed_LiPMS_files/FLiPPR/Data/\*_SPA.csv -o ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Processing_LiP-MS_data/SPA_thresholds/ -t spa
+python src/data/thresholding.py -i ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Processing_LiP-MS_data/processed_LiPMS_files/FLiPPR/Data/\*_coverage.csv -o ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Processing_LiP-MS_data/COV_thresholds/ -t cov

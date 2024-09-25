@@ -1,0 +1,4 @@
+buff,OverlapClass,Count,Overlap,Bounds,pvalue
+CD,R5min,172,0.478,"(0.425, 0.528)",9.957e-01
+CD,R2hr,38,0.106,"(0.075, 0.139)",1.000e+00
+CD,R5min-R2hr,150,0.417,"(0.367, 0.467)",9.999e-05
