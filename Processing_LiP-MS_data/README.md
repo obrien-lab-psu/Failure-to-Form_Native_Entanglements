@@ -101,7 +101,7 @@ options:
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Overlap.cmds) to reproduce the analysis of overlap of genes and PK-cutsites at various refolding times done in this work. Please modify any other pathing as necessary.  
 
 ### Results of overlap analysis
-Here we analyze the overlap of those genes that had a native SPA greater thant the 50th percentile and atleast 50% of their canonical uniprot sequence resolved in the experiment in the absence of any chaperones. We observe a stastically signifcant overlap of 67.9% across all three refolding times and 76.6% when considering the 5min and 2hr timepoints.   
+Here we analyze the overlap of those genes that had a native SPA greater thant the 50th percentile and atleast 50% of their canonical uniprot sequence resolved in the experiment in the absence of any chaperones. We observe a stastically signifcant overlap of 67.9% across all three refolding times (with 40.1% of the signficant changes in structure consistent) and 76.6% when considering the 5min and 2hr timepoints (with 57.7% of the signficant changes in structure consistent).   
 
 #### Gene overlap (Experimental)
 ![EXP GeneOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/GeneOverlap/EXP/GeneOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png)
@@ -117,3 +117,32 @@ Here we analyze the overlap of those genes that had a native SPA greater thant t
 #### PK site overlap (Alphafold)
 ![AF PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/AF/PKsiteOverlapVenn3Diagram_spa50_LiPMScov50_ent_genes_C.png)
 ![AF PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C](Figures/PKsiteOverlap/AF/PKsiteOverlapVenn2Diagram_spa50_LiPMScov50_ent_genes_C.png) 
+
+## Selecting refolded candidates for simulation
+Refolded candidates for our simulations meet the following criteria:
+1. have a SPA >= 50th percentile value  
+2. have coverage in the LiP-MS experiments >= to 50% of the canonical uniprot sequence  
+3. have no PK cut-sites with a significant change in abundance between treated and untreated samples in the cyto-serum buffer  
+4. are refolded across all three refolding schedules (1min, 5min 2hrs)  
+  
+### Usage of [Refolded.py](src/data/Refolded.py)
+```
+usage: Refolded.py [-h] -f LIPMS_FILES -t THRESHOLD -o OUTPATH -a ALPHA -e ENT_GENES
+
+Process user specified arguments for LiPMS files correction.
+
+options:
+  -h, --help            show this help message and exit
+  -f LIPMS_FILES, --lipms_files LIPMS_FILES
+                        path to LiPMS files to correct
+  -t THRESHOLD, --threshold THRESHOLD
+                        abundance change threshold
+  -o OUTPATH, --outpath OUTPATH
+                        outpath
+  -a ALPHA, --alpha ALPHA
+                        family wise error rate: alpha
+  -e ENT_GENES, --ent_genes ENT_GENES
+                        path to list of ent genes to mask over the set of refolded to get the final set of genes
+```
+
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Refolded.cmds) to reproduce the sets of refolded genes done in this work. Please modify any other pathing as necessary. The resulting lists of refolded genes can be found [here](data/Refolded/ALL_Refolded.csv) and for those with native entanglements [here](data/Refolded/ENT_Refolded.csv).  
