@@ -3,11 +3,14 @@
 ## General workflow
 ```mermaid
 graph TD
-    A[FLiPPR] --> B[FDR] --> C[Thresholding] --> D[Timepoint Overlap]
+    A[FLiPPR] --> B[FDR] --> C[Thresholding]
+    D[Timepoint Overlap]
+    E[Sel. Refolded]
     click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#flippr"
     click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#false-discovery-rate-correction"
     click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#thresholding-observed-proteins-by-spa-and-lipms-coverage"
     click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#overlap-of-misfolded-genes-and-pk-sites-across-1min-5min-and-2hr-of-refolding-in-lip-ms-experiments"
+    click E "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Processing_LiP-MS_data#selecting-refolded-candidates-for-simulation"
 
 ``` 
 
