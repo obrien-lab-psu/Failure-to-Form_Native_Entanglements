@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable CSV Table</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sortable Table from CSV</h1>
+    <table id="sortableTable">
+        <thead>
+            <tr id="table-header">
+                <!-- Header will be dynamically generated -->
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Data will be dynamically loaded here -->
+        </tbody>
+    </table>
+
+    <!-- Load PapaParse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <!-- Load Tablesort.js for sorting functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+
+    <script>
+        // Function to load CSV and populate the table
+        function loadCSV() {
+            Papa.parse('data/Get_Candidate_info/Matched_misfolded.csv', {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    generateTable(results.data);
+                }
+            });
+        }
+
+        // Function to generate the table with data
+        function generateTable(data) {
+            const tableHeader = document.getElementById('table-header');
+            const tableBody = document.getElementById('table-body');
+            
+            // Clear any existing table data
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Get the header from the first row
+            const headers = Object.keys(data[0]);
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                tableHeader.appendChild(th);
+            });
+
+            // Populate the table body
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+
+            // Make the table sortable
+            new Tablesort(document.getElementById('sortableTable'));
+        }
+
+        // Load the CSV file when the page loads
+        window.onload = loadCSV;
+    </script>
+
+</body>
+</html>
+
