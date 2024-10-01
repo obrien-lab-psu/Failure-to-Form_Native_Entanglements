@@ -4,6 +4,10 @@
 ```mermaid
 graph TD
     A[Sim. Annealing MC] --> B[Analyze Results]
+    C[Get candidate info]
+    click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Candidate_Selection_for_CG_T-quench_Sims#usage-of-optimizer_simulatedannealingpy"
+    click B ""
+    click C ""
 ``` 
 
 ## Simulated annealing MC for Candidate selection
@@ -48,6 +52,26 @@ options:
 
 If you have the [SLUG] then you can use the command files located [here](src/comman_lists/Optimizer_SimulatedAnnealing_wCutControl_system8.cmds) to reproduce simulated annealing used in this work for the experimental data set and for the randomized controls. Please modify any other pathing as necessary. 
 
+## Analysis of simulated annealingg MC trajectories
+### Usage of [Analyze_Optimizer_SimulatedAnnealing.py](src/data/Analyze_Optimizer_SimulatedAnnealing.py)
+```
+usage: Analyze_Optimizer_SimulatedAnnealing.py [-h] -i INPDIR -o OUTPATH -t TAG -l LOG -f RESFEAT_FILES -r REG_FORMULA
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -i INPDIR, --inpdir INPDIR
+                        Path to top level directory containing trajectories
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory
+  -t TAG, --tag TAG     Tag for output filenames
+  -l LOG, --log LOG     Path to logging file
+  -f RESFEAT_FILES, --resFeat_files RESFEAT_FILES
+                        Path to residue feature files
+  -r REG_FORMULA, --reg_formula REG_FORMULA
+                        Regression formula
+```
 
 ### Results of simulated annealing
 #### Experimental dataset cyto-serum only
@@ -61,3 +85,26 @@ Data for these plots can be found [here](data/Rand-False/EXP/)
 ![Fract_High-OR_dists_system8_EXP_Rand-True_C.png](Figures/Rand-True/EXP/Fract_High-OR_dists_system8_EXP_Rand-True_C.png)  
 ![PhaseT_system8_EXP_Rand-True_C.png](Figures/Rand-True/EXP/PhaseT_system8_EXP_Rand-True_C.png)  
 Data for these plots can be found [here](data/Rand-True/EXP/)  
+
+## Getting info for final refolded and misfolded candidates 
+Here we randomly select 10 of the [refolded candidates](../Processing_LiP-MS_data/data/Refolded/ALL_Refolded.csv) and then select 10 candidates that most closely match the size distribution from those [misfolded candidates](data/Rand-False/EXP/Fract_High-OR_Cdists_system8_EXP_Rand-False_C.csv) that were present in the highest OR state atleast 70% of the time.  
+
+### Usage of [Get_Candidate_info.py](src/data/Get_Candidate_info.py)
+```
+usage: Get_Candidate_info.py [-h] -r REFOLDED -o OUTPATH -m MISFOLDED -l LOG -e ENT_FEATURES
+
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -r REFOLDED, --refolded REFOLDED
+                        Path to top refolded gene file
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory
+  -m MISFOLDED, --misfolded MISFOLDED
+                        path to misfolded genes cdf file
+  -l LOG, --log LOG     Path to logging file
+  -e ENT_FEATURES, --ent_features ENT_FEATURES
+                        path to unique ent feature file
+``` 
+If you have the [SLUG] then you can use the command files located [here](src/comman_lists/Get_Candidate_info.cmds) to get the candidate info. Since the 10 refolded proteins are randomly selected results may change. Please modify any other pathing as necessary. 
