@@ -87,12 +87,13 @@ for fi, featf in enumerate(featfiles):
         uent_df = pd.read_csv(cfile[0], sep='|')
         print(uent_df)
         # copy pdb file
-        pfile = [p for p in pdbfiles if f'{gene}-{pdb}_{chain}' in p]
+        #pfile = [p for p in pdbfiles if f'{gene}-{pdb}_{chain}' in p] ## for experimental PDBs
+        pfile = [p for p in pdbfiles if f'{gene}' in p] ## for AF
         if len(pfile) == 0:
             raise ValueError("PDB file missing")
         pfile = pfile[0]
-        #shutil.copy(pfile, f'PDB/{gene}.pdb')
-        #print(f'Copied {pfile} -> PDB/{gene}.pdb')
+        shutil.copy(pfile, f'/storage/group/epo2/default/ims86/git_repos/viz_AF_entanglements/PDB/{gene}.pdb')
+        print(f'Copied {pfile} -> /storage/group/epo2/default/ims86/git_repos/viz_AF_entanglements/PDB/{gene}.pdb')
 
         for erowi, erow in uent_df.iterrows():
             ijr = ast.literal_eval(erow['ijr'])
