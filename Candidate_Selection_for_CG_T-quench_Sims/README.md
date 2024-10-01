@@ -6,8 +6,8 @@ graph TD
     A[Sim. Annealing MC] --> B[Analyze Results]
     C[Get candidate info]
     click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Candidate_Selection_for_CG_T-quench_Sims#usage-of-optimizer_simulatedannealingpy"
-    click B ""
-    click C ""
+    click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Candidate_Selection_for_CG_T-quench_Sims#usage-of-analyze_optimizer_simulatedannealingpy"
+    click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Candidate_Selection_for_CG_T-quench_Sims#getting-info-for-final-refolded-and-misfolded-candidates"
 ``` 
 
 ## Simulated annealing MC for Candidate selection
