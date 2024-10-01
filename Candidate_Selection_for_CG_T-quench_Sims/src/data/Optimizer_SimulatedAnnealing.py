@@ -35,7 +35,7 @@ class DataAnalysis:
     A class to handle the data analysis process including encoding, regression, and statistical tests.
     """
 
-    def __init__(self, resFeat_files, outpath, ent_gene_list, nonRefold_gene_list, tag, buffer, spa, cov, reg_formula, random, n_groups, steps, C1, C2, restart_path, beta):
+    def __init__(self, resFeat_files, outpath, ent_gene_list, nonRefold_gene_list, tag, buffer, spa, cov, reg_formula, random, n_groups, steps, C1, C2, C3, restart_path, beta, linearT):
         """
         Initializes the DataAnalysis class with necessary paths and parameters.
 
@@ -61,8 +61,10 @@ class DataAnalysis:
         self.steps = steps
         self.C1 = C1
         self.C2 = C2
+        self.C3 = C3
         self.beta = beta
         self.restart_path = restart_path
+        self.linearT = linearT
         self.data = {}
         #self.logger = self.setup_logging()
         #self.gene_list_files = glob.glob(self.gene_list)
@@ -182,7 +184,7 @@ class DataAnalysis:
             self.data += [temp]
 
             self.prot_size['gene'] += [gene]
-            self.prot_size['prot_size'] += [len(temp)]
+            self.prot_size['prot_size'] += [temp['uniprot_length'].values[0]]
 
         self.data = pd.concat(self.data)
         self.data = self.data[self.data['gene'].isin(self.reg_genes)]
@@ -193,6 +195,7 @@ class DataAnalysis:
         print(f"Data loaded and filtered. Number of unique genes: {len(self.data['gene'].unique())}")
         self.prot_size = pd.DataFrame(self.prot_size)
         #print(f'self.prot_size:\n{self.prot_size}')
+     
 
     def run(self):
         """
@@ -226,7 +229,6 @@ class DataAnalysis:
         ## load reference size dist
         self.ref_sizes = self.prot_size['prot_size'].values
         print(f'ref_sizes:\n{self.ref_sizes}')
-
 
         # Define output files and get gene list
         reg_outfile = os.path.join(self.outpath, f"regression_results_{self.tag}_{self.buffer}_{self.timepoint}_spa{self.spa}_LiPMScov{self.cov}.csv")
@@ -282,6 +284,10 @@ class DataAnalysis:
             logging.info(f'num_cuts: {num_cuts}')
            
         #####################################################################################################
+        ## Get ref perresidue cut dist
+        ref_perResCuts_df = get_per_res_cuts(encoded_df, cut_key)
+        ref_perResCuts = ref_perResCuts_df['per_res_cuts'].values
+        #print(f'ref_perResCuts: {ref_perResCuts}')
 
 
         #####################################################################################################
@@ -351,8 +357,12 @@ class DataAnalysis:
 
                 state_size_dist_bootres = bootstrap((size_dist,) , np.mean)
                 state_size_mean, state_size_lb, state_size_ub = np.mean(size_dist), state_size_dist_bootres.confidence_interval.low, state_size_dist_bootres.confidence_interval.high
-                ks_stat = kstest(self.ref_sizes, size_dist).statistic
-                E = -1*self.C1*np.log(OR) + self.C2*(ks_stat)
+                ks_stat_size = kstest(self.ref_sizes, size_dist).statistic
+
+                perResCuts = ref_perResCuts_df[ref_perResCuts_df['gene'].isin(groups[n]['genes'])]['per_res_cuts'].values
+                ks_stat_perResCuts = kstest(ref_perResCuts, perResCuts).statistic
+                #E = -1*self.C1*np.log(OR) + self.C2*(ks_stat)
+                E = -1*self.C1*np.log(OR) + self.C2*(ks_stat_size) + self.C3*(ks_stat_perResCuts)
 
                 groups[n]['OR'] = [OR]
                 groups[n]['pvalue'] = [pvalue]
@@ -363,7 +373,9 @@ class DataAnalysis:
                 groups[n]['psize_ub'] = [state_size_ub]
                 groups[n]['step'] = [last_step]
                 groups[n]['E'] = [E]
-                groups[n]['ks_stat'] = [ks_stat]
+                groups[n]['ks_stat_size'] = [ks_stat_size]
+                groups[n]['ks_stat_perResCuts'] = [ks_stat_perResCuts]
+                groups[n]['beta'] = [self.beta]
 
         ## log the starting information 
         for state in range(len(groups)):
@@ -374,9 +386,12 @@ class DataAnalysis:
             num_genes = len(state_data['genes'])
             state_step = state_data['step'][-1]
             state_E = state_data['E'][-1]
-            ks_stat = state_data['ks_stat'][-1]
-            logging.info(f'STEP: {state_step} | State: {state} | OR: {state_OR} | pvalue: {state_pvalue} | cuts: {state_cuts} | num_genes: {num_genes} | E: {state_E} | ks_stat: {ks_stat}')
-            print(f'STEP: {state_step} | State: {state} | OR: {state_OR} | pvalue: {state_pvalue} | cuts: {state_cuts} | num_genes: {num_genes} | E: {state_E} | ks_stat: {ks_stat}')
+            ks_stat_size = state_data['ks_stat_size'][-1]
+            ks_stat_perResCuts = state_data['ks_stat_perResCuts'][-1]
+            state_beta = state_data['beta'][-1]
+
+            logging.info(f'STEP: {state_step} | State: {state} | OR: {state_OR} | pvalue: {state_pvalue} | cuts: {state_cuts} | num_genes: {num_genes} | E: {state_E} | ks_stat_size: {ks_stat_size} | ks_stat_perResCuts: {ks_stat_perResCuts} | beta: {state_beta}')
+            print(f'STEP: {state_step} | State: {state} | OR: {state_OR} | pvalue: {state_pvalue} | cuts: {state_cuts} | num_genes: {num_genes} | E: {state_E} | ks_stat_size: {ks_stat_size} | ks_stat_perResCuts: {ks_stat_perResCuts} | beta: {state_beta}')
 
         #####################################################################################################
         #####################################################################################################
@@ -427,7 +442,13 @@ class DataAnalysis:
         reps = self.steps
         beta = self.beta
         beta_i = 0
-        betas = np.linspace(beta, 1000, 75)
+        if self.linearT == 'False':
+            betas = np.linspace(beta, 1000, 75)
+        elif self.linearT == 'True':
+            T = 1/beta
+            Ts = np.linspace(T, 0.001, 75)
+            print(f'Ts: {Ts}')
+            betas = 1/Ts
         print(f'betas: {betas} wiht start beta: {betas[beta_i]}')
         logging.info(f'Starting simulations with {reps} steps and beta = {self.beta}')
         
@@ -454,13 +475,17 @@ class DataAnalysis:
                 # get new regression info
                 #_, p0_coef, p0_std, p0_cuts, p0_reg_row, p0_size_dist = self.regression(encoded_df[encoded_df['gene'].isin(p0_genes_prime)][reg_vars], self.reg_formula, p0_genes_prime)
                 p0_OR, p0_pvalue, p0_cuts, p0_size_dist = self.metrics(encoded_df[encoded_df['gene'].isin(p0_genes_prime)][reg_vars], self.reg_formula, p0_genes_prime, cut_key)
-                p0_ks_stat = kstest(self.ref_sizes, p0_size_dist).statistic
-                Ep0 = -1*self.C1*np.log(p0_OR) + self.C2*(p0_ks_stat)
+                p0_ks_stat_size = kstest(self.ref_sizes, p0_size_dist).statistic
+                p0_perResCuts = ref_perResCuts_df[ref_perResCuts_df['gene'].isin(p0_genes_prime)]['per_res_cuts'].values
+                p0_ks_stat_perResCuts = kstest(ref_perResCuts, p0_perResCuts).statistic
+                Ep0 = -1*self.C1*np.log(p0_OR) + self.C2*(p0_ks_stat_size) + self.C3*(p0_ks_stat_perResCuts)
 
                 #_, p1_coef, p1_std, p1_cuts, p1_reg_row, p1_size_dist = self.regression(encoded_df[encoded_df['gene'].isin(p1_genes_prime)][reg_vars], self.reg_formula, p1_genes_prime)
                 p1_OR, p1_pvalue, p1_cuts, p1_size_dist = self.metrics(encoded_df[encoded_df['gene'].isin(p1_genes_prime)][reg_vars], self.reg_formula, p1_genes_prime, cut_key)
-                p1_ks_stat = kstest(self.ref_sizes, p1_size_dist).statistic
-                Ep1 = -1*self.C1*np.log(p1_OR) + self.C2*(p1_ks_stat)
+                p1_ks_stat_size = kstest(self.ref_sizes, p1_size_dist).statistic
+                p1_perResCuts = ref_perResCuts_df[ref_perResCuts_df['gene'].isin(p1_genes_prime)]['per_res_cuts'].values
+                p1_ks_stat_perResCuts = kstest(ref_perResCuts, p1_perResCuts).statistic
+                Ep1 = -1*self.C1*np.log(p1_OR) + self.C2*(p1_ks_stat_size) + self.C3*(p1_ks_stat_perResCuts)
 
                 # Calculate new E and deltaE
                 Enew = Ep0 + Ep1
@@ -494,10 +519,15 @@ class DataAnalysis:
                 state_OR, state_pvalue, state_cuts, state_size_dist = self.metrics(encoded_df[encoded_df['gene'].isin(state_genes)][reg_vars], self.reg_formula, state_genes, cut_key)
                 state_size_dist_bootres = bootstrap((state_size_dist,) , np.mean)
                 state_size_mean, state_size_lb, state_size_ub = np.mean(state_size_dist), state_size_dist_bootres.confidence_interval.low, state_size_dist_bootres.confidence_interval.high
-                ks_stat = kstest(self.ref_sizes, state_size_dist).statistic
-                E = -1*self.C1*np.log(state_OR) + self.C2*(ks_stat)
+
+                ks_stat_size = kstest(self.ref_sizes, state_size_dist).statistic
+
+                perResCuts = ref_perResCuts_df[ref_perResCuts_df['gene'].isin(state_genes)]['per_res_cuts'].values
+                ks_stat_perResCuts = kstest(ref_perResCuts, perResCuts).statistic
+
+                E = -1*self.C1*np.log(state_OR) + self.C2*(ks_stat_size) + self.C3*(ks_stat_perResCuts)
                 #print(f'STEP: {step} | state {state} OR: {state_OR} pvalue: {state_pvalue} cuts: {state_cuts} size_mean: {state_size_mean} | ks_stat: {ks_stat} | E: {E}')
-                logstr += [f'STEP: {step} | state {state} OR: {state_OR} pvalue: {state_pvalue} cuts: {state_cuts} size_mean: {state_size_mean} | ks_stat: {ks_stat} | E: {E}']
+                logstr += [f'STEP: {step} | state {state} OR: {state_OR} pvalue: {state_pvalue} cuts: {state_cuts} size_mean: {state_size_mean} | ks_stat_size: {ks_stat_size} | ks_stat_perResCuts: {ks_stat_perResCuts} | E: {E} | beta: {beta}']
 
                 groups[state]['OR'] += [state_OR]
                 groups[state]['pvalue'] += [state_pvalue]
@@ -507,8 +537,10 @@ class DataAnalysis:
                 groups[state]['psize_lb'] += [state_size_lb]
                 groups[state]['psize_ub'] += [state_size_ub]
                 groups[state]['step'] += [step]
-                groups[state]['ks_stat'] += [ks_stat]
+                groups[state]['ks_stat_size'] += [ks_stat_size]
+                groups[state]['ks_stat_perResCuts'] += [ks_stat_perResCuts]
                 groups[state]['E'] += [E]
+                groups[state]['beta'] += [beta]
 
  
             ## check ranks
@@ -524,7 +556,7 @@ class DataAnalysis:
 
 
             # update beta
-            if step % 750 == 0:
+            if step % 750 == 0 and step > 10:
                 beta_i += 1
                 if beta_i < len(betas):
                     beta = betas[beta_i]
@@ -544,10 +576,12 @@ class DataAnalysis:
             state_size_mean = state_data['psize_mean'][-1]
             state_size_lb = state_data['psize_lb'][-1]
             state_size_ub = state_data['psize_ub'][-1]
-            state_ks_stat = state_data['ks_stat'][-1]
+            state_ks_stat_size = state_data['ks_stat_size'][-1]
+            state_ks_stat_perResCuts = state_data['ks_stat_perResCuts'][-1]
             state_E = state_data['E'][-1]
-            logging.info(f'State: {state} | OR: {state_OR} | pvalue: {state_pvalue} | cuts: {state_cuts} | state_size_mean: {state_size_mean:.0f} ({state_size_lb:.0f}, {state_size_ub:.0f}) | ks_stat: {state_ks_stat} | E: {state_E}')
-            print(f'State: {state} | OR: {state_OR} | pvalue: {state_pvalue} | cuts: {state_cuts} | state_size_mean: {state_size_mean:.0f} ({state_size_lb:.0f}, {state_size_ub:.0f}) | ks_stat: {state_ks_stat} | E: {state_E}')
+            state_beta = state_data['beta'][-1]
+            logging.info(f'State: {state} | OR: {state_OR} | pvalue: {state_pvalue} | cuts: {state_cuts} | state_size_mean: {state_size_mean:.0f} ({state_size_lb:.0f}, {state_size_ub:.0f}) | state_ks_stat_size: {state_ks_stat_size} | E: {state_E} | state_ks_stat_perResCuts: {state_ks_stat_perResCuts} | beta: {state_beta}')
+            print(f'State: {state} | OR: {state_OR} | pvalue: {state_pvalue} | cuts: {state_cuts} | state_size_mean: {state_size_mean:.0f} ({state_size_lb:.0f}, {state_size_ub:.0f}) | state_ks_stat_size: {state_ks_stat_size} | E: {state_E} | state_ks_stat_perResCuts: {state_ks_stat_perResCuts} | beta: {state_beta}')
         #####################################################################################################
 
         #####################################################################################################
@@ -560,8 +594,20 @@ class DataAnalysis:
             _, coef, std, cuts, reg_row, size_dist = self.regression(encoded_df[encoded_df['gene'].isin(groups[state]['genes'])][reg_vars], self.reg_formula, groups[state]['genes'])
             state_size_dist_bootres = bootstrap((size_dist,) , np.mean)
             state_size_mean, state_size_lb, state_size_ub = np.mean(size_dist), state_size_dist_bootres.confidence_interval.low, state_size_dist_bootres.confidence_interval.high
+
+            ks_stat_size = kstest(self.ref_sizes, size_dist).statistic
+
+            perResCuts = ref_perResCuts_df[ref_perResCuts_df['gene'].isin(groups[state]['genes'])]['per_res_cuts'].values
+            ks_stat_perResCuts = kstest(ref_perResCuts, perResCuts).statistic
+
+            E = -1*self.C1*coef + self.C2*(ks_stat_size) + self.C3*(ks_stat_perResCuts)
+
             reg_row['state'] = state
+            reg_row['beta'] = beta
             reg_row['cuts'] = cuts
+            reg_row['ks_stat_size'] = ks_stat_size
+            reg_row['ks_stat_perResCuts'] = ks_stat_perResCuts
+            reg_row['E'] = E
             reg_row['psize_mean'] = state_size_mean
             reg_row['psize_lb'] = state_size_lb
             reg_row['psize_ub'] = state_size_ub
@@ -584,7 +630,7 @@ class DataAnalysis:
             logging.info(f'SAVED: {state_final_genelist_outfile}')
 
             ## save the state data for this state
-            state_df = {'state':[], 'step':[], 'OR':[], 'pvalue':[], 'cuts':[], 'psize_mean':[], 'psize_lb':[], 'psize_ub':[], 'ks_stat':[], 'E':[]}
+            state_df = {'state':[], 'step':[], 'OR':[], 'pvalue':[], 'cuts':[], 'psize_mean':[], 'psize_lb':[], 'psize_ub':[], 'ks_stat_size':[], 'E':[], 'ks_stat_perResCuts':[], 'beta':[]}
             for i in range(len(state_data['step'])):
                 state_df['state'] += [state]
                 state_df['step'] += [state_data['step'][i]]
@@ -594,8 +640,10 @@ class DataAnalysis:
                 state_df['psize_mean'] += [state_data['psize_mean'][i]]
                 state_df['psize_lb'] += [state_data['psize_lb'][i]]
                 state_df['psize_ub'] += [state_data['psize_ub'][i]]
-                state_df['ks_stat'] += [state_data['ks_stat'][i]]
+                state_df['ks_stat_size'] += [state_data['ks_stat_size'][i]]
+                state_df['ks_stat_perResCuts'] += [state_data['ks_stat_perResCuts'][i]]
                 state_df['E'] += [state_data['E'][i]]
+                state_df['beta'] += [state_data['beta'][i]]
             state_df = pd.DataFrame(state_df)
             #print(state_df)
             state_final_traj_outfile = f'{self.outpath}State{state}_final_traj_{self.tag}_{self.buffer}_{self.timepoint}_spa{self.spa}_LiPMScov{self.cov}.csv'
@@ -647,6 +695,14 @@ def is_decending(array):
             return False
     return True
 
+def get_per_res_cuts(df, cutkey):
+    per_res_cuts_df = {'gene':[], 'per_res_cuts':[]}
+    for gene, gene_df in df.groupby('gene'):
+        per_res_cuts_df['gene'] += [gene]
+        per_res_cuts_df['per_res_cuts'] += [np.sum(gene_df[cutkey])/len(gene_df)]
+    per_res_cuts_df = pd.DataFrame(per_res_cuts_df)
+    print(per_res_cuts_df)
+    return per_res_cuts_df
 
 def main():
     """
@@ -670,7 +726,9 @@ def main():
     parser.add_argument("--steps", type=int, required=True, help="Number of steps to run")
     parser.add_argument("-C1", type=float, required=True, help="C1 coefficient for optimization function")
     parser.add_argument("-C2", type=float, required=True, help="C2 coefficient for optimization function")
+    parser.add_argument("-C3", type=float, required=True, help="C3 coefficient for optimization function")
     parser.add_argument("-beta", type=float, required=True, help="Starting beta. If >= 1000 then no temperature quenching is done")
+    parser.add_argument("-linearT", type=str, required=True, help="use a linear T scale instead of a linear beta value")
     args = parser.parse_args()
 
     # Setup logging configuration
@@ -692,10 +750,12 @@ def main():
         steps=args.steps,
         C1=args.C1,
         C2=args.C2,
+        C3=args.C3,
         restart_path=args.restart_path,
-        beta=args.beta)
+        beta=args.beta,
+        linearT=args.linearT)
     analysis.run()
-
+    print('NORMAL TERMINATION')
 if __name__ == "__main__":
     main()
 

@@ -11,7 +11,7 @@ graph TD
 ### Usage of [Optimizer_SimulatedAnnealing.py](src/data/Optimizer_SimulatedAnnealing.py)
 ```
 usage: Optimizer_SimulatedAnnealing.py [-h] -f RESFEAT_FILES -o OUTPATH --ent_gene_list ENT_GENE_LIST --nonRefold_gene_list NONREFOLD_GENE_LIST -t TAG -b BUFFER -s SPA -c COV -n N_GROUPS -r
-                                       REG_FORMULA --random RANDOM -l LOG [--restart_path RESTART_PATH] --steps STEPS -C1 C1 -C2 C2 -beta BETA
+                                       REG_FORMULA --random RANDOM -l LOG [--restart_path RESTART_PATH] --steps STEPS -C1 C1 -C2 C2 -C3 C3 -beta BETA -linearT LINEART
 
 Process user specified arguments
 
@@ -41,26 +41,23 @@ options:
   --steps STEPS         Number of steps to run
   -C1 C1                C1 coefficient for optimization function
   -C2 C2                C2 coefficient for optimization function
+  -C3 C3                C3 coefficient for optimization function
   -beta BETA            Starting beta. If >= 1000 then no temperature quenching is done
+  -linearT LINEART      use a linear T scale instead of a linear beta value
 ```
 
-If you have the [SLUG] then you can use the command files located [here](src/comman_lists/Optimizer_SimulatedAnnealing.cmds) to reproduce simulated annealing used in this work for the experimental data set and the AlphaFold structures and [here](src/comman_lists/Optimizer_SimulatedAnnealing_Rand.cmds) for the randomized controls. Please modify any other pathing as necessary. 
+If you have the [SLUG] then you can use the command files located [here](src/comman_lists/Optimizer_SimulatedAnnealing_wCutControl_system8.cmds) to reproduce simulated annealing used in this work for the experimental data set and for the randomized controls. Please modify any other pathing as necessary. 
 
 
-### Results
+### Results of simulated annealing
 #### Experimental dataset cyto-serum only
-![Ensemble_Traj_Ensemble_EXP_Rall_spa50_LiPMScov50_C](Figures/EXP/Ensemble_Traj_Ensemble_EXP_Rall_spa50_LiPMScov50_C.png)  
-![Fract_High-OR_dists_EXP_Rall_spa50_LiPMScov50_C](Figures/EXP/Fract_High-OR_dists_EXP_Rall_spa50_LiPMScov50_C.png)
-  
-#### Experimental dataset (Randomized) cyto-serum only
-![Ensemble_Traj_Ensemble_EXP_Rand_Rall_spa50_LiPMScov50_C](Figures/Rand/EXP/Ensemble_Traj_Ensemble_Rand_EXP_Rall_spa50_LiPMScov50_C.png)  
-![Fract_High-OR_dists_EXP_Rand_Rall_spa50_LiPMScov50_C](Figures/Rand/EXP/Fract_High-OR_dists_Rand_EXP_Rall_spa50_LiPMScov50_C.png)
+![Ensemble_Traj_system8_EXP_Rand-False_C.png](Figures/Rand-False/EXP/Ensemble_Traj_system8_EXP_Rand-False_C.png)  
+![Fract_High-OR_dists_system8_EXP_Rand-False_C.png](Figures/Rand-False/EXP/Fract_High-OR_dists_system8_EXP_Rand-False_C.png)  
+![PhaseT_system8_EXP_Rand-False_C.png](Figures/Rand-False/EXP/PhaseT_system8_EXP_Rand-False_C.png)  
+Data for these plots can be found [here](data/Rand-False/EXP/)  
 
-
-#### Alphafold dataset cyto-serum only
-![Ensemble_Traj_Ensemble_AF_Rall_spa50_LiPMScov50_C](Figures/AF/Ensemble_Traj_Ensemble_AF_Rall_spa50_LiPMScov50_C.png)  
-![Fract_High-OR_dists_AF_Rall_spa50_LiPMScov50_C](Figures/AF/Fract_High-OR_dists_AF_Rall_spa50_LiPMScov50_C.png)
-  
-#### Alphafold dataset (Randomized) cyto-serum only
-![Ensemble_Traj_Ensemble_AF_Rand_Rall_spa50_LiPMScov50_C](Figures/Rand/AF/Ensemble_Traj_Ensemble_Rand_AF_Rall_spa50_LiPMScov50_C.png)  
-![Fract_High-OR_dists_AF_Rand_Rall_spa50_LiPMScov50_C](Figures/Rand/AF/Fract_High-OR_dists_Rand_AF_Rall_spa50_LiPMScov50_C.png)
+#### Experimental dataset cyto-serum only (Radomized)
+![Ensemble_Traj_system8_EXP_Rand-True_C.png](Figures/Rand-True/EXP/Ensemble_Traj_system8_EXP_Rand-True_C.png)  
+![Fract_High-OR_dists_system8_EXP_Rand-True_C.png](Figures/Rand-True/EXP/Fract_High-OR_dists_system8_EXP_Rand-True_C.png)  
+![PhaseT_system8_EXP_Rand-True_C.png](Figures/Rand-True/EXP/PhaseT_system8_EXP_Rand-True_C.png)  
+Data for these plots can be found [here](data/Rand-True/EXP/)  
