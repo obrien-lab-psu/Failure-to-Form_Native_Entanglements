@@ -131,6 +131,14 @@ class DataAnalysis:
         self.matched_misfolded = self.misfolded_features[self.misfolded_features['gene'].isin(matched_misfolded['gene'].values)]
         print(f'matched_refolded:\n{self.matched_refolded}')
         print(f'matched_misfolded:\n{self.matched_misfolded}')  
+
+        matched_refolded_outpath = os.path.join(self.outpath, 'Matched_refolded.csv')
+        matched_misfolded_outpath = os.path.join(self.outpath, 'Matched_misfolded.csv')
+        self.matched_refolded.to_csv(matched_refolded_outpath, index=False)
+        self.matched_misfolded.to_csv(matched_misfolded_outpath, index=False)
+        print(f'SAVED: {matched_refolded_outpath}')
+        print(f'SAVED: {matched_misfolded_outpath}')
+
     ##########################################################################################################
 
         
