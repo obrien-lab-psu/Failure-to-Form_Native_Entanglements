@@ -33,5 +33,5 @@ if you need help installing a Miniconda you can find instructions [here](https:/
 [Selecting candidates for CG temperature quenching simulations](Candidate_Selection_for_CG_T-quench_Sims/)  
   
 [Association analysis between native entanglement presence and protein essentiality](Association_Native_Entanglements_and_Essentiality/)
-
-
+  
+[Simulations of native entanglement misfolding](Simulations_of_Native_Entanglement_Misfolding/)  
