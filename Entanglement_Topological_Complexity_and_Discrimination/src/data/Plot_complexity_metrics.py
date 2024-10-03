@@ -65,7 +65,7 @@ class DataAnalysis:
         merged_df['qvalue'] = false_discovery_control(merged_df['pvalues'].values)
         print(f'merged_df:\n{merged_df}')
         outfile = f'{self.DataAnalysisOutpath}merged_plotting_df_{tag}.csv'
-        merged_df.to_csv(outfile, sep='|', index=False)
+        merged_df.to_csv(outfile, index=False)
         print(f'SAVED: {outfile}')
 
         fig, axes = plt.subplots(3, 6, figsize=(14, 6))
