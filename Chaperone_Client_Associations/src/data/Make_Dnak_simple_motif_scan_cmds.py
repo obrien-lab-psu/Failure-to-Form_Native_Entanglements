@@ -18,9 +18,9 @@ for set_type in ['EXP', 'AF']:
         NEg = f'-NEg {path_to_slug}/Make_Protein_Feature_Files/Gene_lists/{set_type}/{set_type}_0.6g_C_Rall_spa{spa}_LiPMScov50_nonessential_genes.txt'
         misc = f'-f {path_to_slug}/Chaperone_Client_Associations/Dnak_simple_motif_scan/FASTA/ -r data/{set_type}_genes_pdb_chain.txt -b C -s {spa}'
         if set_type == 'EXP':
-            ents = f'-c {path_to_slug}/Native_Entanglements_in_PDBs/Entanglements/Ecoli/EXP/mapped_NoSlipKNots_clustered_GE/'
+            ents = f'-c {path_to_slug}/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/'
         elif set_type == 'AF':
-            ents = f'-c {path_to_slug}/Native_Entanglements_in_PDBs/Entanglements/Ecoli/AF/unmapped_HQ-AF_HQ-GE_clustered/'
+            ents = f'-c {path_to_slug}/Make_Protein_Feature_Files/Gen_proteome_features_AF/uent_features_lib/'
 
         cmd = ' '.join([script, outpath, misc, Eg, NEg, ents])
         print(cmd)

@@ -214,19 +214,30 @@ class MotifScanner:
             # get the clustered ent file if it exists
             gene_cent_file = [f for f in self.clustered_ent_files if gene in f]
             print(f'gene_cent_file: {gene_cent_file}')
+            df = pd.read_csv(gene_cent_file[0], sep='|')
 
             # loop through entangled residues and get residues within +/- 10 of each crossing and the loop residues
-            if gene_cent_file:
+            if len(df) != 0:
                 ent_present = True
 
                 # map clustered entangled residues to uniprot mapping so i can slice fasta file
                 #cent_ijr = [ast.literal_eval(ijr) for ijr in pd.read_csv(gene_cent_file[0], sep='|')['ijr'].values]
-                df = pd.read_csv(gene_cent_file[0], sep='|')
-                df = df[df['CCBond'] == False]
+
+                df = df[['mapped-NC', 'mapped-crossings']]
                 print(df.to_string())
-                cent_ijr = [ast.literal_eval(ijr) for ijr in df['ijr'].values]
+                cent_ijr = []
+                for rowi, row in df.iterrows():
+                    i,j = row['mapped-NC'].split(',')
+                    i,j = int(i), int(j)
+                    if isinstance(row['mapped-crossings'], str):
+                        r = [int(r) for r in row['mapped-crossings'].split(',')]
+                    else:
+                        r = [row['mapped-crossings']]
+                    #print(i,j,r)
+                    cent_ijr += [(i,j, r)]
+                #cent_ijr = [ast.literal_eval(ijr) for ijr in df['ijr'].values]
                 print(f'cent_ijr: {cent_ijr}')
- 
+
                 
                 threads_seq = []
                 threads_seq_start = []
@@ -253,7 +264,7 @@ class MotifScanner:
                         continue
 
                     # get mapping for crossings
-                    r = [abs(ast.literal_eval(c)) for c in ijr[2:]]
+                    r = ijr[2]
                     crossings = []
                     unmappable_crossing = False
                     for cross in r:
@@ -268,6 +279,7 @@ class MotifScanner:
 
                     mapped_ijr = (i, j, *crossings)
                     print(f'mapped_ijr: {mapped_ijr}')
+
                     for cross in mapped_ijr[2:]:
                         expanded_cross = np.arange(cross - 10, cross + 11)
                         expanded_cross = expanded_cross[expanded_cross >= 1] 
