@@ -110,3 +110,8 @@ options:
                         path to residue feature files
 ``` 
 If you have the [SLUG] then you can use the command files located [here](src/comman_lists/Get_Candidate_info.cmds) to get the candidate info. Since the 10 refolded proteins are randomly selected results may change. Please modify any other pathing as necessary. 
+
+The final set of candidates selected can be found [here](data/Simulation_candidate_summary.xlsx). There are three groups of candidates:  
+1. Matched_refolded - are proteins that were observed to be refolded in the absence of chaperones in the LiPMS experiments.  
+2. Matched_misfolded - are proteins that were in the highest OR states in atleast 70% of the the Monte Carlo Annealing simulation trjaectories and matched to the size distribution of the refolded set.  
+3. UnMatched_misfolded - is a random set of 10 proteins that were in the highest OR states in atleast 70% of the the Monte Carlo Annealing simulation trjaectories.  (picked to be representative of the proteome size distribution)  
