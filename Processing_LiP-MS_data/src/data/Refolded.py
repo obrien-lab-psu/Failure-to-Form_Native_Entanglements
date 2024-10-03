@@ -5,7 +5,7 @@ import os
 import argparse
 from scipy import stats
 import statsmodels.stats.multitest as smm
-
+pd.set_option('display.max_rows', 5000)
 class LiPMSProcessor:
     """
     Class to process and correct LiPMS files for peptide abundance changes.
@@ -94,25 +94,32 @@ class LiPMSProcessor:
         """
         ## only examine the cyto-serum only condition as we want refoldable proteins in the absence of any external help such as chaperones
         buff = file_path.split('/')[-1].split('_')[0]
-        if buff != 'C':
-            return None, None
         timepoint = file_path.split('/')[-1].split('_')[1]
         print(f'Buffer: {buff} & timepoint: {timepoint}')
+        if buff != 'C':
+            return None, None
+        if timepoint not in ['R5min', 'R2hr']:
+            return None, None
+
 
         ## path to outfile containing all peptids
-        all_outf = os.path.basename(file_path).replace('.csv', '_corrected.csv')
-        all_outf = os.path.join(self.outpath, all_outf)
+        outf = os.path.basename(file_path).replace('.csv', '_corrected.csv')
+        outf = os.path.join(self.outpath, outf)
 
         ## Read the file in and do the FDR correction
         df = pd.read_csv(file_path)
         df = df[['Accession', 'proteinaseKsite', 'Peptide Sequence', 'PeptideRatio1', 'PeptidePValue1']]
         df['pvalue_raw'] = 10 ** (-1 * df['PeptidePValue1'])
-        df = df[~df["proteinaseKsite"].str.contains('-')]
-        df = self.apply_corrections(df)
+            
+        all_df = df.copy()
+        all_df = self.apply_corrections(all_df)
 
+        #df = df[~df["proteinaseKsite"].str.contains('-')]
+        df = self.apply_corrections(df)
+      
         # save all corrected PK peptides
-        df.to_csv(all_outf, index=False)
-        #print(f'SAVED: {all_outf} {len(df)}')
+        df.to_csv(outf, index=False)
+        #print(f'SAVED: {outf} {len(df)}')
 
         # get genes where all their peptides are insignificant
         refolded_dfs = []
@@ -122,7 +129,13 @@ class LiPMSProcessor:
 
             # if both the refolded and original df have the same length then all peptides were refolded
             if len(refolded_gene_df) == len(gene_df):
+                #print(f'\n{gene_df.to_string()}')
+                print(f'{gene} is REFOLDED at {buff} and {timepoint}')
+                print(gene_df.to_string())
+                print(refolded_gene_df.to_string())
+                print(all_df[all_df['Accession'] == gene].to_string())
                 refolded_dfs += [gene_df]
+
 
         ## concactenate all refolded genes and get the list regardless of thresholds on spa or lip cov
         refolded_dfs = pd.concat(refolded_dfs)    

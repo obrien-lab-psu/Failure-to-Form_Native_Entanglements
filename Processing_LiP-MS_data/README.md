@@ -148,4 +148,4 @@ options:
                         path to list of ent genes to mask over the set of refolded to get the final set of genes
 ```
 
-If you have the [SLUG] then you can use the command files located [here](src/command_lists/Refolded.cmds) to reproduce the sets of refolded genes done in this work. Please modify any other pathing as necessary. The resulting lists of refolded genes can be found [here](data/Refolded/ALL_Refolded.csv) and for those with native entanglements [here](data/Refolded/ENT_Refolded.csv).  
+If you have the [SLUG] then you can use the command files located [here](src/command_lists/Refolded.cmds) to reproduce the sets of refolded genes done in this work. Please modify any other pathing as necessary. The resulting lists of refolded genes can be found [here](data/Refolded/EXP_all/ALL_Refolded.csv) and for those with native entanglements [here](data/Refolded/EXP_all/ENT_Refolded.csv).  
