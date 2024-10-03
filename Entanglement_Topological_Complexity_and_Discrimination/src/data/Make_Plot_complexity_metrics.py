@@ -8,13 +8,13 @@ import numpy as np
 path_to_slug = '../../../git_slugs/Failure-to-Form_Native_Entanglements_slug'
 for set_type in ['EXP', 'AF']:
     for spa in np.arange(0,100,10):
-        for metric in ['mean', 'median']:
+        for metric in ['mean']:
 
             script = f'python src/data/Plot_complexity_metrics.py'
             outpath = f'-o {path_to_slug}/Entanglement_Topological_Complexity_and_Discrimination/Plots/{set_type}/'
             log = f'-l {path_to_slug}/Entanglement_Topological_Complexity_and_Discrimination/logs/Plot_complexity_metrics_{set_type}_Rall_spa{spa}_LiPMScov50.log'
             merged = f'-m ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/{set_type}/merged_stats_uent_data_\*_{spa}.csv'
-            metric = f'-s {metric} -t {set_type}_{spa}'
+            metric = f'-t {set_type}_spa{spa}_LiPMScov50'
 
 
             cmd = ' '.join([script, outpath, merged, metric, log])

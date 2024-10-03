@@ -138,7 +138,7 @@ class DataAnalysis:
                 medians = []
                 for b in range(n_resamples):
                     boot = np.random.choice(data, replace=True)
-                    medians += [np.median(boot)]
+                    medians += [np.percentile(boot, 50, interpolation='nearest')]
                 lb = np.percentile(medians, 2.5)
                 ub = np.percentile(medians, 97.5)
                 return lb, ub
@@ -154,7 +154,7 @@ class DataAnalysis:
             print(col_data)
 
             mean_val = np.mean(col_data)
-            median_val = np.median(col_data)
+            median_val = np.percentile(col_data, 50, interpolation='nearest')
 
             mean_ci = calculate_bootstrap_ci(col_data, 'mean')
             print('Mean', mean_val, mean_ci)

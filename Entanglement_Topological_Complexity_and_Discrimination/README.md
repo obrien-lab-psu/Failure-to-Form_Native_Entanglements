@@ -68,14 +68,9 @@ LASSO regression scan of inverse regularization strength for the cyto-serum only
   
   
 Comparing the entanglement complexity metric distribution means (Experimental results)  
-![Comparing complexity metric distribution means](Figures/Compare_metrics/EXP/Complexity_measures_EXP_50_mean.png)
-
-Comparing the entanglement complexity metric distribution medians (Experimental results)  
-![Comparing complexity metric distribution medians](Figures/Compare_metrics/EXP/Complexity_measures_EXP_50_median.png)
-  
+![Comparing complexity metric distribution means](Figures/Compare_metrics/EXP/Complexity_measures_EXP_spa50_LiPMScov50.png)
+Plot data can be found [here](data/Compare_metrics/EXP/merged_plotting_df_EXP_spa50_LiPMScov50.csv)  
   
 Comparing the entanglement complexity metric distribution means (Alphafold results)  
-![Comparing complexity metric distribution means](Figures/Compare_metrics/AF/Complexity_measures_AF_50_mean.png)
-
-Comparing the entanglement complexity metric distribution medians (Alphafold results)  
-![Comparing complexity metric distribution medians](Figures/Compare_metrics/AF/Complexity_measures_AF_50_median.png)
+![Comparing complexity metric distribution means](Figures/Compare_metrics/AF/Complexity_measures_AF_spa50_LiPMScov50.png)
+Plot data can be found [here](data/Compare_metrics/AF/merged_plotting_df_AF_spa50_LiPMScov50.csv)

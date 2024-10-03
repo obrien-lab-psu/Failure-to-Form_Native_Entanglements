@@ -2,17 +2,6 @@ import sys, os, re, time, logging
 from sklearn.utils import shuffle
 import ast
 from collections import defaultdict
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LassoCV, Lasso
-from sklearn.datasets import make_regression
-from sklearn.model_selection import StratifiedKFold, KFold, cross_validate, GridSearchCV
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, average_precision_score,f1_score,recall_score,precision_score,roc_auc_score
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
-from sklearn import metrics, preprocessing
-from sklearn.preprocessing import LabelEncoder
 import multiprocessing 
 import argparse
 import math
@@ -58,7 +47,7 @@ class DataAnalysis:
         self.merged_dfs = {f:pd.read_csv(f, sep='|') for f in self.merged_files}
 
     #################################################################################################################
-    def Plot(self, stat_type, tag):
+    def Plot(self, tag):
         
         #        C  fold  balanced_accuracy  accuracy  
         # Create subplots
@@ -75,7 +64,7 @@ class DataAnalysis:
         merged_df = pd.concat(plot_df)
         merged_df['qvalue'] = false_discovery_control(merged_df['pvalues'].values)
         print(f'merged_df:\n{merged_df}')
-        outfile = f'{self.DataAnalysisOutpath}merged_plotting_df_{tag}_{stat_type}.csv'
+        outfile = f'{self.DataAnalysisOutpath}merged_plotting_df_{tag}.csv'
         merged_df.to_csv(outfile, sep='|', index=False)
         print(f'SAVED: {outfile}')
 
@@ -105,7 +94,7 @@ class DataAnalysis:
         for buff_i, buff in enumerate(['C', 'CD', 'CG']):
             buff_df = merged_df[merged_df['buff'] == buff]
             print(f'buff_df:\n{buff_df}')
-
+            
             # Plot each metric
             for i, (idx, row) in enumerate(buff_df.iterrows()):
                 metric = row['metric']
@@ -114,9 +103,10 @@ class DataAnalysis:
                 highest_ub = 0
                 lowest_lb = 999
                 for label in ['Ess', 'NonEss']:
-                    stat = row[f'{label}_{stat_type}']
-                    stat_lb = row[f'{label}_{stat_type}_lb']
-                    stat_ub = row[f'{label}_{stat_type}_ub']
+                    stat = row[f'{label}_mean']
+                    median = row[f'{label}_median']
+                    stat_lb = row[f'{label}_mean_lb']
+                    stat_ub = row[f'{label}_mean_ub']
                     if stat_ub > highest_ub:
                         highest_ub = stat_ub
                         highest_lb = stat_lb
@@ -129,7 +119,7 @@ class DataAnalysis:
                     if label == 'NonEss':
                         color = 'red'
                     axes[i].errorbar(buff_i, stat, yerr=[[stat - stat_lb], [stat_ub - stat]], fmt='o', capsize=5, color=color, label=label)
-                    
+                    axes[i].plot(buff_i, median, color=color, marker='X')
                     # Set title and labels
                     #axes[i].set_title(metric)
                     axes[i].set_xlabel(f'Buffer')
@@ -162,7 +152,7 @@ class DataAnalysis:
 
         plt.tight_layout()
         #plt.show()
-        outfile = f'{self.DataAnalysisOutpath}Complexity_measures_{tag}_{stat_type}.png'
+        outfile = f'{self.DataAnalysisOutpath}Complexity_measures_{tag}.png'
 
         plt.savefig(outfile)
         print(f'SAVED: {outfile}')
@@ -179,14 +169,14 @@ def main():
     parser.add_argument("-m", "--merged_files", type=str, required=True, help=f"path to merged stats file")
     parser.add_argument("-l", "--log_file", type=str, required=True, help="Path to logging file")
     parser.add_argument("-o", "--outpath", type=str, required=True, help="path to output directory. will be made if doesnt exist")
-    parser.add_argument("-s", "--stat_type", type=str, required=True, help="mean or median to use in plots")
+    #parser.add_argument("-s", "--stat_type", type=str, required=True, help="mean or median to use in plots")
     parser.add_argument("-t", "--tag", type=str, required=True, help="tag for output file")
     args = parser.parse_args()
 
     log_file = args.log_file
     outpath = args.outpath
     merged_files = args.merged_files
-    stat_type = args.stat_type
+    #stat_type = args.stat_type
     tag = args.tag
 
     # Setup logging configuration
@@ -202,7 +192,7 @@ def main():
     Analyzer = DataAnalysis(outpath, merged_files)
     print(f'Analyzer: {Analyzer}')
 
-    Analyzer.Plot(stat_type, tag)
+    Analyzer.Plot(tag)
 if __name__ == "__main__":
     main()
 
