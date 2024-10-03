@@ -648,6 +648,8 @@ class Analyzer:
                     'unmapped-NC_wbuff':[],
                     'unmapped-crossings':[], 
                     'unmapped-crossings_wbuff':[], 
+                    'mapped-NC':[],
+                    'mapped-crossings':[], 
                     'loopsize': [], 
                     'num_zipper_nc':[], 
                     'perc_bb_loop':[],
@@ -782,6 +784,7 @@ class Analyzer:
                 pdb_NCi_core = int(float(pdb_NCi_core.replace("(", "").strip()))
                 pdb_NCj_core = int(float(pdb_NCj_core.strip()))
                 pdb_NC_core = [pdb_NCi_core, pdb_NCj_core]
+                pdb_NC_core_mapped = [mapping_pdb2uniprot[pdb_NCi_core], mapping_pdb2uniprot[pdb_NCj_core]]
                 pdb_NC_core_list += pdb_NC_core
 
                 pdb_NCi = np.arange(pdb_NCi_core - rbuffer, pdb_NCi_core + rbuffer + 1)
@@ -793,6 +796,9 @@ class Analyzer:
                 logging.info(f'pdb_NC_core: {pdb_NC_core}')
                 uent_df['unmapped-NC'] += [",".join([str(r) for r in pdb_NC_core])]
                 uent_df['unmapped-NC_wbuff'] += [",".join([str(r) for r in pdb_NC])]
+
+                logging.info(f'pdb_NC_core_mapped: {pdb_NC_core_mapped}')
+                uent_df['mapped-NC'] += [",".join([str(r) for r in pdb_NC_core_mapped])]
 
                 loopsize = pdb_NCj_core - pdb_NCi_core
                 loop_resids = np.arange(pdb_NCi_core, pdb_NCj_core + 1)
@@ -810,14 +816,17 @@ class Analyzer:
                 #########################################################################
                 #get PDB crossings and those +/- rbuffer along the primary structure
                 pdb_crossing_res_core = [abs(int(float(re.findall(r'\d+', cross)[0]))) for cross in line[2:]]
+                pdb_crossing_res_core_mapped = [mapping_pdb2uniprot[r] for r in pdb_crossing_res_core]
                 pdb_crossing_res = np.hstack([np.arange(int(x) - rbuffer, int(x) + rbuffer + 1) for x in pdb_crossing_res_core]).tolist()
                 logging.info(f'pdb_crossing_res: {pdb_crossing_res}')
                 logging.info(f'pdb_crossing_res_core: {pdb_crossing_res_core}')
+                logging.info(f'pdb_crossing_res_core_mapped: {pdb_crossing_res_core_mapped}')
 
                 pdb_crossing_list += pdb_crossing_res
                 pdb_crossing_core_list += pdb_crossing_res_core
                 uent_df['unmapped-crossings'] += [",".join([str(c) for c in pdb_crossing_res_core])]
                 uent_df['unmapped-crossings_wbuff'] += [",".join([str(c) for c in pdb_crossing_res])]
+                uent_df['mapped-crossings'] += [",".join([str(c) for c in pdb_crossing_res_core_mapped])]
 
                 ### Get residues in contact with crossing residues +/- cbuff
                 cross_alpha_carbon_indices = [atom.index for atom in traj.top.atoms if atom.name == 'CA' if atom.residue.resSeq in pdb_crossing_res]
@@ -831,9 +840,9 @@ class Analyzer:
 
                 #########################################################################
                 ## Get number of threads in each termini and depth
-                N_term_thread = [c for c in pdb_crossing_res_core if c < pdb_NCi_core]            
+                N_term_thread = [c for c in pdb_crossing_res_core_mapped if c < pdb_NC_core_mapped[0]]            
                 num_N_term_thread = len(N_term_thread)
-                C_term_thread = [c for c in pdb_crossing_res_core if c > pdb_NCj_core]            
+                C_term_thread = [c for c in pdb_crossing_res_core_mapped if c > pdb_NC_core_mapped[1]]            
                 num_C_term_thread = len(C_term_thread)
                 logging.info(f'N_term_thread: {N_term_thread}')
 
@@ -843,7 +852,7 @@ class Analyzer:
 
                 if num_N_term_thread != 0:
                     min_N_thread_slippage_left = min(N_term_thread)
-                    min_N_thread_depth_left = min_N_thread_slippage_left / pdb_NCi_core
+                    min_N_thread_depth_left = min_N_thread_slippage_left / pdb_NC_core_mapped[0]
                     min_N_prot_depth_left = min_N_thread_slippage_left / prot_size
                 else:
                     min_N_thread_slippage_left = np.nan
@@ -855,7 +864,7 @@ class Analyzer:
 
                 if num_C_term_thread != 0:
                     min_C_thread_slippage_right = prot_size - max(C_term_thread)
-                    min_C_thread_depth_right = min_C_thread_slippage_right / (prot_size - pdb_NCj_core)
+                    min_C_thread_depth_right = min_C_thread_slippage_right / (prot_size - pdb_NC_core_mapped[1])
                     min_C_prot_depth_right = min_C_thread_slippage_right / prot_size
                 else:
                     min_C_thread_slippage_right = np.nan
