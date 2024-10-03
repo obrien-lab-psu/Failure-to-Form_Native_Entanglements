@@ -118,8 +118,13 @@ class DataAnalysis:
                         color = 'blue'
                     if label == 'NonEss':
                         color = 'red'
-                    axes[i].errorbar(buff_i, stat, yerr=[[stat - stat_lb], [stat_ub - stat]], fmt='o', capsize=5, color=color, label=label)
-                    axes[i].plot(buff_i, median, color=color, marker='X')
+                    #only add the label once
+                    if buff_i == 0:
+                        axes[i].errorbar(buff_i, stat, yerr=[[stat - stat_lb], [stat_ub - stat]], fmt='o', capsize=5, color=color, label=f'{label} mean (95% c.i.)')
+                        axes[i].plot(buff_i, median, color=color, marker='x', label=f'{label} median')
+                    else:
+                        axes[i].errorbar(buff_i, stat, yerr=[[stat - stat_lb], [stat_ub - stat]], fmt='o', capsize=5, color=color)
+                        axes[i].plot(buff_i, median, color=color, marker='x')
                     # Set title and labels
                     #axes[i].set_title(metric)
                     axes[i].set_xlabel(f'Buffer')
@@ -148,7 +153,7 @@ class DataAnalysis:
                 if annotation:
                     axes[i].text(buff_i, highest_ub, annotation, ha='center', va='bottom', fontsize=12, color='red')
 
-        axes[5].legend(loc='upper right', bbox_to_anchor=(2, 1))
+        axes[5].legend(loc='upper left', bbox_to_anchor=(1, 1))
 
         plt.tight_layout()
         #plt.show()
