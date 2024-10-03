@@ -278,7 +278,7 @@ class DataAnalysis:
         cdf_outfile = os.path.join(self.outpath, f'Fract_High-OR_Cdists_{title}.csv')
 
         # First subplot: Normalized Histogram
-        H, bins, _ = ax[0].hist(dist_df['F'].values, bins=30, density=False, alpha=0.7, color='blue', width=0.05)
+        H, bins, _ = ax[0].hist(dist_df['F'].values, bins=20, density=False, alpha=0.7, color='blue', width=0.01)
         ax[0].set_title('Normalized Histogram')
         ax[0].set_xlabel('Fraction traj in High-OR')
         ax[0].set_ylabel('Frequency')
@@ -298,7 +298,7 @@ class DataAnalysis:
         sorted_F = sorted_data['F'].values
         cdf = np.arange(1, len(sorted_F) + 1) / len(sorted_F)
         
-        ax[1].bar(sorted_F, cdf, width=0.05, color='red', alpha=0.7)
+        ax[1].bar(sorted_F, cdf, width=0.01, color='red', alpha=0.7)
         ax[1].set_title('Cumulative Distribution Function (CDF)')
         ax[1].set_xlabel('Fraction traj in High-OR')
         ax[1].set_ylabel('CDF')
@@ -641,13 +641,13 @@ class DataAnalysis:
         #self.Plot_traj(C_data, f'{self.tag}_C')
 
         # plot the enesmble of traj in a single plot
-        self.Plot_ensem(C_data, f'{self.tag}_C', num_states)
+        #self.Plot_ensem(C_data, f'{self.tag}_C', num_states)
        
         # Get the overlap of gene histograms and CDF across the highest OR state in each traj
         self.State_overlap(C_data, f'{self.tag}_C')
 
         # plot the phase transition
-        self.plot_phaseT(C_data, f'{self.tag}_C')
+        #self.plot_phaseT(C_data, f'{self.tag}_C')
 
         logging.info(f'NORMAL TERMINATION {time.time() - start_time}')
     ##########################################################################################################

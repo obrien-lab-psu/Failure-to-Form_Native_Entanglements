@@ -12,13 +12,13 @@ import sys,os
 import numpy as np
 
 path_to_slug = '../../../git_slugs/Failure-to-Form_Native_Entanglements_slug'
-for buff in ['C', 'CD', 'CG']:
+for buff in ['C']:
     for random in ['False', 'True']:
-        for set_type in ['EXP']:
-            for i in range(0,10):
+        for set_type in ['EXP', 'AF']:
+            for i in range(0, 20):
 
                 #script = f'python src/data/Optimizer_SimulatedAnnealing.py'
-                script = f'python src/data/Optimizer_SimulatedAnnealing_prod.py'
+                script = f'python src/data/Optimizer_SimulatedAnnealing.py'
                 outpath = f'-o {path_to_slug}/Candidate_Selection_for_CG_T-quench_Sims/prod/Rand-{random}/{set_type}/{i}/'
                 f = f'-f {path_to_slug}/Make_Protein_Feature_Files/Gen_proteome_features_{set_type}/res_features_lib/'       
                 ent_gene_list = f'--ent_gene_list {path_to_slug}/Make_Protein_Feature_Files/Gene_lists/{set_type}/{set_type}_0.6g_{buff}_Rall_spa50_LiPMScov50_ent_genes.txt' 
@@ -26,10 +26,11 @@ for buff in ['C', 'CD', 'CG']:
 
                 logs = f'-l {path_to_slug}/Candidate_Selection_for_CG_T-quench_Sims/prod/logs/{set_type}_{buff}_{i}_Rand-{random}_linearT-False.log'
                 #tag  = f'-t {set_type}_{buff}_traj{i} -b {buff} -s 50 -c 50 -r "cut_{buff}_Rall ~ AA + region" --random {random} -n 5 -beta 0.05 -C1 1 -C2 2.5 --steps 100000'
-                tag  = f'-t {set_type}_{buff}_traj{i} -b {buff} -s 50 -c 50 -r "cut_{buff}_Rall ~ AA + region" --random {random} -n 4 -beta 0.05 -C1 1 -C2 2.5 -C3 0 --steps 300000 -linearT False'
+                tag  = f'-t {set_type}_{buff}_traj{i} -b {buff} -s 50 -c 50 -r "cut_{buff}_Rall ~ AA + region" --random {random} -n 4 -beta 0.05 -C1 1 -C2 2.5 -C3 0 --steps 200000 -linearT False'
 
                 cmd = ' '.join([script, outpath, f, ent_gene_list, nonRefold_gene_list, tag, logs])
                 print(cmd)
+
 
 
 quit()   

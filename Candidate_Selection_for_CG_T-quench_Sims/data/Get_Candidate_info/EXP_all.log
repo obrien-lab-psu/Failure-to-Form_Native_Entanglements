@@ -1,0 +1,413 @@
+Loading data
+refolded_genes: ['P61175' 'P0ADY3' 'P77754' 'P0A7N9' 'P0AG51' 'P0A6T9' 'P77214' 'P0ADZ0'
+ 'P0A6E6'] 9
+misfolded_genes: ['P0A6B4' 'P0A790' 'P0AES0' 'P0ACP7' 'P06715' 'P0AFG6' 'P0A855' 'P0AA25'
+ 'P60438' 'P09158' 'P0A7J3' 'P60906' 'P21599' 'P0A763' 'P0A6L2' 'P04816'
+ 'P0AB77' 'P65556' 'P60546' 'Q46856' 'P75823' 'P45748' 'P0A8M3' 'P0ABP8'
+ 'P23882' 'P0A6I0' 'P00934' 'P0AGE9' 'P22188' 'P12758' 'P00864' 'P04425'
+ 'P22259' 'P31142' 'P0A8I5' 'P37747' 'P0A6F3' 'P0AGJ9'] 38
+overlap: set()
+misfolded_features:
+     gene   PDB chain  ENT-ID  ...       RCO  #-mapped  #-unmapped  #-missing
+0  P0A6B4  4WR3     A       1  ...  0.083565       359           0          0
+1  P0A6B4  4WR3     A       2  ...  0.488394       359           0          0
+2  P0A6B4  4WR3     A       3  ...  0.639624       359           0          0
+3  P0A6B4  4WR3     A       4  ...  0.112349       359           0          0
+4  P0A6B4  4WR3     A       5  ...  0.135097       359           0          0
+0  P0A790  4CRZ     A       1  ...  0.209325       126           1          0
+1  P0A790  4CRZ     A       2  ...  0.338501       126           1          0
+0  P0AES0  2IO9     B       1  ...  0.095939       603           0         16
+1  P0AES0  2IO9     B       2  ...  0.170090       603           0         16
+2  P0AES0  2IO9     B       3  ...  0.091115       603           0         16
+3  P0AES0  2IO9     B       4  ...  0.211389       603           0         16
+4  P0AES0  2IO9     B       5  ...  0.211842       603           0         16
+5  P0AES0  2IO9     B       6  ...  0.395648       603           0         16
+6  P0AES0  2IO9     B       7  ...  0.071890       603           0         16
+0  P0ACP7  1QPZ     A       1  ...  0.484647       339           0          2
+1  P0ACP7  1QPZ     A       2  ...  0.169250       339           0          2
+0  P06715  1GER     B       1  ...  0.692222       449           0          1
+1  P06715  1GER     B       2  ...  0.185000       449           0          1
+2  P06715  1GER     B       3  ...  0.288889       449           0          1
+3  P06715  1GER     B       4  ...  0.366857       449           0          1
+0  P0AFG6  1SCZ     A       1  ...  0.362963       233           0        172
+1  P0AFG6  1SCZ     A       2  ...  0.288889       233           0        172
+0  P0A855  2HQS     A       1  ...  0.204712       408           4         22
+0  P0AA25  6LUR     D       1  ...  0.377982       109         104          0
+1  P0AA25  6LUR     D       2  ...  0.465067       109         104          0
+0  P60438  6PCR     N       1  ...  0.161085       209           0          0
+1  P60438  6PCR     N       2  ...  0.767943       209           0          0
+2  P60438  6PCR     N       3  ...  0.136364       209           0          0
+0  P09158  3O4F     A       1  ...  0.544147       282           0          6
+1  P09158  3O4F     A       2  ...  0.163194       282           0          6
+2  P09158  3O4F     A       3  ...  0.218750       282           0          6
+0  P0A7J3  6XZ7     H       1  ...  0.225895       135           0         30
+1  P0A7J3  6XZ7     H       2  ...  0.278182       135           0         30
+0  P60906  1HTT     B       1  ...  0.133101       191         166        233
+0  P21599  6K0K     A       1  ...  0.625000       479           0          1
+1  P21599  6K0K     A       2  ...  0.722917       479           0          1
+2  P21599  6K0K     A       3  ...  0.043750       479           0          1
+3  P21599  6K0K     A       4  ...  0.155208       479           0          1
+4  P21599  6K0K     A       5  ...  0.628030       479           0          1
+0  P0A763  2HUR     C       1  ...  0.299301       142           0          1
+1  P0A763  2HUR     C       2  ...  0.514685       142           0          1
+0  P0A6L2  1DHP     A       1  ...  0.729452       292           0          0
+1  P0A6L2  1DHP     A       2  ...  0.704271       292           0          0
+0  P04816  1USG     A       1  ...  0.645761       345           1         24
+1  P04816  1USG     A       2  ...  0.152665       345           1         24
+0  P0AB77  1FC4     B       1  ...  0.231156       397           4          1
+1  P0AB77  1FC4     B       2  ...  0.766911       397           4          1
+2  P0AB77  1FC4     B       3  ...  0.410176       397           4          1
+3  P0AB77  1FC4     B       4  ...  0.434830       397           4          1
+4  P0AB77  1FC4     B       5  ...  0.140285       397           4          1
+0  P65556  2FKB     A       1  ...  0.169444       161           0         19
+1  P65556  2FKB     A       2  ...  0.487222       161           0         19
+2  P65556  2FKB     A       3  ...  0.297222       161           0         19
+0  P60546  2ANB     A       1  ...  0.171498       206           0          1
+1  P60546  2ANB     A       2  ...  0.425121       206           0          1
+2  P60546  2ANB     A       3  ...  0.684211       206           0          1
+0  Q46856  1OJ7     D       1  ...  0.540913       387           3          0
+1  Q46856  1OJ7     D       2  ...  0.243217       387           3          0
+2  Q46856  1OJ7     D       3  ...  0.183463       387           3          0
+3  Q46856  1OJ7     D       4  ...  0.348837       387           3          0
+4  Q46856  1OJ7     D       5  ...  0.205168       387           3          0
+0  P75823  3WLX     B       1  ...  0.246246       332           0          1
+1  P75823  3WLX     B       2  ...  0.890390       332           0          1
+2  P75823  3WLX     B       3  ...  0.249529       332           0          1
+3  P75823  3WLX     B       4  ...  0.521599       332           0          1
+0  P45748  1HRU     A       1  ...  0.184211       186           0          4
+1  P45748  1HRU     A       2  ...  0.270175       186           0          4
+2  P45748  1HRU     A       3  ...  0.542659       186           0          4
+0  P0A8M3  1QF6     A       1  ...  0.098261       641           0          1
+1  P0A8M3  1QF6     A       2  ...  0.255832       641           0          1
+2  P0A8M3  1QF6     A       3  ...  0.185358       641           0          1
+3  P0A8M3  1QF6     A       4  ...  0.100467       641           0          1
+4  P0A8M3  1QF6     A       5  ...  0.060935       641           0          1
+5  P0A8M3  1QF6     A       6  ...  0.083435       641           0          1
+0  P0ABP8  3ONV     C       1  ...  0.156904       237           0          2
+1  P0ABP8  3ONV     C       2  ...  0.746311       237           0          2
+2  P0ABP8  3ONV     C       3  ...  0.246862       237           0          2
+3  P0ABP8  3ONV     C       4  ...  0.309623       237           0          2
+0  P23882  2FMT     A       1  ...  0.182684       314           0          1
+1  P23882  2FMT     A       2  ...  0.211640       314           0          1
+0  P0A6I0  1KDO     A       1  ...  0.509545       223           0          4
+1  P0A6I0  1KDO     A       2  ...  0.844714       223           0          4
+2  P0A6I0  1KDO     A       3  ...  0.207048       223           0          4
+3  P0A6I0  1KDO     A       4  ...  0.214842       223           0          4
+0  P00934  1VB3     A       1  ...  0.627726       428           0          0
+1  P00934  1VB3     A       2  ...  0.158879       428           0          0
+2  P00934  1VB3     A       3  ...  0.250000       428           0          0
+3  P00934  1VB3     A       4  ...  0.287383       428           0          0
+4  P00934  1VB3     A       5  ...  0.400200       428           0          0
+5  P00934  1VB3     A       6  ...  0.532635       428           0          0
+6  P00934  1VB3     A       7  ...  0.132447       428           0          0
+7  P00934  1VB3     A       8  ...  0.516793       428           0          0
+0  P0AGE9  1JKJ     A       1  ...  0.269640       287           0          2
+1  P0AGE9  1JKJ     A       2  ...  0.327991       287           0          2
+0  P22188  1E8C     A       1  ...  0.357576       492           4          3
+1  P22188  1E8C     A       2  ...  0.202020       492           4          3
+2  P22188  1E8C     A       3  ...  0.120346       492           4          3
+3  P22188  1E8C     A       4  ...  0.162458       492           4          3
+4  P22188  1E8C     A       5  ...  0.385032       492           4          3
+0  P12758  1K3F     C       1  ...  0.218379       253           0          0
+1  P12758  1K3F     C       2  ...  0.222332       253           0          0
+2  P12758  1K3F     C       3  ...  0.158667       253           0          0
+3  P12758  1K3F     C       4  ...  0.690305       253           0          0
+4  P12758  1K3F     C       5  ...  0.344093       253           0          0
+0  P00864  1JQN     A       1  ...  0.605606       874           0          9
+1  P00864  1JQN     A       2  ...  0.498301       874           0          9
+2  P00864  1JQN     A       3  ...  0.073864       874           0          9
+3  P00864  1JQN     A       4  ...  0.465510       874           0          9
+4  P00864  1JQN     A       5  ...  0.144394       874           0          9
+0  P04425  1GSA     A       1  ...  0.156789       314           0          2
+1  P04425  1GSA     A       2  ...  0.196598       314           0          2
+2  P04425  1GSA     A       3  ...  0.231465       314           0          2
+0  P22259  1OS1     A       1  ...  0.593210       537           0          3
+1  P22259  1OS1     A       2  ...  0.269753       537           0          3
+2  P22259  1OS1     A       3  ...  0.265488       537           0          3
+3  P22259  1OS1     A       4  ...  0.117901       537           0          3
+4  P22259  1OS1     A       5  ...  0.172685       537           0          3
+5  P22259  1OS1     A       6  ...  0.431965       537           0          3
+6  P22259  1OS1     A       7  ...  0.095926       537           0          3
+7  P22259  1OS1     A       8  ...  0.229821       537           0          3
+0  P31142  1URH     A       1  ...  0.207730       262           1         19
+1  P31142  1URH     A       2  ...  0.351127       262           1         19
+2  P31142  1URH     A       3  ...  0.288486       262           1         19
+3  P31142  1URH     A       4  ...  0.190391       262           1         19
+0  P0A8I5  3DXX     A       1  ...  0.327461       205           3         34
+1  P0A8I5  3DXX     A       2  ...  0.264156       205           3         34
+0  P37747  1I8T     A       1  ...  0.510956       367           0          0
+1  P37747  1I8T     A       2  ...  0.444472       367           0          0
+2  P37747  1I8T     A       3  ...  0.749319       367           0          0
+3  P37747  1I8T     A       4  ...  0.059946       367           0          0
+4  P37747  1I8T     A       5  ...  0.035422       367           0          0
+0  P0A6F3  1GLF     Y       1  ...  0.145418       499           0          3
+1  P0A6F3  1GLF     Y       2  ...  0.185828       499           0          3
+2  P0A6F3  1GLF     Y       3  ...  0.312749       499           0          3
+3  P0A6F3  1GLF     Y       4  ...  0.270363       499           0          3
+4  P0A6F3  1GLF     Y       5  ...  0.235724       499           0          3
+0  P0AGJ9  6HB5     B       1  ...  0.340802       417           0          7
+1  P0AGJ9  6HB5     B       2  ...  0.435142       417           0          7
+2  P0AGJ9  6HB5     B       3  ...  0.173821       417           0          7
+
+[139 rows x 32 columns]
+P61175 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P61175_6XZ7_S_native_uents.csv']
+P0ADY3 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P0ADY3_6XZ7_K_native_uents.csv']
+P77754 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P77754_6BIE_A_native_uents.csv']
+P0A7N9 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P0A7N9_6XZ7_b_native_uents.csv']
+P0AG51 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P0AG51_6XZ7_Z_native_uents.csv']
+P0A6T9 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P0A6T9_3A7L_A_native_uents.csv']
+P77214 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P77214_1ZEQ_X_native_uents.csv']
+P0ADZ0 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P0ADZ0_6QUL_U_native_uents.csv']
+P0A6E6 ['../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/uent_features_lib/P0A6E6_1AQT_A_native_uents.csv']
+refolded_features:
+     gene   PDB chain  ENT-ID  ...       RCO  #-mapped  #-unmapped  #-missing
+0  P61175  6XZ7     S     1.0  ...  0.645455       110           0          0
+0  P0ADY3  6XZ7     K     1.0  ...  0.426829       123           0          0
+0  P77754  6BIE     A     NaN  ...       NaN        96           1         65
+0  P0A7N9  6XZ7     b     NaN  ...       NaN        51           0          4
+0  P0AG51  6XZ7     Z     NaN  ...       NaN        58           0          1
+0  P0A6T9  3A7L     A     1.0  ...  0.426357       128           0          1
+0  P77214  1ZEQ     X     NaN  ...       NaN        83           1         27
+0  P0ADZ0  6QUL     U     NaN  ...       NaN        95           0          5
+0  P0A6E6  1AQT     A     NaN  ...       NaN       134           1          5
+
+[9 rows x 32 columns]
+Matching 10 refolded to misfolded 
+misfold_sizes:
+      gene  prot_size
+0   P00864        883
+1   P00934        428
+2   P04425        316
+3   P04816        369
+4   P06715        450
+5   P09158        288
+6   P0A6B4        359
+7   P0A6F3        502
+8   P0A6I0        227
+9   P0A6L2        292
+10  P0A763        143
+11  P0A790        126
+12  P0A7J3        165
+13  P0A855        430
+14  P0A8I5        239
+15  P0A8M3        642
+16  P0AA25        109
+17  P0AB77        398
+18  P0ABP8        239
+19  P0ACP7        341
+20  P0AES0        619
+21  P0AFG6        405
+22  P0AGE9        289
+23  P0AGJ9        424
+24  P12758        253
+25  P21599        480
+26  P22188        495
+27  P22259        540
+28  P23882        315
+29  P31142        281
+30  P37747        367
+31  P45748        190
+32  P60438        209
+33  P60546        207
+34  P60906        424
+35  P65556        180
+36  P75823        333
+37  Q46856        387
+count     38.000000
+mean     351.157895
+std      158.322204
+min      109.000000
+25%      239.000000
+50%      337.000000
+75%      427.000000
+max      883.000000
+Name: prot_size, dtype: float64
+refolded_sizes:
+     gene  prot_size
+0  P0A6E6        139
+1  P0A6T9        129
+2  P0A7N9         55
+3  P0ADY3        123
+4  P0ADZ0        100
+5  P0AG51         59
+6  P61175        110
+7  P77214        110
+8  P77754        161
+count      9.000000
+mean     109.555556
+std       34.814189
+min       55.000000
+25%      100.000000
+50%      110.000000
+75%      129.000000
+max      161.000000
+Name: prot_size, dtype: float64
+refolded_sizes:
+     gene  prot_size
+0  P0A6E6        139
+1  P0A6T9        129
+2  P0A7N9         55
+3  P0ADY3        123
+4  P0ADZ0        100
+5  P0AG51         59
+6  P61175        110
+7  P77214        110
+8  P77754        161
+unmatched_misfolded_sizes
+:      gene  prot_size
+30  P37747        367
+33  P60546        207
+9   P0A6L2        292
+37  Q46856        387
+20  P0AES0        619
+19  P0ACP7        341
+29  P31142        281
+14  P0A8I5        239
+25  P21599        480
+6   P0A6B4        359
+matched_refolded:
+     gene  prot_size
+0  P0A7N9         55
+1  P0AG51         59
+2  P0ADZ0        100
+3  P61175        110
+4  P77214        110
+5  P0ADY3        123
+6  P0A6T9        129
+7  P0A6E6        139
+8  P77754        161
+matched_misfolded:
+     gene  prot_size
+0  P0AA25        109
+1  P0A790        126
+2  P0A763        143
+3  P0A7J3        165
+4  P65556        180
+5  P45748        190
+6  P60546        207
+7  P60438        209
+8  P0A6I0        227
+matched_refolded:
+     gene   PDB chain  length  ...       RCO  #-mapped  #-unmapped  #-missing
+0  P0A7N9  6XZ7     b      55  ...       NaN        51           0          4
+0  P0AG51  6XZ7     Z      59  ...       NaN        58           0          1
+0  P0ADZ0  6QUL     U     100  ...       NaN        95           0          5
+0  P61175  6XZ7     S     110  ...  0.645455       110           0          0
+0  P77214  1ZEQ     X     110  ...       NaN        83           1         27
+0  P0ADY3  6XZ7     K     123  ...  0.426829       123           0          0
+0  P0A6T9  3A7L     A     129  ...  0.426357       128           0          1
+0  P0A6E6  1AQT     A     139  ...       NaN       134           1          5
+0  P77754  6BIE     A     161  ...       NaN        96           1         65
+
+[9 rows x 30 columns]
+           length  ENT-ID        Gn  ...    #-mapped  #-unmapped  #-missing
+count    9.000000     3.0  3.000000  ...    9.000000    9.000000   9.000000
+mean   109.555556     1.0 -0.010183  ...   97.555556    0.333333  12.000000
+std     34.814189     0.0  0.017638  ...   29.601989    0.500000  21.581242
+min     55.000000     1.0 -0.030550  ...   51.000000    0.000000   0.000000
+25%    100.000000     1.0 -0.015275  ...   83.000000    0.000000   1.000000
+50%    110.000000     1.0  0.000000  ...   96.000000    0.000000   4.000000
+75%    129.000000     1.0  0.000000  ...  123.000000    1.000000   5.000000
+max    161.000000     1.0  0.000000  ...  134.000000    1.000000  65.000000
+
+[8 rows x 23 columns]
+matched_misfolded:
+     gene   PDB chain  length  ...       RCO  #-mapped  #-unmapped  #-missing
+0  P0AA25  6LUR     D     109  ...  0.377982       109         104          0
+1  P0AA25  6LUR     D     109  ...  0.465067       109         104          0
+0  P0A790  4CRZ     A     126  ...  0.209325       126           1          0
+1  P0A790  4CRZ     A     126  ...  0.338501       126           1          0
+1  P0A763  2HUR     C     143  ...  0.514685       142           0          1
+0  P0A763  2HUR     C     143  ...  0.299301       142           0          1
+0  P0A7J3  6XZ7     H     165  ...  0.225895       135           0         30
+1  P0A7J3  6XZ7     H     165  ...  0.278182       135           0         30
+2  P65556  2FKB     A     180  ...  0.297222       161           0         19
+1  P65556  2FKB     A     180  ...  0.487222       161           0         19
+0  P65556  2FKB     A     180  ...  0.169444       161           0         19
+0  P45748  1HRU     A     190  ...  0.184211       186           0          4
+1  P45748  1HRU     A     190  ...  0.270175       186           0          4
+2  P45748  1HRU     A     190  ...  0.542659       186           0          4
+0  P60546  2ANB     A     207  ...  0.171498       206           0          1
+1  P60546  2ANB     A     207  ...  0.425121       206           0          1
+2  P60546  2ANB     A     207  ...  0.684211       206           0          1
+1  P60438  6PCR     N     209  ...  0.767943       209           0          0
+0  P60438  6PCR     N     209  ...  0.161085       209           0          0
+2  P60438  6PCR     N     209  ...  0.136364       209           0          0
+2  P0A6I0  1KDO     A     227  ...  0.207048       223           0          4
+0  P0A6I0  1KDO     A     227  ...  0.509545       223           0          4
+1  P0A6I0  1KDO     A     227  ...  0.844714       223           0          4
+3  P0A6I0  1KDO     A     227  ...  0.214842       223           0          4
+
+[24 rows x 30 columns]
+           length     ENT-ID         Gn  ...    #-mapped  #-unmapped  #-missing
+count   24.000000  24.000000  24.000000  ...   24.000000   24.000000  24.000000
+mean   181.333333   1.916667  -0.024652  ...  175.083333    8.750000   6.250000
+std     37.824155   0.880547   0.582848  ...   39.237201   29.337985   9.469631
+min    109.000000   1.000000  -0.935140  ...  109.000000    0.000000   0.000000
+25%    159.500000   1.000000  -0.523467  ...  140.250000    0.000000   0.000000
+50%    190.000000   2.000000   0.000000  ...  186.000000    0.000000   2.500000
+75%    209.000000   2.250000   0.609992  ...  209.000000    0.000000   4.000000
+max    227.000000   4.000000   0.864800  ...  223.000000  104.000000  30.000000
+
+[8 rows x 23 columns]
+unmatched_misfolded:
+     gene   PDB chain  length  ...       RCO  #-mapped  #-unmapped  #-missing
+2  P60546  2ANB     A     207  ...  0.684211       206           0          1
+1  P60546  2ANB     A     207  ...  0.425121       206           0          1
+0  P60546  2ANB     A     207  ...  0.171498       206           0          1
+1  P0A8I5  3DXX     A     239  ...  0.264156       205           3         34
+0  P0A8I5  3DXX     A     239  ...  0.327461       205           3         34
+3  P31142  1URH     A     281  ...  0.190391       262           1         19
+2  P31142  1URH     A     281  ...  0.288486       262           1         19
+1  P31142  1URH     A     281  ...  0.351127       262           1         19
+0  P31142  1URH     A     281  ...  0.207730       262           1         19
+0  P0A6L2  1DHP     A     292  ...  0.729452       292           0          0
+1  P0A6L2  1DHP     A     292  ...  0.704271       292           0          0
+1  P0ACP7  1QPZ     A     341  ...  0.169250       339           0          2
+0  P0ACP7  1QPZ     A     341  ...  0.484647       339           0          2
+0  P0A6B4  4WR3     A     359  ...  0.083565       359           0          0
+1  P0A6B4  4WR3     A     359  ...  0.488394       359           0          0
+2  P0A6B4  4WR3     A     359  ...  0.639624       359           0          0
+3  P0A6B4  4WR3     A     359  ...  0.112349       359           0          0
+4  P0A6B4  4WR3     A     359  ...  0.135097       359           0          0
+4  P37747  1I8T     A     367  ...  0.035422       367           0          0
+2  P37747  1I8T     A     367  ...  0.749319       367           0          0
+1  P37747  1I8T     A     367  ...  0.444472       367           0          0
+0  P37747  1I8T     A     367  ...  0.510956       367           0          0
+3  P37747  1I8T     A     367  ...  0.059946       367           0          0
+4  Q46856  1OJ7     D     387  ...  0.205168       387           3          0
+3  Q46856  1OJ7     D     387  ...  0.348837       387           3          0
+2  Q46856  1OJ7     D     387  ...  0.183463       387           3          0
+0  Q46856  1OJ7     D     387  ...  0.540913       387           3          0
+1  Q46856  1OJ7     D     387  ...  0.243217       387           3          0
+4  P21599  6K0K     A     480  ...  0.628030       479           0          1
+3  P21599  6K0K     A     480  ...  0.155208       479           0          1
+2  P21599  6K0K     A     480  ...  0.043750       479           0          1
+1  P21599  6K0K     A     480  ...  0.722917       479           0          1
+0  P21599  6K0K     A     480  ...  0.625000       479           0          1
+6  P0AES0  2IO9     B     619  ...  0.071890       603           0         16
+2  P0AES0  2IO9     B     619  ...  0.091115       603           0         16
+1  P0AES0  2IO9     B     619  ...  0.170090       603           0         16
+0  P0AES0  2IO9     B     619  ...  0.095939       603           0         16
+3  P0AES0  2IO9     B     619  ...  0.211389       603           0         16
+4  P0AES0  2IO9     B     619  ...  0.211842       603           0         16
+5  P0AES0  2IO9     B     619  ...  0.395648       603           0         16
+
+[40 rows x 30 columns]
+           length     ENT-ID         Gn  ...    #-mapped  #-unmapped  #-missing
+count   40.000000  40.000000  40.000000  ...   40.000000    40.00000  40.000000
+mean   394.675000   2.825000   0.295131  ...  387.975000     0.62500   6.700000
+std    127.280306   1.599479   0.532117  ...  126.540049     1.14774   9.829834
+min    207.000000   1.000000  -0.865150  ...  205.000000     0.00000   0.000000
+25%    292.000000   1.750000  -0.005752  ...  292.000000     0.00000   0.000000
+50%    367.000000   2.500000   0.611555  ...  367.000000     0.00000   1.000000
+75%    480.000000   4.000000   0.706235  ...  479.000000     1.00000  16.000000
+max    619.000000   7.000000   1.047700  ...  603.000000     3.00000  34.000000
+
+[8 rows x 23 columns]
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Candidate_Selection_for_CG_T-quench_Sims/Get_Candidate_info/MisEXP_RefEXP/Matched_refolded.csv
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Candidate_Selection_for_CG_T-quench_Sims/Get_Candidate_info/MisEXP_RefEXP/Matched_misfolded.csv
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Candidate_Selection_for_CG_T-quench_Sims/Get_Candidate_info/MisEXP_RefEXP/UnMatched_misfolded.csv
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Candidate_Selection_for_CG_T-quench_Sims/Get_Candidate_info/MisEXP_RefEXP/Matched_refolded_stats.csv
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Candidate_Selection_for_CG_T-quench_Sims/Get_Candidate_info/MisEXP_RefEXP/Matched_misfolded_stats.csv
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Candidate_Selection_for_CG_T-quench_Sims/Get_Candidate_info/MisEXP_RefEXP/UnMatched_misfolded_stats.csv

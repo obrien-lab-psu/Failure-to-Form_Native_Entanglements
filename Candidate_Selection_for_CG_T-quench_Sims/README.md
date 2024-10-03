@@ -87,11 +87,11 @@ Data for these plots can be found [here](data/Rand-False/EXP/)
 Data for these plots can be found [here](data/Rand-True/EXP/)  
 
 ## Getting info for final refolded and misfolded candidates 
-Here we randomly select 10 of the [refolded candidates](../Processing_LiP-MS_data/data/Refolded/ALL_Refolded.csv) and then select 10 candidates that most closely match the size distribution from those [misfolded candidates](data/Rand-False/EXP/Fract_High-OR_Cdists_system8_EXP_Rand-False_C.csv) that were present in the highest OR state atleast 70% of the time.  
+Here we randomly select 10 of the [refolded candidates](../Processing_LiP-MS_data/data/Refolded/EXP_all/ALL_Refolded.csv) and then select 10 candidates that most closely match the size distribution from those [misfolded candidates](data/Rand-False/EXP/Fract_High-OR_Cdists_system8_EXP_Rand-False_C.csv) that were present in the highest OR state atleast 70% of the time.  
 
 ### Usage of [Get_Candidate_info.py](src/data/Get_Candidate_info.py)
 ```
-usage: Get_Candidate_info.py [-h] -r REFOLDED -o OUTPATH -m MISFOLDED -l LOG -e ENT_FEATURES
+usage: Get_Candidate_info.py [-h] -r REFOLDED -o OUTPATH -m MISFOLDED -l LOG -e ENT_FEATURES -f RES_FEATURES
 
 Process user specified arguments
 
@@ -106,5 +106,7 @@ options:
   -l LOG, --log LOG     Path to logging file
   -e ENT_FEATURES, --ent_features ENT_FEATURES
                         path to unique ent feature file
+  -f RES_FEATURES, --res_features RES_FEATURES
+                        path to residue feature files
 ``` 
 If you have the [SLUG] then you can use the command files located [here](src/comman_lists/Get_Candidate_info.cmds) to get the candidate info. Since the 10 refolded proteins are randomly selected results may change. Please modify any other pathing as necessary. 
