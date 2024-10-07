@@ -1,0 +1,13 @@
+tpn = 1
+ppn = 1
+num_traj = 1
+psf = ../../setup/4yng_fill_renum_clean_ca.psf 
+top = ../../setup/4yng_fill_renum_clean_ca.top
+param = ../../setup/4yng_fill_renum_clean_nscal1_fnn1_go_bt.prm
+starting_strucs = ../../setup/4yng_fill_renum_clean_ca.cor
+temp_equil = 1000
+temp_prod = 310
+Q_threshold = 0.86
+secondary_structure_def = ../../setup/secondary_struc_defs.txt 
+log_file = info.log
+restart = 1
