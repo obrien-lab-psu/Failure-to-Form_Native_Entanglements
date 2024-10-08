@@ -30,20 +30,29 @@ class Viz:
         self.outpath = args.outpath
         self.prebuilt_PDB = args.prebuilt_PDB
         self.postbuilt_PDB = args.postbuilt_PDB
-        self.gif_output = 'temp.gif'
-
-        print(f'prebuilt_PDB:\n{self.prebuilt_PDB}')
-        print(f'postbuilt_PDB:\n{self.postbuilt_PDB}')
-
+        self.gif_output = self.postbuilt_PDB.split('/')[-1].replace('.pdb', '.gif')
+        self.gif_output = os.path.join(self.outpath, self.gif_output)
+        print(f'prebuilt_PDB: {self.prebuilt_PDB}')
+        print(f'postbuilt_PDB: {self.postbuilt_PDB}')
+        print(f'gif_output: {self.gif_output}')
         
     ### Gather the data from the interwebs
     def run(self,):
-        # Start PyMOL session
         cmd.reinitialize()
 
         # Load the PDB structures
-        cmd.load(self.prebuilt_PDB, 'structure1')
-        cmd.load(self.postbuilt_PDB, 'structure2')
+        cmd.load(self.postbuilt_PDB, 'structure1')
+        cmd.load(self.prebuilt_PDB, 'structure2')
+
+        # Set the background color to white
+        cmd.bg_color('white')
+
+        # Ensure the background is opaque (non-transparent)
+        cmd.set('ray_opaque_background', 1)
+        
+        # Remove waters and other non-protein molecules (optional adjustments can be made)
+        cmd.remove('solvent')  # Removes water molecules (usually HOH)
+        cmd.remove('not polymer')  # Removes anything that is not part of the protein
 
         # Color the structures
         cmd.color('red', 'structure1')
@@ -57,26 +66,39 @@ class Viz:
         if not os.path.exists(temp_dir):
             os.makedirs(temp_dir)
 
-        # Center on the second structure to rotate around it
-        cmd.center('structure2')
+        # Center on both structures to rotate around the combined center
+        cmd.center('structure1 structure2')
+
+        # Save the current view to reset it before each rotation
+        initial_view = cmd.get_view()
 
         # Create a list to store the image file paths
         image_files = []
 
-        # Rotate around the second structure and save images
+        # Adjust the number of frames and angle step for a smoother rotation
+        n_frames = 360  # Increase number of frames for a slower rotation
+        angle_per_frame = 360 / n_frames  # 360 degrees divided by the number of frames
+
+        # Rotate both structures and save images
         for frame in range(n_frames):
-            angle = (frame / n_frames) * 360  # Calculate the rotation angle
-            cmd.rotate('y', angle, 'structure2')  # Rotate around the y-axis of structure2
+            # Reset to the initial view at the start of each frame
+            #cmd.set_view(initial_view)
+
+            # Rotate the camera (view) around the y-axis for this frame
+            cmd.turn('y', angle_per_frame)
+            
+            # Rotate the structures by a small increment for this frame
+            #cmd.rotate('y', angle_per_frame * frame, 'structure1 structure2')
 
             # Generate a filename for the current image
             image_file = os.path.join(temp_dir, f'image_{frame:03d}.png')
-            
-            # Save the image at the current angle
+
+            # Save the image at the current angle (with non-transparent background)
             cmd.png(image_file, dpi=300)
             image_files.append(image_file)
 
-        # Convert the images into a GIF using imageio
-        with imageio.get_writer(self.gif_output, mode='I', duration=duration) as writer:
+        # Convert the images into a GIF using imageio (adjust duration here)
+        with imageio.get_writer(self.gif_output, mode='I', duration=1, loop=0) as writer:  # 0.05 seconds per frame = 20 FPS
             for image_file in image_files:
                 image = imageio.imread(image_file)
                 writer.append_data(image)
