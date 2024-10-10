@@ -8,4 +8,5 @@
 #SBATCH --account=epo2_nih
 
 cd /storage/group/epo2/default/ims86/git_repos/Failure-to-Form_Native_Entanglements/Simulations_of_Native_Entanglement_Misfolding/Benchmarks
-
+conda activate FtoF
+cmd

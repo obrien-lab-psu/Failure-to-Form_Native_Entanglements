@@ -40,3 +40,7 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 
 ## Results
 
+P0A6B4_4WR3_A  
+<p align="center">
+  <img src="data/gifs/P0A6B4_4WR3_A_rebuilt.gif" alt="My GIF">
+</p>
