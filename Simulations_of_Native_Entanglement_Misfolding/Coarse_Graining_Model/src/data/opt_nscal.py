@@ -237,7 +237,7 @@ def main():
     script_name = f'opt_nscale'
     parser = argparse.ArgumentParser(description="Process user specified arguments")
     parser.add_argument("-i", "--input", type=str, default="", required=True, help="<input.pdb> for CG model creation")
-    parser.add_argument("-d", "--domain", type=str, default="", required=True, help="<domain.dat> for domain defination")
+    parser.add_argument("-d", "--domain", type=str, default="", required=True, help="<domain.dat> for domain defination. full path")
     parser.add_argument("-o", "--outpath", type=str, default="./", required=True, help="Path to output directory")
     parser.add_argument("-t", "--temp", type=int, default=310, required=False, help="<Temperature> in Kelvin")
     parser.add_argument("-p", "--tpn", type=int, default=10, required=False, help="<total number of CPUs>. Default 10.")
@@ -284,7 +284,7 @@ def main():
     print(f'nscal_set:\n{nscal_set}')
 
     #sim_step = 66666667 #for 1000 ns
-    sim_step = 666667 #for 1000 ns
+    sim_step = 666667 #for 1 ns
     Q_threshold = 0.6688
     frame_threshold = 0.98
     sleep_time = 10 # s
@@ -411,48 +411,15 @@ def main():
                 MD_script = os.path.join(full_path, 'post_trans_single_run_v2.py')
                 MD_cmd = f'python {MD_script} setup/%s.psf setup/%s.cor setup/%s %f %d %d %d %d ../setup/secondary_struc_defs.txt 1.1 setup/%s.cor %d'%(prefix, prefix, prm_name, temperature, ppn, i+1, rand, sim_step, prefix, 1)
                 print(MD_cmd)
-                #result = subprocess.run([MD_cmd], capture_output=True, text=True)    
                 os.system(MD_cmd)
-                #pool.apply_async(run_simulation, (i, prefix, prm_name, rand,))
-            print(f'Simulations finished')
-            quit()
 
-            while True:
-                time.sleep(sleep_time)
-                
-                f = open('simulation.log', 'w')
-                f.write("%-20s %-20s %-20s %-20s %-20s\n"%("#Num", "Step", "Speed(Step/s)", "Used_Time", "Rest_Time"))
-                for i in range(ntraj):
-                    if os.path.exists('qbb_%d.dat'%(i+1)):
-                        current_step = 'Done'
-                        speed = '--'
-                        used_time = np.nan
-                    elif os.path.exists('%d.out'%(i+1)):
-                        info = os.popen('tail -n 1 %d.out'%(i+1)).readlines()[0]
-                        if not info.strip().startswith('Time') and not info.strip() == '':
-                            current_step = int(info.strip().split()[1])
-                        else:
-                            current_step = 0
-                        used_time = time.time() - start_time[i]
-                        speed = (current_step - start_step[i])/used_time
-                    else:
-                        current_step = 0
-                        used_time = time.time() - start_time[i]
-                        speed = (current_step - start_step[i])/used_time
-                    if speed == 0 or speed == '--':
-                        rest_time = np.nan
-                    else:
-                        rest_time = (sim_step - current_step)/speed
-                        speed = int(speed)
-                    f.write("%-20d %-20s %-20s %-20s %-20s\n"%(i+1, str(current_step), str(speed), convert_time(used_time), convert_time(rest_time)))
-                f.close()
-                if len(pool._cache) == 0:
-                    break
-            pool.close()
-            pool.join()
-            worker_idx += nproc
-        
-        # Get Q
+                Q_script = os.path.join(full_path, 'calc_native_contact_fraction.pl')
+                Q_cmd = f'perl {Q_script} -i setup/%s.cor -d %s -s ../setup/secondary_struc_defs.txt -t %d.dcd -r 1'%(prefix, dom_def_file, i+1)
+                print(Q_cmd)
+                os.system(Q_cmd)   
+            print(f'Simulations finished and Q calculated')
+    
+
         fo = open('../opt_nscal.log', 'a')
         fo.write("-> Probability of domain stability:\n")
         fo.close()
