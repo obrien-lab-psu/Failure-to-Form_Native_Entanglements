@@ -14,6 +14,7 @@ import argparse
 import pandas as pd
 from modeller import *
 from modeller.automodel import *
+from modeller import restraints, physical
 import numpy as np
 import glob
 
@@ -613,6 +614,7 @@ def rebuild_missing_residues(pdb_path, fasta_sequence, missing_residues_df, outp
             # Select only missing residues for refinement
             # Select only the regions around existing residues for refinement
             selection = []
+            selected_residues = []
             for _, row in missing_residues_df.iterrows():
                 res_id = int(row['FASTA_resid'])
                 chain = 'A'
@@ -628,13 +630,39 @@ def rebuild_missing_residues(pdb_path, fasta_sequence, missing_residues_df, outp
                         end = res_id
                     else:
                         end = res_id+1
-                    #print(start, end)
+                    selected_residues += [np.arange(start, end + 1)]
                     selection.append(self.residue_range(f"{start}:{chain}", f"{end}:{chain}"))
                 except KeyError:
                     print(f"Missing residue {res_id} in chain {chain} not found in alignment. Skipping.")
-
+            print(f'selected_residues: {set(np.hstack(selected_residues))}')
             return Selection(*selection)
-        
+
+        ### This is a special restraint for P77754_6BIE_A and P31142 to prevent odd rebuilding of the very long temrinal tails. 
+        # it is not required for other proteins and is commented out for the rest
+        def special_restraints(self, aln):
+            rsr = self.restraints
+            
+            # Add excluded volume restraints to prevent clashes
+            rsr.make(self, restraint_type='stereo', spline_on_site=True)
+
+            # Add custom distance restraints to keep the rebuilt tail away from the core
+            #at1 = self.atoms['CA:153:A']  # Example: alpha carbon of the first residue (adjust accordingly)
+
+            # Selection for P77754_6BIE_A
+            #at1_range = self.residue_range('150:A', '161:A') # terminal tail to be rebuilt that i do not want interacting with protein
+            #at2_range = self.residue_range('55:A', '140:A')
+
+            # Selection for P31142_1URH_A
+            #at1_range = self.residue_range('272:A', '281:A') # terminal tail to be rebuilt that i do not want interacting with protein
+            #at2_range = self.residue_range('5:A', '260:A')
+            
+            # Loop through all atoms in both ranges and apply lower-bound distance restraints
+            for at1_res in at1_range:
+                for at2_res in at2_range:
+                    # Apply the distance restraint between atoms in at1_res and at2_res
+                    for at1_atom in at1_res.atoms:
+                        for at2_atom in at2_res.atoms:
+                            rsr.add(forms.LowerBound(group=physical.xy_distance, feature=features.Distance(at1_atom, at2_atom), mean=20.0, stdev=0.1))
 
     # Set up the model and perform the rebuilding
     mdl = MyModel(env, alnfile=alignment_file,
