@@ -25,7 +25,7 @@ def main():
     dfs = pd.concat(dfs)
 
     dfs = dfs[(dfs['MISSING'] == True) | (dfs['MUTATION'] == True)]
-    print(f'Rebuilt residues:\n{dfs}')
+    print(f'Rebuilt residues:\n{dfs.to_string()}')
 
     dfs.to_csv(args.outpath, index=False)
     print(f'SAVED: {args.outpath}')

@@ -1,259 +1,257 @@
 Rebuilt residues:
-     FASTA_resid FASTA PDB  PDB_resid  ...  pdb_id  chain_id CLASS CLASS_ID
-273          274     Y   F      274.0  ...    4WR3         A     b        0
-0              1     M   -        NaN  ...    1AQT         A     b        0
-1              2     A   -        NaN  ...    1AQT         A     b        0
-2              3     M   -        NaN  ...    1AQT         A     b        0
-137          138     A   -        NaN  ...    1AQT         A     a        1
-138          139     M   -        NaN  ...    1AQT         A     a        1
-0              1     M   -        NaN  ...    1KDO         A     c        0
-1              2     T   -        NaN  ...    1KDO         A     c        0
-225          226     L   -        NaN  ...    1KDO         A     c        0
-226          227     A   -        NaN  ...    1KDO         A     c        0
-0              1     M   -        NaN  ...    3A7L         A     b        0
-0              1     M   -        NaN  ...    2HUR         C     c        0
-56            57     T   V       57.0  ...    4CRZ         A     b        0
-77            78     C   -        NaN  ...    4CRZ         A     b        0
-0              1     M   -        NaN  ...    6XZ7         H     a        0
-84            85     S   V       85.0  ...    6XZ7         H     a        0
-85            86     M   T       86.0  ...    6XZ7         H     a        0
-136          137     A   -        NaN  ...    6XZ7         H     a        0
-137          138     R   -        NaN  ...    6XZ7         H     a        0
-138          139     L   -        NaN  ...    6XZ7         H     a        0
-139          140     M   -        NaN  ...    6XZ7         H     a        0
-140          141     A   -        NaN  ...    6XZ7         H     a        0
-141          142     T   -        NaN  ...    6XZ7         H     a        0
-142          143     M   -        NaN  ...    6XZ7         H     a        0
-143          144     K   -        NaN  ...    6XZ7         H     a        0
-144          145     E   -        NaN  ...    6XZ7         H     a        0
-145          146     A   -        NaN  ...    6XZ7         H     a        0
-146          147     S   -        NaN  ...    6XZ7         H     a        0
-147          148     A   -        NaN  ...    6XZ7         H     a        0
-148          149     G   -        NaN  ...    6XZ7         H     a        0
-149          150     K   -        NaN  ...    6XZ7         H     a        0
-150          151     L   -        NaN  ...    6XZ7         H     a        0
-151          152     V   -        NaN  ...    6XZ7         H     a        0
-152          153     R   -        NaN  ...    6XZ7         H     a        0
-153          154     T   -        NaN  ...    6XZ7         H     a        0
-154          155     L   -        NaN  ...    6XZ7         H     a        0
-155          156     A   -        NaN  ...    6XZ7         H     a        0
-156          157     A   -        NaN  ...    6XZ7         H     a        0
-157          158     V   -        NaN  ...    6XZ7         H     a        0
-158          159     R   -        NaN  ...    6XZ7         H     a        0
-159          160     D   -        NaN  ...    6XZ7         H     a        0
-160          161     A   -        NaN  ...    6XZ7         H     a        0
-161          162     K   -        NaN  ...    6XZ7         H     a        0
-162          163     E   -        NaN  ...    6XZ7         H     a        0
-163          164     A   -        NaN  ...    6XZ7         H     a        0
-164          165     A   -        NaN  ...    6XZ7         H     a        0
-0              1     M   -        NaN  ...    6XZ7         b     b        0
-1              2     A   -        NaN  ...    6XZ7         b     b        0
-2              3     K   -        NaN  ...    6XZ7         b     b        0
-54            55     K   -        NaN  ...    6XZ7         b     b        0
-0              1     M   -        NaN  ...    3DXX         A     c        0
-1              2     K   -        NaN  ...    3DXX         A     c        0
-2              3     N   -        NaN  ...    3DXX         A     c        0
-3              4     D   -        NaN  ...    3DXX         A     c        0
-4              5     V   -        NaN  ...    3DXX         A     c        0
-5              6     I   -        NaN  ...    3DXX         A     c        0
-6              7     S   -        NaN  ...    3DXX         A     c        0
-7              8     P   -        NaN  ...    3DXX         A     c        0
-8              9     E   -        NaN  ...    3DXX         A     c        0
-9             10     F   -        NaN  ...    3DXX         A     c        0
-10            11     D   -        NaN  ...    3DXX         A     c        0
-11            12     E   -        NaN  ...    3DXX         A     c        0
-12            13     N   -        NaN  ...    3DXX         A     c        0
-13            14     G   -        NaN  ...    3DXX         A     c        0
-14            15     R   -        NaN  ...    3DXX         A     c        0
-15            16     P   -        NaN  ...    3DXX         A     c        0
-16            17     L   -        NaN  ...    3DXX         A     c        0
-17            18     R   -        NaN  ...    3DXX         A     c        0
-18            19     R   -        NaN  ...    3DXX         A     c        0
-19            20     I   -        NaN  ...    3DXX         A     c        0
-20            21     R   -        NaN  ...    3DXX         A     c        0
-21            22     S   -        NaN  ...    3DXX         A     c        0
-22            23     F   -        NaN  ...    3DXX         A     c        0
-23            24     V   -        NaN  ...    3DXX         A     c        0
-24            25     R   -        NaN  ...    3DXX         A     c        0
-25            26     R   -        NaN  ...    3DXX         A     c        0
-26            27     Q   -        NaN  ...    3DXX         A     c        0
-27            28     G   -        NaN  ...    3DXX         A     c        0
-28            29     R   -        NaN  ...    3DXX         A     c        0
-29            30     L   -        NaN  ...    3DXX         A     c        0
-30            31     T   -        NaN  ...    3DXX         A     c        0
-31            32     K   -        NaN  ...    3DXX         A     c        0
-32            33     G   -        NaN  ...    3DXX         A     c        0
-33            34     Q   -        NaN  ...    3DXX         A     c        0
-0              1     M   -        NaN  ...    1QPZ         A     a        0
-340          341     R   -        NaN  ...    1QPZ         A     c        2
-0              1     M   -        NaN  ...    6QUL         U     c        0
-96            97     G   -        NaN  ...    6QUL         U     c        0
-97            98     G   -        NaN  ...    6QUL         U     c        0
-98            99     A   -        NaN  ...    6QUL         U     c        0
-99           100     E   -        NaN  ...    6QUL         U     c        0
-0              1     M   -        NaN  ...    2IO9         B     c        2
-1              2     S   -        NaN  ...    2IO9         B     c        2
-2              3     K   -        NaN  ...    2IO9         B     c        2
-3              4     G   -        NaN  ...    2IO9         B     c        2
-4              5     T   -        NaN  ...    2IO9         B     c        2
-5              6     T   -        NaN  ...    2IO9         B     c        2
-6              7     S   -        NaN  ...    2IO9         B     c        2
-7              8     Q   -        NaN  ...    2IO9         B     c        2
-8              9     D   -        NaN  ...    2IO9         B     c        2
-34            35     P   -        NaN  ...    2IO9         B     c        2
-35            36     Q   -        NaN  ...    2IO9         B     c        2
-36            37     E   -        NaN  ...    2IO9         B     c        2
-37            38     Y   -        NaN  ...    2IO9         B     c        2
-38            39     E   -        NaN  ...    2IO9         B     c        2
-39            40     D   -        NaN  ...    2IO9         B     c        2
-618          619     K   -        NaN  ...    2IO9         B     n        3
-0              1     M   -        NaN  ...    6XZ7         Z     c        0
-0              1     M   -        NaN  ...    6K0K         A     c        0
-0              1     M   -        NaN  ...    1URH         A     c        0
-1              2     S   -        NaN  ...    1URH         A     c        0
-186          187     P   -        NaN  ...    1URH         A     c        1
-187          188     R   -        NaN  ...    1URH         A     c        1
-188          189     P   -        NaN  ...    1URH         A     c        1
-189          190     G   -        NaN  ...    1URH         A     c        1
-237          238     C   -        NaN  ...    1URH         A     c        1
-269          270     G   -        NaN  ...    1URH         A     c        1
-270          271     A   -        NaN  ...    1URH         A     c        1
-271          272     R   -        NaN  ...    1URH         A     c        1
-272          273     A   -        NaN  ...    1URH         A     c        1
-273          274     D   -        NaN  ...    1URH         A     c        1
-274          275     L   -        NaN  ...    1URH         A     c        1
-275          276     P   -        NaN  ...    1URH         A     c        1
-276          277     V   -        NaN  ...    1URH         A     c        1
-277          278     E   -        NaN  ...    1URH         A     c        1
-278          279     P   -        NaN  ...    1URH         A     c        1
-279          280     V   -        NaN  ...    1URH         A     c        1
-280          281     K   -        NaN  ...    1URH         A     c        1
-0              1     M   -        NaN  ...    1HRU         A     c        0
-1              2     N   -        NaN  ...    1HRU         A     c        0
-43            44     M   -        NaN  ...    1HRU         A     c        0
-75            76     M   -        NaN  ...    1HRU         A     c        0
-188          189     Q   -        NaN  ...    1HRU         A     c        0
-189          190     G   -        NaN  ...    1HRU         A     c        0
-0              1     M   -        NaN  ...    2ANB         A     c        0
-0              1     M   -        NaN  ...    2FKB         A     c        0
-1              2     E   -        NaN  ...    2FKB         A     c        0
-2              3     Q   -        NaN  ...    2FKB         A     c        0
-3              4     R   -        NaN  ...    2FKB         A     c        0
-4              5     R   -        NaN  ...    2FKB         A     c        0
-5              6     L   -        NaN  ...    2FKB         A     c        0
-6              7     A   -        NaN  ...    2FKB         A     c        0
-29            30     M   -        NaN  ...    2FKB         A     c        0
-47            48     M   -        NaN  ...    2FKB         A     c        0
-65            66     M   -        NaN  ...    2FKB         A     c        0
-164          165     M   -        NaN  ...    2FKB         A     c        0
-168          169     A   -        NaN  ...    2FKB         A     c        0
-169          170     K   -        NaN  ...    2FKB         A     c        0
-170          171     N   -        NaN  ...    2FKB         A     c        0
-171          172     E   -        NaN  ...    2FKB         A     c        0
-172          173     A   -        NaN  ...    2FKB         A     c        0
-173          174     V   -        NaN  ...    2FKB         A     c        0
-174          175     E   -        NaN  ...    2FKB         A     c        0
-175          176     T   -        NaN  ...    2FKB         A     c        0
-176          177     E   -        NaN  ...    2FKB         A     c        0
-177          178     T   -        NaN  ...    2FKB         A     c        0
-178          179     A   -        NaN  ...    2FKB         A     c        0
-179          180     E   -        NaN  ...    2FKB         A     c        0
-0              1     M   -        NaN  ...    1ZEQ         X     b        0
-1              2     K   -        NaN  ...    1ZEQ         X     b        0
-2              3     K   -        NaN  ...    1ZEQ         X     b        0
-3              4     A   -        NaN  ...    1ZEQ         X     b        0
-4              5     L   -        NaN  ...    1ZEQ         X     b        0
-5              6     Q   -        NaN  ...    1ZEQ         X     b        0
-6              7     V   -        NaN  ...    1ZEQ         X     b        0
-7              8     A   -        NaN  ...    1ZEQ         X     b        0
-8              9     M   -        NaN  ...    1ZEQ         X     b        0
-9             10     F   -        NaN  ...    1ZEQ         X     b        0
-10            11     S   -        NaN  ...    1ZEQ         X     b        0
-11            12     L   -        NaN  ...    1ZEQ         X     b        0
-12            13     F   -        NaN  ...    1ZEQ         X     b        0
-13            14     T   -        NaN  ...    1ZEQ         X     b        0
-14            15     V   -        NaN  ...    1ZEQ         X     b        0
-15            16     I   -        NaN  ...    1ZEQ         X     b        0
-16            17     G   -        NaN  ...    1ZEQ         X     b        0
-17            18     F   -        NaN  ...    1ZEQ         X     b        0
-18            19     N   -        NaN  ...    1ZEQ         X     b        0
-19            20     A   -        NaN  ...    1ZEQ         X     b        0
-20            21     Q   -        NaN  ...    1ZEQ         X     b        0
-21            22     A   -        NaN  ...    1ZEQ         X     b        0
-22            23     N   -        NaN  ...    1ZEQ         X     b        0
-23            24     E   -        NaN  ...    1ZEQ         X     b        0
-24            25     H   -        NaN  ...    1ZEQ         X     b        0
-25            26     H   -        NaN  ...    1ZEQ         X     b        0
-26            27     H   -        NaN  ...    1ZEQ         X     b        0
-0              1     M   -        NaN  ...    6BIE         A     a        0
-1              2     R   -        NaN  ...    6BIE         A     a        0
-2              3     K   -        NaN  ...    6BIE         A     a        0
-3              4     L   -        NaN  ...    6BIE         A     a        0
-4              5     T   -        NaN  ...    6BIE         A     a        0
-5              6     A   -        NaN  ...    6BIE         A     a        0
-6              7     L   -        NaN  ...    6BIE         A     a        0
-7              8     F   -        NaN  ...    6BIE         A     a        0
-8              9     V   -        NaN  ...    6BIE         A     a        0
-9             10     A   -        NaN  ...    6BIE         A     a        0
-10            11     S   -        NaN  ...    6BIE         A     a        0
-11            12     T   -        NaN  ...    6BIE         A     a        0
-12            13     L   -        NaN  ...    6BIE         A     a        0
-13            14     A   -        NaN  ...    6BIE         A     a        0
-14            15     L   -        NaN  ...    6BIE         A     a        0
-15            16     G   -        NaN  ...    6BIE         A     a        0
-16            17     A   -        NaN  ...    6BIE         A     a        0
-17            18     A   -        NaN  ...    6BIE         A     a        0
-18            19     N   -        NaN  ...    6BIE         A     a        0
-19            20     L   -        NaN  ...    6BIE         A     a        0
-20            21     A   -        NaN  ...    6BIE         A     a        0
-21            22     H   -        NaN  ...    6BIE         A     a        0
-22            23     A   -        NaN  ...    6BIE         A     a        0
-23            24     A   -        NaN  ...    6BIE         A     a        0
-24            25     D   -        NaN  ...    6BIE         A     a        0
-25            26     T   -        NaN  ...    6BIE         A     a        0
-26            27     T   -        NaN  ...    6BIE         A     a        0
-27            28     T   -        NaN  ...    6BIE         A     a        0
-28            29     A   -        NaN  ...    6BIE         A     a        0
-29            30     A   -        NaN  ...    6BIE         A     a        0
-30            31     P   -        NaN  ...    6BIE         A     a        0
-31            32     A   -        NaN  ...    6BIE         A     a        0
-32            33     D   -        NaN  ...    6BIE         A     a        0
-33            34     A   -        NaN  ...    6BIE         A     a        0
-34            35     K   -        NaN  ...    6BIE         A     a        0
-35            36     P   -        NaN  ...    6BIE         A     a        0
-36            37     M   -        NaN  ...    6BIE         A     a        0
-37            38     M   -        NaN  ...    6BIE         A     a        0
-38            39     H   -        NaN  ...    6BIE         A     a        0
-39            40     H   -        NaN  ...    6BIE         A     a        0
-40            41     K   -        NaN  ...    6BIE         A     a        0
-41            42     G   -        NaN  ...    6BIE         A     a        0
-42            43     K   -        NaN  ...    6BIE         A     a        0
-43            44     F   -        NaN  ...    6BIE         A     a        0
-44            45     G   -        NaN  ...    6BIE         A     a        0
-45            46     P   -        NaN  ...    6BIE         A     a        0
-46            47     H   -        NaN  ...    6BIE         A     a        0
-47            48     Q   -        NaN  ...    6BIE         A     a        0
-48            49     D   -        NaN  ...    6BIE         A     a        0
-49            50     M   -        NaN  ...    6BIE         A     a        0
-50            51     M   -        NaN  ...    6BIE         A     a        0
-147          148     E   -        NaN  ...    6BIE         A     a        0
-148          149     R   -        NaN  ...    6BIE         A     a        0
-149          150     P   -        NaN  ...    6BIE         A     a        0
-150          151     A   -        NaN  ...    6BIE         A     a        0
-151          152     A   -        NaN  ...    6BIE         A     a        0
-152          153     K   -        NaN  ...    6BIE         A     a        0
-153          154     G   -        NaN  ...    6BIE         A     a        0
-154          155     K   -        NaN  ...    6BIE         A     a        0
-155          156     M   -        NaN  ...    6BIE         A     a        0
-156          157     P   -        NaN  ...    6BIE         A     a        0
-157          158     A   -        NaN  ...    6BIE         A     a        0
-158          159     T   -        NaN  ...    6BIE         A     a        0
-159          160     A   -        NaN  ...    6BIE         A     a        0
-160          161     E   -        NaN  ...    6BIE         A     a        0
-0              1     M   L        1.0  ...    1OJ7         D     c        6
-212          213     Q   H      213.0  ...    1OJ7         D     a        7
-
-[252 rows x 11 columns]
+     FASTA_resid FASTA PDB  PDB_resid  MISSING  MUTATION uniprot_id pdb_id chain_id CLASS  CLASS_ID
+273          274     Y   F      274.0    False      True     P0A6B4   4WR3        A     b         0
+0              1     M   -        NaN     True     False     P0A6E6   1AQT        A     b         0
+1              2     A   -        NaN     True     False     P0A6E6   1AQT        A     b         0
+2              3     M   -        NaN     True     False     P0A6E6   1AQT        A     b         0
+137          138     A   -        NaN     True     False     P0A6E6   1AQT        A     a         1
+138          139     M   -        NaN     True     False     P0A6E6   1AQT        A     a         1
+0              1     M   -        NaN     True     False     P0A6I0   1KDO        A     c         0
+1              2     T   -        NaN     True     False     P0A6I0   1KDO        A     c         0
+225          226     L   -        NaN     True     False     P0A6I0   1KDO        A     c         0
+226          227     A   -        NaN     True     False     P0A6I0   1KDO        A     c         0
+0              1     M   -        NaN     True     False     P0A6T9   3A7L        A     b         0
+0              1     M   -        NaN     True     False     P0A763   2HUR        C     c         0
+56            57     T   V       57.0    False      True     P0A790   4CRZ        A     b         0
+77            78     C   -        NaN     True     False     P0A790   4CRZ        A     b         0
+0              1     M   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+84            85     S   V       85.0    False      True     P0A7J3   6XZ7        H     a         0
+85            86     M   T       86.0    False      True     P0A7J3   6XZ7        H     a         0
+136          137     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+137          138     R   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+138          139     L   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+139          140     M   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+140          141     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+141          142     T   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+142          143     M   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+143          144     K   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+144          145     E   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+145          146     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+146          147     S   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+147          148     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+148          149     G   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+149          150     K   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+150          151     L   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+151          152     V   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+152          153     R   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+153          154     T   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+154          155     L   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+155          156     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+156          157     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+157          158     V   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+158          159     R   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+159          160     D   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+160          161     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+161          162     K   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+162          163     E   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+163          164     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+164          165     A   -        NaN     True     False     P0A7J3   6XZ7        H     a         0
+0              1     M   -        NaN     True     False     P0A7N9   6XZ7        b     b         0
+1              2     A   -        NaN     True     False     P0A7N9   6XZ7        b     b         0
+2              3     K   -        NaN     True     False     P0A7N9   6XZ7        b     b         0
+54            55     K   -        NaN     True     False     P0A7N9   6XZ7        b     b         0
+0              1     M   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+1              2     K   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+2              3     N   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+3              4     D   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+4              5     V   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+5              6     I   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+6              7     S   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+7              8     P   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+8              9     E   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+9             10     F   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+10            11     D   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+11            12     E   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+12            13     N   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+13            14     G   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+14            15     R   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+15            16     P   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+16            17     L   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+17            18     R   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+18            19     R   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+19            20     I   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+20            21     R   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+21            22     S   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+22            23     F   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+23            24     V   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+24            25     R   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+25            26     R   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+26            27     Q   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+27            28     G   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+28            29     R   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+29            30     L   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+30            31     T   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+31            32     K   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+32            33     G   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+33            34     Q   -        NaN     True     False     P0A8I5   3DXX        A     c         0
+0              1     M   -        NaN     True     False     P0ACP7   1QPZ        A     a         0
+340          341     R   -        NaN     True     False     P0ACP7   1QPZ        A     c         2
+0              1     M   -        NaN     True     False     P0ADZ0   6QUL        U     c         0
+96            97     G   -        NaN     True     False     P0ADZ0   6QUL        U     c         0
+97            98     G   -        NaN     True     False     P0ADZ0   6QUL        U     c         0
+98            99     A   -        NaN     True     False     P0ADZ0   6QUL        U     c         0
+99           100     E   -        NaN     True     False     P0ADZ0   6QUL        U     c         0
+0              1     M   -        NaN     True     False     P0AES0   2IO9        B     c         2
+1              2     S   -        NaN     True     False     P0AES0   2IO9        B     c         2
+2              3     K   -        NaN     True     False     P0AES0   2IO9        B     c         2
+3              4     G   -        NaN     True     False     P0AES0   2IO9        B     c         2
+4              5     T   -        NaN     True     False     P0AES0   2IO9        B     c         2
+5              6     T   -        NaN     True     False     P0AES0   2IO9        B     c         2
+6              7     S   -        NaN     True     False     P0AES0   2IO9        B     c         2
+7              8     Q   -        NaN     True     False     P0AES0   2IO9        B     c         2
+8              9     D   -        NaN     True     False     P0AES0   2IO9        B     c         2
+34            35     P   -        NaN     True     False     P0AES0   2IO9        B     c         2
+35            36     Q   -        NaN     True     False     P0AES0   2IO9        B     c         2
+36            37     E   -        NaN     True     False     P0AES0   2IO9        B     c         2
+37            38     Y   -        NaN     True     False     P0AES0   2IO9        B     c         2
+38            39     E   -        NaN     True     False     P0AES0   2IO9        B     c         2
+39            40     D   -        NaN     True     False     P0AES0   2IO9        B     c         2
+618          619     K   -        NaN     True     False     P0AES0   2IO9        B     n         3
+0              1     M   -        NaN     True     False     P0AG51   6XZ7        Z     c         0
+0              1     M   -        NaN     True     False     P21599   6K0K        A     c         0
+0              1     M   -        NaN     True     False     P31142   1URH        A     c         0
+1              2     S   -        NaN     True     False     P31142   1URH        A     c         0
+186          187     P   -        NaN     True     False     P31142   1URH        A     c         1
+187          188     R   -        NaN     True     False     P31142   1URH        A     c         1
+188          189     P   -        NaN     True     False     P31142   1URH        A     c         1
+189          190     G   -        NaN     True     False     P31142   1URH        A     c         1
+237          238     C   -        NaN     True     False     P31142   1URH        A     c         1
+269          270     G   -        NaN     True     False     P31142   1URH        A     c         1
+270          271     A   -        NaN     True     False     P31142   1URH        A     c         1
+271          272     R   -        NaN     True     False     P31142   1URH        A     c         1
+272          273     A   -        NaN     True     False     P31142   1URH        A     c         1
+273          274     D   -        NaN     True     False     P31142   1URH        A     c         1
+274          275     L   -        NaN     True     False     P31142   1URH        A     c         1
+275          276     P   -        NaN     True     False     P31142   1URH        A     c         1
+276          277     V   -        NaN     True     False     P31142   1URH        A     c         1
+277          278     E   -        NaN     True     False     P31142   1URH        A     c         1
+278          279     P   -        NaN     True     False     P31142   1URH        A     c         1
+279          280     V   -        NaN     True     False     P31142   1URH        A     c         1
+280          281     K   -        NaN     True     False     P31142   1URH        A     c         1
+0              1     M   -        NaN     True     False     P45748   1HRU        A     c         0
+1              2     N   -        NaN     True     False     P45748   1HRU        A     c         0
+43            44     M   -        NaN     True     False     P45748   1HRU        A     c         0
+75            76     M   -        NaN     True     False     P45748   1HRU        A     c         0
+188          189     Q   -        NaN     True     False     P45748   1HRU        A     c         0
+189          190     G   -        NaN     True     False     P45748   1HRU        A     c         0
+0              1     M   -        NaN     True     False     P60546   2ANB        A     c         0
+0              1     M   -        NaN     True     False     P65556   2FKB        A     c         0
+1              2     E   -        NaN     True     False     P65556   2FKB        A     c         0
+2              3     Q   -        NaN     True     False     P65556   2FKB        A     c         0
+3              4     R   -        NaN     True     False     P65556   2FKB        A     c         0
+4              5     R   -        NaN     True     False     P65556   2FKB        A     c         0
+5              6     L   -        NaN     True     False     P65556   2FKB        A     c         0
+6              7     A   -        NaN     True     False     P65556   2FKB        A     c         0
+29            30     M   -        NaN     True     False     P65556   2FKB        A     c         0
+47            48     M   -        NaN     True     False     P65556   2FKB        A     c         0
+65            66     M   -        NaN     True     False     P65556   2FKB        A     c         0
+164          165     M   -        NaN     True     False     P65556   2FKB        A     c         0
+168          169     A   -        NaN     True     False     P65556   2FKB        A     c         0
+169          170     K   -        NaN     True     False     P65556   2FKB        A     c         0
+170          171     N   -        NaN     True     False     P65556   2FKB        A     c         0
+171          172     E   -        NaN     True     False     P65556   2FKB        A     c         0
+172          173     A   -        NaN     True     False     P65556   2FKB        A     c         0
+173          174     V   -        NaN     True     False     P65556   2FKB        A     c         0
+174          175     E   -        NaN     True     False     P65556   2FKB        A     c         0
+175          176     T   -        NaN     True     False     P65556   2FKB        A     c         0
+176          177     E   -        NaN     True     False     P65556   2FKB        A     c         0
+177          178     T   -        NaN     True     False     P65556   2FKB        A     c         0
+178          179     A   -        NaN     True     False     P65556   2FKB        A     c         0
+179          180     E   -        NaN     True     False     P65556   2FKB        A     c         0
+0              1     M   -        NaN     True     False     P77214   1ZEQ        X     b         0
+1              2     K   -        NaN     True     False     P77214   1ZEQ        X     b         0
+2              3     K   -        NaN     True     False     P77214   1ZEQ        X     b         0
+3              4     A   -        NaN     True     False     P77214   1ZEQ        X     b         0
+4              5     L   -        NaN     True     False     P77214   1ZEQ        X     b         0
+5              6     Q   -        NaN     True     False     P77214   1ZEQ        X     b         0
+6              7     V   -        NaN     True     False     P77214   1ZEQ        X     b         0
+7              8     A   -        NaN     True     False     P77214   1ZEQ        X     b         0
+8              9     M   -        NaN     True     False     P77214   1ZEQ        X     b         0
+9             10     F   -        NaN     True     False     P77214   1ZEQ        X     b         0
+10            11     S   -        NaN     True     False     P77214   1ZEQ        X     b         0
+11            12     L   -        NaN     True     False     P77214   1ZEQ        X     b         0
+12            13     F   -        NaN     True     False     P77214   1ZEQ        X     b         0
+13            14     T   -        NaN     True     False     P77214   1ZEQ        X     b         0
+14            15     V   -        NaN     True     False     P77214   1ZEQ        X     b         0
+15            16     I   -        NaN     True     False     P77214   1ZEQ        X     b         0
+16            17     G   -        NaN     True     False     P77214   1ZEQ        X     b         0
+17            18     F   -        NaN     True     False     P77214   1ZEQ        X     b         0
+18            19     N   -        NaN     True     False     P77214   1ZEQ        X     b         0
+19            20     A   -        NaN     True     False     P77214   1ZEQ        X     b         0
+20            21     Q   -        NaN     True     False     P77214   1ZEQ        X     b         0
+21            22     A   -        NaN     True     False     P77214   1ZEQ        X     b         0
+22            23     N   -        NaN     True     False     P77214   1ZEQ        X     b         0
+23            24     E   -        NaN     True     False     P77214   1ZEQ        X     b         0
+24            25     H   -        NaN     True     False     P77214   1ZEQ        X     b         0
+25            26     H   -        NaN     True     False     P77214   1ZEQ        X     b         0
+26            27     H   -        NaN     True     False     P77214   1ZEQ        X     b         0
+0              1     M   -        NaN     True     False     P77754   6BIE        A     a         0
+1              2     R   -        NaN     True     False     P77754   6BIE        A     a         0
+2              3     K   -        NaN     True     False     P77754   6BIE        A     a         0
+3              4     L   -        NaN     True     False     P77754   6BIE        A     a         0
+4              5     T   -        NaN     True     False     P77754   6BIE        A     a         0
+5              6     A   -        NaN     True     False     P77754   6BIE        A     a         0
+6              7     L   -        NaN     True     False     P77754   6BIE        A     a         0
+7              8     F   -        NaN     True     False     P77754   6BIE        A     a         0
+8              9     V   -        NaN     True     False     P77754   6BIE        A     a         0
+9             10     A   -        NaN     True     False     P77754   6BIE        A     a         0
+10            11     S   -        NaN     True     False     P77754   6BIE        A     a         0
+11            12     T   -        NaN     True     False     P77754   6BIE        A     a         0
+12            13     L   -        NaN     True     False     P77754   6BIE        A     a         0
+13            14     A   -        NaN     True     False     P77754   6BIE        A     a         0
+14            15     L   -        NaN     True     False     P77754   6BIE        A     a         0
+15            16     G   -        NaN     True     False     P77754   6BIE        A     a         0
+16            17     A   -        NaN     True     False     P77754   6BIE        A     a         0
+17            18     A   -        NaN     True     False     P77754   6BIE        A     a         0
+18            19     N   -        NaN     True     False     P77754   6BIE        A     a         0
+19            20     L   -        NaN     True     False     P77754   6BIE        A     a         0
+20            21     A   -        NaN     True     False     P77754   6BIE        A     a         0
+21            22     H   -        NaN     True     False     P77754   6BIE        A     a         0
+22            23     A   -        NaN     True     False     P77754   6BIE        A     a         0
+23            24     A   -        NaN     True     False     P77754   6BIE        A     a         0
+24            25     D   -        NaN     True     False     P77754   6BIE        A     a         0
+25            26     T   -        NaN     True     False     P77754   6BIE        A     a         0
+26            27     T   -        NaN     True     False     P77754   6BIE        A     a         0
+27            28     T   -        NaN     True     False     P77754   6BIE        A     a         0
+28            29     A   -        NaN     True     False     P77754   6BIE        A     a         0
+29            30     A   -        NaN     True     False     P77754   6BIE        A     a         0
+30            31     P   -        NaN     True     False     P77754   6BIE        A     a         0
+31            32     A   -        NaN     True     False     P77754   6BIE        A     a         0
+32            33     D   -        NaN     True     False     P77754   6BIE        A     a         0
+33            34     A   -        NaN     True     False     P77754   6BIE        A     a         0
+34            35     K   -        NaN     True     False     P77754   6BIE        A     a         0
+35            36     P   -        NaN     True     False     P77754   6BIE        A     a         0
+36            37     M   -        NaN     True     False     P77754   6BIE        A     a         0
+37            38     M   -        NaN     True     False     P77754   6BIE        A     a         0
+38            39     H   -        NaN     True     False     P77754   6BIE        A     a         0
+39            40     H   -        NaN     True     False     P77754   6BIE        A     a         0
+40            41     K   -        NaN     True     False     P77754   6BIE        A     a         0
+41            42     G   -        NaN     True     False     P77754   6BIE        A     a         0
+42            43     K   -        NaN     True     False     P77754   6BIE        A     a         0
+43            44     F   -        NaN     True     False     P77754   6BIE        A     a         0
+44            45     G   -        NaN     True     False     P77754   6BIE        A     a         0
+45            46     P   -        NaN     True     False     P77754   6BIE        A     a         0
+46            47     H   -        NaN     True     False     P77754   6BIE        A     a         0
+47            48     Q   -        NaN     True     False     P77754   6BIE        A     a         0
+48            49     D   -        NaN     True     False     P77754   6BIE        A     a         0
+49            50     M   -        NaN     True     False     P77754   6BIE        A     a         0
+50            51     M   -        NaN     True     False     P77754   6BIE        A     a         0
+147          148     E   -        NaN     True     False     P77754   6BIE        A     a         0
+148          149     R   -        NaN     True     False     P77754   6BIE        A     a         0
+149          150     P   -        NaN     True     False     P77754   6BIE        A     a         0
+150          151     A   -        NaN     True     False     P77754   6BIE        A     a         0
+151          152     A   -        NaN     True     False     P77754   6BIE        A     a         0
+152          153     K   -        NaN     True     False     P77754   6BIE        A     a         0
+153          154     G   -        NaN     True     False     P77754   6BIE        A     a         0
+154          155     K   -        NaN     True     False     P77754   6BIE        A     a         0
+155          156     M   -        NaN     True     False     P77754   6BIE        A     a         0
+156          157     P   -        NaN     True     False     P77754   6BIE        A     a         0
+157          158     A   -        NaN     True     False     P77754   6BIE        A     a         0
+158          159     T   -        NaN     True     False     P77754   6BIE        A     a         0
+159          160     A   -        NaN     True     False     P77754   6BIE        A     a         0
+160          161     E   -        NaN     True     False     P77754   6BIE        A     a         0
+0              1     M   L        1.0    False      True     Q46856   1OJ7        D     c         6
+212          213     Q   H      213.0    False      True     Q46856   1OJ7        D     a         7
 SAVED: data/Rebuilt_residues.csv
 No Insertions found in dataset
 Deletions:
@@ -268,4 +266,4 @@ P31142-1URH_A (Deletion) 188 Left_Empty
 P31142-1URH_A (Deletion) 189 Left_Empty
 P31142-1URH_A (Deletion) 190 Left_Empty
 
-NORMAL TERMINATION: 0.2737400531768799
+NORMAL TERMINATION: 0.25020813941955566
