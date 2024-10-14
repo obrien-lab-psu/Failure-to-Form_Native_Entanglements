@@ -18,7 +18,7 @@ Here we preprocess the PDB files and standardize them against the canonical FAST
 6. Mutated residues are removed and remodeled with the canonical sequence.  
     CAUTION: should be used here as if there are extensive mutations that differ in physicochemical characteristics from the canonical residue then another PDB maybe a better choice than remodeling. If you wish to avoid rebuilding mutated residues change the variable *non_missing_mutant_residues_df* in [Get_PDBs.py](src/data/Get_PDBs.py) to include the MUTATION column in making the resid_mapping object.   
       
-7. The missing and mutated residues are rebuilt using the [MODELLER](https://salilab.org/modeller/download_installation.html) which does require a free license to operate.  
+7. The missing and mutated residues are rebuilt using the [MODELLER](https://salilab.org/modeller/download_installation.html) which does require a free license to operate. To prevent non-realistic bonds between the rebuilt residues and the remainder of the protein (which remains fixed during the rebuilding processes) we include the residues on either side of the missing residues in the MODELLER template.  
     NOTE: if you are rebuilding long sections of the protein such as with IDR tails then modeller may need a little help to prevent these rebuilt sections from threading gaps in the protein.  See the *special_restraints* section of the *MyModel* class inside the *rebuild_missing_residues* function for examples on how to defined lowerbound distance restraints to prevent the rebuilt terminal tails from coming to close too the protein.  
       
 8.  Finally the [CATH](https://www.cathdb.info/) domain information is pulled from the [boundaries-seqreschopping](data/cath-domain-boundaries-seqreschopping.txt) and [domain-list](data/cath-domain-list.txt) files provided by the user and mapped to the fasta sequence. 
@@ -28,6 +28,7 @@ Here we preprocess the PDB files and standardize them against the canonical FAST
     | 1         | a     | Mainly alpha-helical         |
     | 2         | b     | Mainly beta-strand           |
     | 3         | c     | Alpha-helical and beta-strand|
+    | -         | n     | not defined                  |
     
     By definition missing residues not resolved in the PDB are not present in the CATH domain data and thus a simple approach is employeed where any missing residue is assigned to the next already assigned CATH domain ahead of it in the sequence. Any residue still not mapped to a domain after this first pass is then assigned to the previous already assigned CATH domain. 
       
@@ -38,10 +39,15 @@ Here we preprocess the PDB files and standardize them against the canonical FAST
     Finally if no CATH data is present then the [STRIDE](https://webclu.bio.wzw.tum.de/stride/) program is used to estimate the secondary structure content of the domain and classify it based on a 20% threshold. If the protein has both alpha-helical and beta-strand content above 20% then the structure is classified as mixed a/b and if neither meets the threshold then it is assigned a value of *n* and should be manually curated by the user.  
 
 
-
 ### Usage of [Get_PDBs.py](src/data/Get_PDBs.py)
+You will need the following external software installed and accessible in your PATH to run this code: 
+1.  [BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)  
+2.  [STRIDE](https://webclu.bio.wzw.tum.de/stride/)  
+You will also need [MODELLER](https://salilab.org/modeller/download_installation.html) python package which does require a free license to operate.  
+Download the most up-to-date CATH files located [here](https://www.cathdb.info/wiki?id=data:index). You will need the cath-domain-boundaries-seqreschopping.txt and cath-domain-list.txt files.  
+
 ```
-usage: Get_PDBs.py [-h] --candidates CANDIDATES --outpath OUTPATH --log LOG --cath CATH
+usage: Get_PDBs.py [-h] --candidates CANDIDATES --outpath OUTPATH --log LOG --cath CATH --cath_domain_list CATH_DOMAIN_LIST
 
 Process user specified arguments
 
@@ -52,14 +58,16 @@ options:
   --outpath OUTPATH     Path to output directory
   --log LOG             Path to logging file
   --cath CATH           Path to latest cath-domain-boundaries-seqreschopping.txt file
+  --cath_domain_list CATH_DOMAIN_LIST
+                        Path to latest cath-domain-list.txt file
 ```
 
 If you have the [SLUG] then you can use the command files located [here](src/command_files/Get_PDBs.cmd) to processes and rebuild the PDBs in this work. Please modify any other pathing as necessary. 
 
 
-
 ## Results
-  
+Below are the results of the rebuilding process (red) overlayed ontop of the original PDB (blue). While non-rebuilt residues are held fixed during the rebuilding process newly added residues can change how nglview renders cartoon secondary structure so there maybe changes in the representation that are unexpected. Make sure you check each structure in the *ball-and-stick* model in VMD or Pymol to valid the rebuild.  
+
 data/gifs/P0A6B4_4WR3_A_rebuilt.gif
 <p align='center'>
   <img src=data/gifs/P0A6B4_4WR3_A_rebuilt.gif alt='My GIF'>
