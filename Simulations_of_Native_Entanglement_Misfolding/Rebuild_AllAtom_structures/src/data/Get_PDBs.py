@@ -39,19 +39,34 @@ class Grabber:
         # parse the parameters 
         self.outpath = args.outpath
         self.candidates = pd.read_csv(args.candidates)
+        candidate_pdbs = np.unique([x.lower() for x in self.candidates['pdb'].values])
+        print(f'candidate_pdbs: {candidate_pdbs}')
+
         self.log = args.log
 
         # parse the cath file
         self.cath_file = args.cath
         self.cath_data = np.loadtxt(self.cath_file, dtype=str)
         print(self.cath_data)
+        self.cath_domain_list = args.cath_domain_list
+        self.cath_domain_data = np.loadtxt(self.cath_domain_list, dtype=str, usecols=[0,1])
+        print(self.cath_domain_data)
+        
         df = {'PDB':[], 'CHAIN':[], 'CLASS':[], 'CLASS_ID':[], 'PDB_resid_start':[], 'PDB_resid_end':[]}
         for idstr, rangstr in self.cath_data:
             pdb = idstr[:4]
+            if pdb not in candidate_pdbs:
+                continue
             chain = idstr[4]
-            domain = idstr[6]
-            #print(idstr, pdb, chain, domain)
-            
+
+            domain = self.cath_domain_data[np.where(self.cath_domain_data[:,0] == idstr)]
+            if len(domain) != 1:
+                print(f'More or less than 1 domain found! {idstr} {domain}')
+                domain = 6
+            else:
+                domain = domain[0][1]
+            print(idstr, pdb, chain, domain)
+
             if len(df['PDB']) == 0:
                 domainID = 0
             elif pdb != df['PDB'][-1]:
@@ -67,12 +82,12 @@ class Grabber:
 
                 df['PDB'] += [pdb]
                 df['CHAIN'] += [chain]
-                if domain == '0':
-                    df['CLASS'] += ['c']
-                elif domain == '1':
-                    df['CLASS'] += ['b']
-                elif domain == '2':
+                if domain == '1':
                     df['CLASS'] += ['a']
+                elif domain == '2':
+                    df['CLASS'] += ['b']
+                elif domain == '3':
+                    df['CLASS'] += ['c']
                 else:
                     df['CLASS'] += ['n']
                 df['CLASS_ID'] += [domainID]
@@ -645,24 +660,33 @@ def rebuild_missing_residues(pdb_path, fasta_sequence, missing_residues_df, outp
             # Add excluded volume restraints to prevent clashes
             rsr.make(self, restraint_type='stereo', spline_on_site=True)
 
-            # Add custom distance restraints to keep the rebuilt tail away from the core
-            #at1 = self.atoms['CA:153:A']  # Example: alpha carbon of the first residue (adjust accordingly)
-
+            # Add custom distance restraints to keep the rebuilt tail away from the core for certain PDBs with long tails
             # Selection for P77754_6BIE_A
-            #at1_range = self.residue_range('150:A', '161:A') # terminal tail to be rebuilt that i do not want interacting with protein
-            #at2_range = self.residue_range('55:A', '140:A')
-
+            if 'P77754_6BIE_A' in pdb_path:
+                logging.info(f'Detected P77754_6BIE_A and will apply appropriate constraints')
+                at1_range = self.residue_range('150:A', '161:A') # terminal tail to be rebuilt that i do not want interacting with protein
+                at2_range = self.residue_range('55:A', '140:A')
+                # Loop through all atoms in both ranges and apply lower-bound distance restraints
+                for at1_res in at1_range:
+                    for at2_res in at2_range:
+                        # Apply the distance restraint between atoms in at1_res and at2_res
+                        for at1_atom in at1_res.atoms:
+                            for at2_atom in at2_res.atoms:
+                                rsr.add(forms.LowerBound(group=physical.xy_distance, feature=features.Distance(at1_atom, at2_atom), mean=20.0, stdev=0.1))
+                                
             # Selection for P31142_1URH_A
-            #at1_range = self.residue_range('272:A', '281:A') # terminal tail to be rebuilt that i do not want interacting with protein
-            #at2_range = self.residue_range('5:A', '260:A')
-            
-            # Loop through all atoms in both ranges and apply lower-bound distance restraints
-            for at1_res in at1_range:
-                for at2_res in at2_range:
-                    # Apply the distance restraint between atoms in at1_res and at2_res
-                    for at1_atom in at1_res.atoms:
-                        for at2_atom in at2_res.atoms:
-                            rsr.add(forms.LowerBound(group=physical.xy_distance, feature=features.Distance(at1_atom, at2_atom), mean=20.0, stdev=0.1))
+            if 'P31142_1URH_A' in pdb_path:
+                logging.info(f'Detected P31142_1URH_A and will apply appropriate constraints')
+                at1_range = self.residue_range('271:A', '281:A') # terminal tail to be rebuilt that i do not want interacting with protein
+                at2_range = self.residue_range('5:A', '255:A')
+                
+                # Loop through all atoms in both ranges and apply lower-bound distance restraints
+                for at1_res in at1_range:
+                    for at2_res in at2_range:
+                        # Apply the distance restraint between atoms in at1_res and at2_res
+                        for at1_atom in at1_res.atoms:
+                            for at2_atom in at2_res.atoms:
+                                rsr.add(forms.LowerBound(group=physical.xy_distance, feature=features.Distance(at1_atom, at2_atom), mean=10.0, stdev=0.1))
 
     # Set up the model and perform the rebuilding
     mdl = MyModel(env, alnfile=alignment_file,
@@ -738,6 +762,7 @@ def main():
     parser.add_argument("--outpath", type=str, required=True, help="Path to output directory")
     parser.add_argument("--log", type=str, required=True, help="Path to logging file")
     parser.add_argument("--cath", type=str, required=True, help="Path to latest cath-domain-boundaries-seqreschopping.txt file")
+    parser.add_argument("--cath_domain_list", type=str, required=True, help="Path to latest cath-domain-list.txt file")
     args = parser.parse_args()
 
     ## make output folder
