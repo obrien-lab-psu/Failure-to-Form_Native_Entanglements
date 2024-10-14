@@ -205,3 +205,21 @@ data/gifs/Q46856_1OJ7_D_rebuilt.gif
 <p align='center'>
   <img src=data/gifs/Q46856_1OJ7_D_rebuilt.gif alt='My GIF'>
 </p>  
+
+
+### Usage of [Get_Rebuilt_res.py](src/data/Get_Rebuilt_res.py)
+This script just checks for all those residues that were rebuilt in this study and for any Insertions or Deletions reported in the resid_mapping.txt files provided by our previous [publication](https://pubmed.ncbi.nlm.nih.gov/38296158/).  
+```
+usage: Get_Rebuilt_res.py [-h] --inpfiles INPFILES --mapping MAPPING --outpath OUTPATH
+
+Process user specified arguments
+
+options:
+  -h, --help           show this help message and exit
+  --inpfiles INPFILES  Path to candidates file
+  --mapping MAPPING    Path to mapping files to check for insertions or deletions
+  --outpath OUTPATH    Path to output directory
+```
+The resulting log file with details can be viewed [here](data/Get_Rebuilt_res.log).  
+  
+If you have the [SLUG] then you can use the command files located [here](src/command_files/Get_Rebuilt_res.cmds) to reproduce the set of missing residues rebuilt in this work. Please modify any other pathing as necessary. 
