@@ -43,7 +43,7 @@ Here we preprocess the PDB files and standardize them against the canonical FAST
 You will need the following external software installed and accessible in your PATH to run this code: 
 1.  [BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)  
 2.  [STRIDE](https://webclu.bio.wzw.tum.de/stride/)  
-3.  You will also need [MODELLER](https://salilab.org/modeller/download_installation.html) python package which does require a free license to operate.  
+3.  [MODELLER](https://salilab.org/modeller/download_installation.html) python package which does require a free license to operate. (does not need to be in your PATH but does need to be installed in your current conda env.)   
 4.  Download the most up-to-date CATH files located [here](https://www.cathdb.info/wiki?id=data:index). You will need the cath-domain-boundaries-seqreschopping.txt and cath-domain-list.txt files.  
 
 ```
