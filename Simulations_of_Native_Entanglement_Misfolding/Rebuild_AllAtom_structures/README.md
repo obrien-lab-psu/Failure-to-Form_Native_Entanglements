@@ -21,7 +21,14 @@ Here we preprocess the PDB files and standardize them against the canonical FAST
 7. The missing and mutated residues are rebuilt using the [MODELLER](https://salilab.org/modeller/download_installation.html) which does require a free license to operate.  
     NOTE: if you are rebuilding long sections of the protein such as with IDR tails then modeller may need a little help to prevent these rebuilt sections from threading gaps in the protein.  See the *special_restraints* section of the *MyModel* class inside the *rebuild_missing_residues* function for examples on how to defined lowerbound distance restraints to prevent the rebuilt terminal tails from coming to close too the protein.  
       
-8.  Finally the [CATH](https://www.cathdb.info/) domain information is pulled from the [boundaries-seqreschopping](data/cath-domain-boundaries-seqreschopping.txt) and [domain-list](data/cath-domain-list.txt) files provided by the user and mapped to the fasta sequence. By definition missing residues not resolved in the PDB are not present in the CATH domain data and thus a simple approach is employeed where any missing residue is assigned to the next already assigned CATH domain ahead of it in the sequence. Any residue still not mapped to a domain after this first pass is then assigned to the previous already assigned CATH domain. 
+8.  Finally the [CATH](https://www.cathdb.info/) domain information is pulled from the [boundaries-seqreschopping](data/cath-domain-boundaries-seqreschopping.txt) and [domain-list](data/cath-domain-list.txt) files provided by the user and mapped to the fasta sequence. 
+      
+    | CATH code | CLASS | Desc |
+    | 1 | a | Mainly alpha-helcial |
+    | 2 | b | Mainly beta-strand |
+    | 3 | c | Alpha-helical and beta-strand |
+    
+    By definition missing residues not resolved in the PDB are not present in the CATH domain data and thus a simple approach is employeed where any missing residue is assigned to the next already assigned CATH domain ahead of it in the sequence. Any residue still not mapped to a domain after this first pass is then assigned to the previous already assigned CATH domain. 
       
     This approach assumes the following: (1) There are only short sections of missing residues within already defined domains and thus no matter which direction you scan the previous or next official CATH domain will be the same. (2) Most long stretches or missing residues are located on the terminal tails. 
       
