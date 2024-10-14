@@ -265,5 +265,6 @@ P31142-1URH_A (Deletion) 187 Left_Empty
 P31142-1URH_A (Deletion) 188 Left_Empty
 P31142-1URH_A (Deletion) 189 Left_Empty
 P31142-1URH_A (Deletion) 190 Left_Empty
+* None of these are true deletions and thus were appropriate to rebuilt as they were infact missing residues in IDR regions. 
 
 NORMAL TERMINATION: 0.25020813941955566
