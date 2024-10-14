@@ -15,11 +15,11 @@ Here we preprocess the PDB files and standardize them against the canonical FAST
    
 5. Missing residues and mutations are found but importantly this code does not handel insertions or deletions!  
   
-6. Mutated residues are removed and remodeled with the canonical sequence 
+6. Mutated residues are removed and remodeled with the canonical sequence.  
     CAUTION: should be used here as if there are extensive mutations that differ in physicochemical characteristics from the canonical residue then another PDB maybe a better choice than remodeling. If you wish to avoid rebuilding mutated residues change the variable *non_missing_mutant_residues_df* in [Get_PDBs.py](src/data/Get_PDBs.py) to include the MUTATION column in making the resid_mapping object.   
       
 7. The missing and mutated residues are rebuilt using the [MODELLER](https://salilab.org/modeller/download_installation.html) which does require a free license to operate.  
-    NOTE: if you are rebuilding long sections of the protein such as with IDR tails then modeller may need a little help to prevent these rebuilt sections from threading gaps in the protein.  See the special_restraints section of the MyModel class inside the rebuild_missing_residues function for examples on how to defined lowerbound distance restraints to prevent the rebuilt terminal tails from coming to close too the protein.  
+    NOTE: if you are rebuilding long sections of the protein such as with IDR tails then modeller may need a little help to prevent these rebuilt sections from threading gaps in the protein.  See the *special_restraints* section of the *MyModel* class inside the *rebuild_missing_residues* function for examples on how to defined lowerbound distance restraints to prevent the rebuilt terminal tails from coming to close too the protein.  
       
 8.  Finally the [CATH](https://www.cathdb.info/) domain information is pulled from the [boundaries-seqreschopping](data/cath-domain-boundaries-seqreschopping.txt) and [domain-list](data/cath-domain-list.txt) files provided by the user and mapped to the fasta sequence. By definition missing residues not resolved in the PDB are not present in the CATH domain data and thus a simple approach is employeed where any missing residue is assigned to the next already assigned CATH domain ahead of it in the sequence. Any residue still not mapped to a domain after this first pass is then assigned to the previous already assigned CATH domain. 
       
