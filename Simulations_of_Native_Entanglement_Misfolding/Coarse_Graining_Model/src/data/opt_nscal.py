@@ -265,7 +265,6 @@ def main():
     # Print argument names and values
     for arg_name, arg_value in vars(args).items():
         print(f"{arg_name}: {arg_value}")
-
         
     if tpn == -1:
         use_gpu = 1
@@ -284,7 +283,9 @@ def main():
     print(f'nscal_set:\n{nscal_set}')
 
     #sim_step = 66666667 #for 1000 ns
-    sim_step = 666667 #for 1 ns
+    #sim_step = 666667 #for 1 ns
+    #sim_step = 16666667 # 250ns
+    sim_step =  33333334 # 500ns
     Q_threshold = 0.6688
     frame_threshold = 0.98
     sleep_time = 10 # s
@@ -477,5 +478,4 @@ if __name__ == "__main__":
     main()
     end_time = time.time()
 print(f'NORMAL TERMINATION: {end_time - start_time}')
-logging.info(f'NORMAL TERMINATION: {end_time - start_time}')
 

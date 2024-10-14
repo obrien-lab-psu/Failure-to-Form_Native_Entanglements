@@ -35,5 +35,5 @@ for cmd_i, cmd in enumerate(cmds):
         for line in cmd_temp_slurm:
             fh.write(line)
     print(f'SAVED: tmp/{cmd_i}{tag}.slurm -> submitting')
-    #os.popen(f'sbatch tmp/{cmd_i}{tag}.slurm')
+    os.popen(f'sbatch tmp/{cmd_i}{tag}.slurm')
 
