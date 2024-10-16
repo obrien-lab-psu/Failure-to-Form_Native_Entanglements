@@ -93,8 +93,8 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 | 23    | P65556 | 2FKB  | A     | 180    | 1:180 c                                                             | TRUE   | Domain 1: nscal = 1.4213                                                                     |
 | 24    | P77214 | 1ZEQ  | X     | 110    | 1:110 b                                                             | TRUE   | Domain 1: nscal = 1.8120                                                                     |
 | 25    | P77754 | 6BIE  | A     | 161    | 1:161 a                                                             | TRUE   | Domain 1: nscal = 2.0322                                                                     |
-| 26    | Q46856 | 1OJ7  | D     | 387    | 1:204 c<br>205:387 a                                                | TRUE   | Domain 1: nscal = 1.1556<br>Domain 2: nscal = 1.1954<br>Interface 1|2: nscal = 1.2747       |
-| 27    | P0AD61 | 4YNG  | C     | 470    | 336:471 c<br>1:69 169:335 c<br>70:168 b                             | TRUE   | Domain 1: nscal = 1.4213<br>Domain 2: nscal = 1.1556<br>Domain 3: nscal = 1.4732<br>Interface 1|2: nscal = 1.8611<br>Interface 1|3: nscal = 1.2747<br>Interface 2|3: nscal = 1.8611 |
+| 26    | Q46856 | 1OJ7  | D     | 387    | 1:204 c<br>205:387 a                                                | TRUE   | Domain 1: nscal = 1.1556<br>Domain 2: nscal = 1.1954<br>Interface 1\|2: nscal = 1.2747       |
+| 27    | P0AD61 | 4YNG  | C     | 470    | 336:471 c<br>1:69 169:335 c<br>70:168 b                             | TRUE   | Domain 1: nscal = 1.4213<br>Domain 2: nscal = 1.1556<br>Domain 3: nscal = 1.4732<br>Interface 1\|2: nscal = 1.8611<br>Interface 1\|3: nscal = 1.2747<br>Interface 2\|3: nscal = 1.8611 |
 
 
 #### 6. References
