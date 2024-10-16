@@ -62,7 +62,7 @@ options:
   i 1.2747 1.5679 1.8611 2.1670 2.5044 1.8611
 ```
 
-If you have the [SLUG] then you can use the command files located [here](src/command_files/opt_nscal_cmds.sh) to reproduce the coarse grained protein files. Please modify any other pathing as necessary. 
+If you have the [SLUG] then you can use the command files located [here](src/command_files/opt_nscale.cmds) to reproduce the coarse grained protein files. Please modify any other pathing as necessary. 
 
 ## Results
 | Index | Gene   | PDB   | Chain | Length | Dom Type(s)                                                        | Status | nscales                                                                                     |
