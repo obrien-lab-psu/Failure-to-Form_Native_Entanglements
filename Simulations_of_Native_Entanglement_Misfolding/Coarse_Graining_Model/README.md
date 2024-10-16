@@ -14,7 +14,7 @@ Parameters ![equation](https://latex.codecogs.com/svg.image?\inline&space;\varep
 
 
 #### 4. Optimizing *n*<sub>scale</sub> Basic theory
-An arbitrary protein can be parameterized using the following strategy: The protein is coarse-grained using our [CG force field](create_cg_protein_model.py#51-force-field-of-the-cα-model). The native vdW interactions are divided into groups based on the domains defined by [CATH database](https://www.cathdb.info/); *n*<sub>scale</sub> is assigned as the first-level value according to the domain’s structural class (or interface). We then perform 10 parallel 0.5-μs MD simulations at 310 K for this CG model and monitor the *Q* value (fraction of native contacts formed) of each domain and interface. The domain or interface is regarded stabilized when all the 10 trajectories have the *Q* values greater than the threshold \<*Q*<sub>kin</sub>\> = 0.6688 for no less than 98% of the simulation time. We then increase the *n*<sub>scale</sub> values of the destabilized domains and interfaces to the next level and keep the other’s *n*<sub>scale</sub> values invariant and generate the next CG model, until all the domains and interfaces are stabilized. If a domain or interface cannot be stabilized even using the highest level of *n*<sub>scale</sub>, the median *n*<sub>scale</sub> value (i.e., level 3) of the corresponding structural class will be used to generate the final CG model regardless of the stability.
+An arbitrary protein can be parameterized using the following strategy: The protein is coarse-grained using our CG force field. The native vdW interactions are divided into groups based on the domains defined by [CATH database](https://www.cathdb.info/); *n*<sub>scale</sub> is assigned as the first-level value according to the domain’s structural class (or interface). We then perform 10 parallel 0.5-μs MD simulations at 310 K for this CG model and monitor the *Q* value (fraction of native contacts formed) of each domain and interface. The domain or interface is regarded stabilized when all the 10 trajectories have the *Q* values greater than the threshold \<*Q*<sub>kin</sub>\> = 0.6688 for no less than 98% of the simulation time. We then increase the *n*<sub>scale</sub> values of the destabilized domains and interfaces to the next level and keep the other’s *n*<sub>scale</sub> values invariant and generate the next CG model, until all the domains and interfaces are stabilized. If a domain or interface cannot be stabilized even using the highest level of *n*<sub>scale</sub>, the median *n*<sub>scale</sub> value (i.e., level 3) of the corresponding structural class will be used to generate the final CG model regardless of the stability.
 
 **Table 1**. *n*<sub>scale</sub> levels used to parameterize an arbitrary protein
 
@@ -27,22 +27,27 @@ An arbitrary protein can be parameterized using the following strategy: The prot
 
 ### Usage of [opt_nscal.py](src/data/opt_nscal.py)
 ```
+usage: opt_nscal.py [-h] -i INPUT -d DOMAIN -o OUTPATH [-t TEMP] [-p TPN] [-j NTRAJ] [-r RESTART] [-s NSCAL] [-c CASM]
 
-  Usage: python opt_nscal.py
-                --input | -i <input.pdb> for CG model creation
-                --domain | -d <domain.dat> for domain defination
-                [--temp | -t] <Temperature> in Kelvin
-                [--ppn | -n] <number of CPUs> for each trajectory. Default 1.
-                        if 0, use a single GPU for each trajectory.
-                [--tpn | -p] <total number of CPUs>. Default 10.
-                [--ntraj | -j] <number of trajectories>. Default 10.
-                [--restart | -r] <0 or 1> restart optimization. Default 0, not restart.
-                [--nscal | -s] <nscal_level.dat> for nscal levels. Default values were
-                               obtained from a training set of 18 small single-domain
-                               proteins.
-                [--casm | -c] <0 or 1> CG model type. Default 0, C-alpha model.
-                              1, C-alpha side chain model.
-                [--help | -h]
+Process user specified arguments
+
+options:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        <input.pdb> for CG model creation
+  -d DOMAIN, --domain DOMAIN
+                        <domain.dat> for domain defination. full path
+  -o OUTPATH, --outpath OUTPATH
+                        Path to output directory
+  -t TEMP, --temp TEMP  <Temperature> in Kelvin
+  -p TPN, --tpn TPN     <total number of CPUs>. Default 10.
+  -j NTRAJ, --ntraj NTRAJ
+                        <number of trajectories>. Default 10. -1 use GPU
+  -r RESTART, --restart RESTART
+                        <0 or 1> restart optimization. Default 0, not restart.
+  -s NSCAL, --nscal NSCAL
+                        <nscal_level.dat> for nscal levels. Default values were obtained from a training set of 18 small single-domain proteins.
+  -c CASM, --casm CASM  <0 or 1> CG model type. Default 0, C-alpha model. 1, C-alpha side chain model.
 
   Example domain.dat:
   1:96 302:350 a #Domain 1 is from resid 1 to 96 and 302 to 350, and in
