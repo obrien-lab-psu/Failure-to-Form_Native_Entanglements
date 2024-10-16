@@ -65,7 +65,7 @@ options:
 If you have the [SLUG] then you can use the command files located [here](src/command_files/opt_nscale.cmds) to reproduce the coarse grained protein files. Please modify any other pathing as necessary. 
 
 ## Results
-| Index | Gene   | PDB   | Chain | Length | Dom Type(s)                                                        | Status | nscales                                                                                     |
+| Index | Gene   | PDB   | Chain | Length | Dom Type(s)                                                        | Status |  *n*<sub>scale</sub>                                                                        |
 |-------|--------|-------|-------|--------|---------------------------------------------------------------------|--------|---------------------------------------------------------------------------------------------|
 | 0     | P0A6B4 | 4WR3  | A     | 359    | 1:9 218:359 b<br>10:217 c                                           | FALSE  |                                                                                             |
 | 1     | P0A6E6 | 1AQT  | A     | 139    | 1:90 b<br>91:139 a                                                  | FALSE  |                                                                                             |
