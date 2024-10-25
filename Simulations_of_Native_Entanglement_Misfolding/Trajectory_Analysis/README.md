@@ -36,7 +36,7 @@ options:
 
 #### 1. Coarse graining metastable states  
 
-### Usage of [GQ.py](src/data/GQ.py)
+### Usage of [BuildKineticModel.py](src/data/BuildKineticModel.py)
 ## Environment setup
 Please install a new Miniconda environment using the provided [MSMenvironment.yml](data/MSMenvironment.yml) file. This is required as some of the pyemma and msmtools packages have dependances on specific versions of numpy.  
 ```python
