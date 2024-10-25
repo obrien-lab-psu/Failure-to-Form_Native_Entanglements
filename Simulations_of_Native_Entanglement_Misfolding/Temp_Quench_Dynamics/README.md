@@ -2,10 +2,10 @@
   
 ### Basic theory
 #### 0. Generating random unfolded states of the models   
-We take the resulting C<sub>&alpha;</sub> Go model for each protein in the dataset and unfold it at 310K using Langevin MD untill the Q<sub>mode</sub> for a 100ns sliding window is less than or equal to a threshold provided by the user for atleast 100 frames. In this work we used Q<sub>threshold</sub> = 0.05 which is very strict but generally ok for smaller proteins. The user should define a threshold appropriate for their model.  
+We take the resulting C<sub>&alpha;</sub> Go model for each protein in the dataset and [unfold it at 310K using Langevin MD](https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Temp_Quench_Dynamics#usage-of-unfoldingdynamicspy) untill the Q<sub>mode</sub> for a 100ns sliding window is less than or equal to a threshold provided by the user for atleast 100 frames. In this work we used Q<sub>threshold</sub> = 0.05 which is very strict but generally ok for smaller proteins. The user should define a threshold appropriate for their model.  
 
-#### 1. Generating random unfolded states of the models   
-The final frame of the unfolding simulations is then used as the starting structure for the instantaneous temperature quenching dynamics at 310K. We run all quenching simulations for 2us in this work.  
+#### 1. Quenching unfolded states  
+The final frame of the unfolding simulations is then used as the starting structure for the [instantaneous temperature quenching dynamics at 310K](https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Temp_Quench_Dynamics#usage-of-dynamicspy). We run all quenching simulations for 2us in this work.  
 
 #### 2. Theoretical Background of Langevin Molecular Dynamics (Langevin MD)  
 Langevin Molecular Dynamics (Langevin MD) is a simulation technique used to model the behavior of particles (e.g., atoms or molecules) in a system that is in contact with a heat bath. It combines classical molecular dynamics with stochastic processes to mimic the thermal fluctuations and frictional effects of an environment, capturing the essential physics of a system at finite temperatures.  
