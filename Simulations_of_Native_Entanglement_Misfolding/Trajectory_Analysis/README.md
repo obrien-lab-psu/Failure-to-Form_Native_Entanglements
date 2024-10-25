@@ -37,14 +37,11 @@ $$ g_C(i, j) = \frac{1}{4\pi} \sum_{m=i}^{j-1} \sum_{n=j+4}^{N-6} \frac{R_m - R_
 where we excluded the first 5 residues on the N-terminal curve, last 5 residues on the C-terminal curve, and 4 residues before and after the native contact 
 to eliminate the error induced by both the high flexibility and contiguity of those tails.
 
-The total linking number for a native contact (*i*, *j*) was estimated as:
-
-$$ g(i, j) = \text{round}(g_N(i, j)) + \text{round}(g_C(i, j)) $$
   
 This trajectory-level analysis is useful for classifying statistically independent sample sets by the level and types of changes in entanglement they exhibit, but a time series metric which conveys the same information was desired to allow for folding time extrapolations. G is a time-dependent order parameter that reflects the extent of the topological entanglement changes in a given structure compared to the native structure. It is calculated as:
 
 $$
-G(t) = \frac{1}{N} \sum_{(i,j)} \Theta \left[(i, j) \in \cap nc \setminus g(i,j,t) \neq g_{native}(i,j)\right]
+G(t) = \frac{1}{N} \sum_{(i,j)} \Theta \left[(i, j) \in nc \cap g_{N|C}(i,j,t) \neq g_{native, N|C}(i,j)\right]
 $$
 
 where (i, j) is one of the native contacts in the native crystal structure; nc is the set of native contacts formed in the current structure at time t; g(i,j,t) and g_{native}(i,j) are, respectively, the total entanglement number of the native contact (i, j) at time t, and native structures estimated using previous equations; N is the total number of native contacts within the native structure and the selection function \Theta equals 1 when the condition is true and equals 0 when it is false. The larger G is, the greater the number of native contact residues that have changed their entanglement status relative to the native state. 
