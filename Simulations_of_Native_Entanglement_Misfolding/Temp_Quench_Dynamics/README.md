@@ -35,11 +35,10 @@ Here:
 The frictional and random forces collectively represent the thermal bath, mimicking interactions of the system with an implicit solvent.
 
 #### 2.2 Key Components of the Langevin Equation
-##### (a) Frictional Force ($-\gamma_i \frac{d \mathbf{r}_i}{dt}$)
+##### (a) Frictional Force $-\gamma_i \frac{d \mathbf{r}_i}{dt}$
 The frictional force slows down the motion of particles, damping their velocities over time. It represents energy dissipation, akin to the resistance encountered by a moving object through a viscous medium. The magnitude of the frictional force is controlled by the friction coefficient $\gamma_i$, which can be tuned to represent different levels of viscosity.
 
-#### (b) Random Force
-$\mathbf{R}_i(t)$  
+#### (b) Random Force $\mathbf{R}_i(t)$   
 The random force $\mathbf{R}_i(t)$ adds randomness to the particle’s motion, capturing the effect of thermal fluctuations. It follows the properties:
 1. **Zero Mean:** $\langle \mathbf{R}_i(t) \rangle = 0$, meaning there is no net force over time.
 2. **Delta-Correlated:** $\langle \mathbf{R}_i(t) \mathbf{R}_j(t') \rangle = 2 \gamma_i k_B T \delta_{ij} \delta(t - t')$, where $k_B$ is the Boltzmann constant, $T$ is the temperature, and $\delta(t - t')$ is the Dirac delta function. This ensures that the variance of the random force is proportional to temperature and friction, satisfying the **fluctuation-dissipation theorem**.
@@ -47,9 +46,7 @@ The random force $\mathbf{R}_i(t)$ adds randomness to the particle’s motion, c
 ##### (c) Fluctuation-Dissipation Theorem
 The fluctuation-dissipation theorem is a fundamental principle in statistical mechanics that links the dissipative forces (friction) with the random fluctuations. In Langevin MD, it ensures that the system maintains equilibrium with the heat bath at temperature $T$.
 
-$$
-\langle \mathbf{R}_i(t) \mathbf{R}_j(t') \rangle = 2 \gamma_i k_B T \delta_{ij} \delta(t - t')
-$$
+$\langle \mathbf{R}_i(t) \mathbf{R}_j(t') \rangle = 2 \gamma_i k_B T \delta_{ij} \delta(t - t')$  
 
 This relation is crucial because it ensures that the system samples the correct thermodynamic ensemble (typically the canonical ensemble).
 
