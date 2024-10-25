@@ -290,11 +290,12 @@ def main():
     frame_threshold = 0.98
     sleep_time = 10 # s
 
-    if restart == 1 and not os.path.exists('opt_nscal.log'):
-        restart = 0
-
     os.chdir(outpath)
     print(f'Changed dir to {outpath}')
+
+    if restart == 1 and not os.path.exists('opt_nscal.log'):
+        restart = 0
+    print(f'Restart: {restart}')
 
     os.system('mkdir setup')
     nscal_index_list = [0 for d in domain]

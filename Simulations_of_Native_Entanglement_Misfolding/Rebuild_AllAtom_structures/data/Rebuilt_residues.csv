@@ -85,6 +85,9 @@ FASTA_resid,FASTA,PDB,PDB_resid,MISSING,MUTATION,uniprot_id,pdb_id,chain_id,CLAS
 34,Q,-,,True,False,P0A8I5,3DXX,A,c,0
 1,M,-,,True,False,P0ACP7,1QPZ,A,a,0
 341,R,-,,True,False,P0ACP7,1QPZ,A,c,2
+346,N,-,,True,False,P0AD61,4YNG,C,c,8
+347,N,-,,True,False,P0AD61,4YNG,C,c,8
+348,D,-,,True,False,P0AD61,4YNG,C,c,8
 1,M,-,,True,False,P0ADZ0,6QUL,U,c,0
 97,G,-,,True,False,P0ADZ0,6QUL,U,c,0
 98,G,-,,True,False,P0ADZ0,6QUL,U,c,0

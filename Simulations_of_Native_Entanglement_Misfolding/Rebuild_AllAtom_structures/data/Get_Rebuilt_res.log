@@ -86,6 +86,9 @@ Rebuilt residues:
 33            34     Q   -        NaN     True     False     P0A8I5   3DXX        A     c         0
 0              1     M   -        NaN     True     False     P0ACP7   1QPZ        A     a         0
 340          341     R   -        NaN     True     False     P0ACP7   1QPZ        A     c         2
+345          346     N   -        NaN     True     False     P0AD61   4YNG        C     c         8
+346          347     N   -        NaN     True     False     P0AD61   4YNG        C     c         8
+347          348     D   -        NaN     True     False     P0AD61   4YNG        C     c         8
 0              1     M   -        NaN     True     False     P0ADZ0   6QUL        U     c         0
 96            97     G   -        NaN     True     False     P0ADZ0   6QUL        U     c         0
 97            98     G   -        NaN     True     False     P0ADZ0   6QUL        U     c         0
@@ -255,6 +258,9 @@ Rebuilt residues:
 SAVED: data/Rebuilt_residues.csv
 No Insertions found in dataset
 Deletions:
+P0AD61-4YNG_C (Deletion) 346 Left_Empty
+P0AD61-4YNG_C (Deletion) 347 Left_Empty
+P0AD61-4YNG_C (Deletion) 348 Left_Empty
 P0AES0-2IO9_B (Deletion) 35 Left_Empty
 P0AES0-2IO9_B (Deletion) 36 Left_Empty
 P0AES0-2IO9_B (Deletion) 37 Left_Empty
@@ -265,6 +271,5 @@ P31142-1URH_A (Deletion) 187 Left_Empty
 P31142-1URH_A (Deletion) 188 Left_Empty
 P31142-1URH_A (Deletion) 189 Left_Empty
 P31142-1URH_A (Deletion) 190 Left_Empty
-* None of these are true deletions and thus were appropriate to rebuilt as they were infact missing residues in IDR regions. 
 
-NORMAL TERMINATION: 0.25020813941955566
+NORMAL TERMINATION: 0.35918450355529785

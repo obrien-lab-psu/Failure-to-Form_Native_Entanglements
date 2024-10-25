@@ -40,6 +40,8 @@ Here we preprocess the PDB files and standardize them against the canonical FAST
     Therefore, if you have a structure that violates these assumptions you may need to manually curate the domain.txt file created. 
       
     Finally if no CATH data is present then the [STRIDE](https://webclu.bio.wzw.tum.de/stride/) program is used to estimate the secondary structure content of the domain and classify it based on a 20% threshold. If the protein has both alpha-helical and beta-strand content above 20% then the structure is classified as mixed a/b and if neither meets the threshold then it is assigned a value of *n* and should be manually curated by the user.  
+      
+    Two of the candidates (P0AES0 and P37747) had CATH data available for a portion of the resolved PDB structure but was missing annotations for another significant portion of the structure. Again we used the STRIDE method to approximate the structural class of these missing domains.  
 
 
 ### Usage of [Get_PDBs.py](src/data/Get_PDBs.py)
