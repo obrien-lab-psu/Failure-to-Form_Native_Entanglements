@@ -1,6 +1,7 @@
 # Trajectory Analysis
 
-## Fraction of native contacts (Q) and Fraction of native contacts with a change in entanglement (G)  
+## Fraction of native contacts (Q)
+## Fraction of native contacts with a change in entanglement (G)  
 ### Basic theory
 #### 0. Fraction of native contacts (Q) 
 
