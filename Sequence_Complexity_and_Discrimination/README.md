@@ -142,8 +142,8 @@ options:
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Plot_compare_energetics_with_permutation.cmds) to reproduce the results plots for the loop forming contact enrichment analysis used in this work in the experimental data set and the AlphaFold structures. Please modify any other pathing as necessary. 
   
   
-### Results of loop forming contact enrichment analysis
-#### Experimental structures
+## Results of loop forming contact enrichment analysis
+### Experimental structures
 For the cyto-serum only set of observal proteins using 100k permutations  
 ![Cyto-serum loop forming contact enrichment](Figures/Contact_Enrichment/EXP/deltaDeltaE_C_50_p100000_EXP.png)  
 Raw data for plotting can be found [here](data/Contact_Enrichment/EXP/C_50_p100000/)  
@@ -158,7 +158,7 @@ Raw data for plotting can be found [here](data/Contact_Enrichment/EXP/CG_50_p100
   
   
 
-#### Alphafold structures
+### Alphafold structures
 For the cyto-serum only set of observal proteins using 100k permutations  
 ![Cyto-serum loop forming contact enrichment](Figures/Contact_Enrichment/AF/deltaDeltaE_C_50_p100000_AF.png)  
 Raw data for plotting can be found [here](data/Contact_Enrichment/AF/C_50_p100000/)  
@@ -171,6 +171,38 @@ For the cyto-serum + GroEL only set of observal proteins using 100k permutations
 ![Cyto-serum + GroEL loop forming contact enrichment](Figures/Contact_Enrichment/AF/deltaDeltaE_CG_50_p100000_AF.png)  
 Raw data for plotting can be found [here](data/Contact_Enrichment/AF/CG_50_p100000/)  
   
+
+
+## Results of loop forming contact enrichment analysis (OR instead of contact potential)
+### Experimental structures
+For the cyto-serum only set of observal proteins using 100k permutations  
+![Cyto-serum loop forming contact enrichment](Figures/Contact_Enrichment_OR_anal/EXP/deltaDeltaE_C_50_p100000_EXP.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment_OR_anal/EXP/C_50_p100000/)  
+
+For the cyto-serum + Dnak only set of observal proteins using 100k permutations  
+![Cyto-serum + DnaK loop forming contact enrichment](Figures/Contact_Enrichment_OR_anal/EXP/deltaDeltaE_CD_50_p100000_EXP.png) 
+Raw data for plotting can be found [here](data/Contact_Enrichment_OR_anal/EXP/CD_50_p100000/)  
+  
+For the cyto-serum + GroEL only set of observal proteins using 100k permutations  
+![Cyto-serum + GroEL loop forming contact enrichment](Figures/Contact_Enrichment_OR_anal/EXP/deltaDeltaE_CG_50_p100000_EXP.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment/EXP/CG_50_p100000/)  
+  
+  
+
+### Alphafold structures
+For the cyto-serum only set of observal proteins using 100k permutations  
+![Cyto-serum loop forming contact enrichment](Figures/Contact_Enrichment_OR_anal/AF/deltaDeltaE_C_50_p100000_AF.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment_OR_anal/AF/C_50_p100000/)  
+  
+For the cyto-serum + Dnak only set of observal proteins using 100k permutations  
+![Cyto-serum + DnaK loop forming contact enrichment](Figures/Contact_Enrichment_OR_anal/AF/deltaDeltaE_CD_50_p100000_AF.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment_OR_anal/AF/CD_50_p100000/)  
+  
+For the cyto-serum + GroEL only set of observal proteins using 100k permutations  
+![Cyto-serum + GroEL loop forming contact enrichment](Figures/Contact_Enrichment_OR_anal/AF/deltaDeltaE_CG_50_p100000_AF.png)  
+Raw data for plotting can be found [here](data/Contact_Enrichment_OR_anal/AF/CG_50_p100000/)  
+  
+
 ## Trend analysis in loop forming contacts 
 From the loop forming contact enrichement analysis we observe that F-F, F-Y, T-Y, S-Y, and H-C loop forming contacts are enriched in non-essential proteins across all three LiPMS experimental conditions. 
 

@@ -42,7 +42,7 @@ class Plotter:
         # Load Enorm df into class
         self.Enorm_file = self.__dict__['Enorm_file']
         print(f'self.Enorm_file: {self.Enorm_file}')
-        self.Enorm = pd.read_csv(self.Enorm_file, sep='|')
+        self.Enorm = pd.read_csv(self.Enorm_file)
         self.Enorm.set_index('AA', inplace=True)
         print(f'self.Enorm:\n{self.Enorm.to_string()}')
         self.data['Enorm'] = {'df':self.Enorm, 'pvalues':None}
@@ -51,14 +51,14 @@ class Plotter:
         # Load Ess deltaE and its pvalue files into class
         self.Ess_deltaE_file = self.__dict__['Ess_deltaE_file']
         print(f'self.Ess_deltaE_file: {self.Ess_deltaE_file}')
-        self.Ess_deltaE = pd.read_csv(self.Ess_deltaE_file, sep='|')
+        self.Ess_deltaE = pd.read_csv(self.Ess_deltaE_file)
         self.Ess_deltaE.set_index('AA', inplace=True)
         print(f'self.Ess_deltaE:\n{self.Ess_deltaE.to_string()}')
 
         self.Ess_deltaE_pvalues_file = self.__dict__['Ess_deltaE_pvalues_file']
         print(f'self.Ess_deltaE_pvalues_file: {self.Ess_deltaE_pvalues_file}')
         if os.path.exists(self.Ess_deltaE_pvalues_file):
-            self.Ess_deltaE_pvalues = pd.read_csv(self.Ess_deltaE_pvalues_file, sep='|')
+            self.Ess_deltaE_pvalues = pd.read_csv(self.Ess_deltaE_pvalues_file)
             print(self.Ess_deltaE_pvalues)
             self.Ess_deltaE_pvalues.set_index('AA', inplace=True)
             print(self.Ess_deltaE_pvalues)
@@ -75,14 +75,14 @@ class Plotter:
         # Load NonEss deltaE and its pvalue files into class
         self.NonEss_deltaE_file = self.__dict__['NonEss_deltaE_file']
         print(f'self.NonEss_deltaE_file: {self.NonEss_deltaE_file}')
-        self.NonEss_deltaE = pd.read_csv(self.NonEss_deltaE_file, sep='|')
+        self.NonEss_deltaE = pd.read_csv(self.NonEss_deltaE_file)
         self.NonEss_deltaE.set_index('AA', inplace=True)
         print(f'self.NonEss_deltaE:\n{self.NonEss_deltaE.to_string()}')
 
         self.NonEss_deltaE_pvalues_file = self.__dict__['NonEss_deltaE_pvalues_file']
         print(f'self.NonEss_deltaE_pvalues_file: {self.NonEss_deltaE_pvalues_file}')
         if os.path.exists(self.NonEss_deltaE_pvalues_file):
-            self.NonEss_deltaE_pvalues = pd.read_csv(self.NonEss_deltaE_pvalues_file, sep='|')
+            self.NonEss_deltaE_pvalues = pd.read_csv(self.NonEss_deltaE_pvalues_file)
             self.NonEss_deltaE_pvalues.set_index('AA', inplace=True)
             a = self.NonEss_deltaE_pvalues.values
             symmetric_a = np.maximum(a, a.T)
@@ -98,14 +98,14 @@ class Plotter:
         # Load Ess deltaE and its pvalue files into class
         self.deltaDeltaE_file = self.__dict__['deltaDeltaE_file']
         print(f'self.deltaDeltaE_file: {self.deltaDeltaE_file}')
-        self.deltaDeltaE = pd.read_csv(self.deltaDeltaE_file, sep='|')
+        self.deltaDeltaE = pd.read_csv(self.deltaDeltaE_file)
         self.deltaDeltaE.set_index('AA', inplace=True)
         print(f'self.deltaDeltaE:\n{self.deltaDeltaE.to_string()}')
 
         self.deltaDeltaE_pvalues_file = self.__dict__['deltaDeltaE_pvalues_file']
         print(f'self.deltaDeltaE_pvalues_file: {self.deltaDeltaE_pvalues_file}')
         if os.path.exists(self.deltaDeltaE_pvalues_file):
-            self.deltaDeltaE_pvalues = pd.read_csv(self.deltaDeltaE_pvalues_file, sep='|')
+            self.deltaDeltaE_pvalues = pd.read_csv(self.deltaDeltaE_pvalues_file)
             self.deltaDeltaE_pvalues.set_index('AA', inplace=True)
             a = self.deltaDeltaE_pvalues.values
             symmetric_a = np.maximum(a, a.T)
@@ -145,8 +145,9 @@ class Plotter:
             df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
 
             plt.figure(figsize=(8, 6))
-            heatmap = sns.heatmap(df, annot=df.round().astype(int), fmt="d", cmap="coolwarm", vmin=-60, vmax=60, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30})
-            
+            #heatmap = sns.heatmap(df, annot=df.round(decimal=1).astype(str)), fmt="", cmap="coolwarm", vmin=-60, vmax=60, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30})
+            heatmap = sns.heatmap(df, annot=df.round(decimals=1).astype(str), fmt="", cmap="coolwarm", vmin=0, vmax=2, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30})
+
             # if there is a valid pvalue dataframe color those with values below 0.05 in a yellow highlight
             if isinstance(pvalues_df, pd.DataFrame):
                 print('Pvalues found')

@@ -127,7 +127,7 @@ class FrequencyGenerator:
             self.F_ab_df['AA'] = AA_categories
             #print(f'self.F_ab_df:\n{self.F_ab_df}')
 
-            self.F_ab_df.to_csv(self.F_ab_outfile, index=False)
+            self.F_ab_df.to_csv(self.F_ab_outfile, sep='|', index=False)
             print(f'SAVED: {self.F_ab_outfile}')
             logger.info(f'SAVED: {self.F_ab_outfile}')
 
@@ -136,7 +136,7 @@ class FrequencyGenerator:
             logger.info(f'WARNING: {self.F_ab_outfile} Already exists. Delete if you wish to remake the file.')
             print(f'Loading: {self.F_ab_outfile}')
             logger.info(f'Loading: {self.F_ab_outfile}')
-            self.F_ab_df = pd.read_csv(self.F_ab_outfile)
+            self.F_ab_df = pd.read_csv(self.F_ab_outfile, sep='|')
             #print(f'self.F_ab_df:\n{self.F_ab_df}')
     #################################################################################################################
 
@@ -208,12 +208,12 @@ class FrequencyGenerator:
             
 
             contact_df = pd.DataFrame(contact_df)
-            contact_df.to_csv(contact_outfile, index=False)
+            contact_df.to_csv(contact_outfile, sep='|', index=False)
             print(f'SAVED: {contact_outfile}')
 
         print(f'LOADING: {contact_outfile}')
         logger.info(f'LOADING: {contact_outfile}')
-        contact_df = pd.read_csv(contact_outfile)
+        contact_df = pd.read_csv(contact_outfile, sep='|')
 
         return contact_df
     #################################################################################################################
@@ -238,6 +238,7 @@ class FrequencyGenerator:
                 gene_contacts = contact_df[contact_df['gene'] == gene]
                 print(gene_contacts)
 
+                #uent_df = pd.read_csv(f, sep='|')['contacts'].values
                 uent_df = pd.read_csv(f, sep='|')
                 uent_df = uent_df[uent_df['CCBond'] == False]
                 uent_df = uent_df['contacts'].values
@@ -262,12 +263,12 @@ class FrequencyGenerator:
                 GE_contact_df += [loop_contact_info]
             
             GE_contact_df = pd.concat(GE_contact_df)
-            GE_contact_df.to_csv(GE_contact_outfile, index=False)
+            GE_contact_df.to_csv(GE_contact_outfile, sep='|', index=False)
             print(f'SAVED: {GE_contact_outfile}')
 
         print(f'LOADING: {GE_contact_outfile}')
         logger.info(f'LOADING: {GE_contact_outfile}')
-        GE_contact_df = pd.read_csv(GE_contact_outfile)
+        GE_contact_df = pd.read_csv(GE_contact_outfile, sep='|')
 
         return GE_contact_df
     #################################################################################################################
@@ -275,9 +276,9 @@ class FrequencyGenerator:
     #################################################################################################################
     def Fc_ab(self, contact_df, tag):
         """
-        Fc_ab = Nc(a,b)/(Nc - Nc(a,b))
+        Fc_ab = Nc(a,b)/Nc 
         this is the frequence of a given pair of amino acids (a) and (b) being in contact across the proteome
-        where Nc(a,b) is the number of time (a) and (b) where in contact across the the set of contacts provided, and Nc is the total number of contacts across the proteome  
+        where Nc(a,b) is the number of time (a) and (b) where in contact across the proteome, and Nc is the total number of contacts across the proteome
         """
 
         # Initialize the Fc_ab outpath
@@ -308,7 +309,7 @@ class FrequencyGenerator:
         # Calculate Fc_ab = N_ab/N and make it into a pandas df
         Nc = len(contact_df['contact_mapping2matrix'].values) 
 
-        Fc_ab = Nc_ab/(Nc - Nc_ab)
+        Fc_ab = Nc_ab/Nc
         AA_categories = self.AAs2idx.keys()
         Fc_ab_df = pd.DataFrame(Fc_ab, columns = AA_categories)
         Fc_ab_df['AA'] = AA_categories
@@ -325,7 +326,7 @@ class FrequencyGenerator:
             print(f'Fc_ab_df:\n{Fc_ab_df}')
             logger.info(f'Fc_ab_df:\n{Fc_ab_df}')
 
-            Fc_ab_df.to_csv(Fc_ab_outfile, index=False)
+            Fc_ab_df.to_csv(Fc_ab_outfile, sep='|', index=False)
             #print(f'SAVED: {Fc_ab_outfile}')
             logger.info(f'SAVED: {Fc_ab_outfile}')
 
@@ -360,17 +361,17 @@ class FrequencyGenerator:
         if tag != 'None':
             pd.set_option('display.float_format', lambda x: '%.2f' % x)
             #print(f'Enorm_ab:\n{Enorm_ab}')
-            Enorm_ab.to_csv(self.Enorm_ab_outfile, index=False)
+            Enorm_ab.to_csv(self.Enorm_ab_outfile, sep='|', index=False)
             print(f'SAVED: {self.Enorm_ab_outfile}')
             logger.info(f'SAVED: {self.Enorm_ab_outfile}')
 
             #print(f'Ege_ab:\n{Ege_ab}')
-            Ege_ab.to_csv(self.Ege_ab_outfile, index=False)
+            Ege_ab.to_csv(self.Ege_ab_outfile, sep='|', index=False)
             print(f'SAVED: {self.Ege_ab_outfile}')
             logger.info(f'SAVED: {self.Ege_ab_outfile}')
 
             #print(f'deltaE:\n{deltaE}')
-            deltaE.to_csv(self.deltaE_outfile, index=False)
+            deltaE.to_csv(self.deltaE_outfile, sep='|', index=False)
             print(f'SAVED: {self.deltaE_outfile}')
             logger.info(f'SAVED: {self.deltaE_outfile}')
 
@@ -387,8 +388,7 @@ class FrequencyGenerator:
         Ess_sub = Ess_GT_FcG_ab.loc[:, Ess_GT_FcG_ab.columns != 'AA']
         NonEss_sub = NonEss_GT_FcG_ab.loc[:, NonEss_GT_FcG_ab.columns != 'AA']
         
-        deltaDeltaE = Ess_sub/NonEss_sub
-        #deltaDeltaE = NonEss_sub/Ess_sub
+        deltaDeltaE = -100*np.log10(Ess_sub/NonEss_sub)
         #print(f'deltaDeltaE:\n{deltaDeltaE}')
 
         deltaDeltaE['AA'] = Ess_GT_FcG_ab['AA'] 
@@ -396,7 +396,7 @@ class FrequencyGenerator:
         #print(f'deltaDeltaE_full:\n{deltaDeltaE_full}')
 
         if tag != 'None':
-            deltaDeltaE.to_csv(deltaDeltaE_outfile, index=False)
+            deltaDeltaE.to_csv(deltaDeltaE_outfile, sep='|', index=False)
             print(f'SAVED: {deltaDeltaE_outfile}')
             logger.info(f'SAVED: {deltaDeltaE_outfile}')
 
@@ -474,7 +474,7 @@ class FrequencyGenerator:
         # Zero the upper triangle
         result_df = self.zero_upper_triangle(result_df)
         result_df['AA'] = AA
-        result_df.to_csv(pvalue_df_outfile, index=False)
+        result_df.to_csv(pvalue_df_outfile, sep='|', index=False)
         print(f'SAVED: {pvalue_df_outfile}')
         logger.info(f'SAVED: {pvalue_df_outfile}')
 
@@ -483,7 +483,7 @@ class FrequencyGenerator:
 
         corrected_df['AA'] = AA
         print(f'corrected_df:\n{corrected_df.to_string()}')
-        corrected_df.to_csv(FDR_df_outfile, index=False)
+        corrected_df.to_csv(FDR_df_outfile, sep='|', index=False)
         print(f'SAVED: {FDR_df_outfile}')
         logger.info(f'SAVED: {FDR_df_outfile}')
     #################################################################################################################
@@ -505,11 +505,11 @@ class FrequencyGenerator:
                     resampled_value = resampled_df.at[row, col]
 
                     if pd.notna(ground_value) and pd.notna(resampled_value):  # Check for non-NaN values
-                        if ground_value > 1 and resampled_value > ground_value:
+                        if ground_value > 0 and resampled_value > ground_value:
                             result_df.at[row, col] += 1
-                        elif ground_value < 1 and resampled_value < ground_value:
+                        elif ground_value < 0 and resampled_value < ground_value:
                             result_df.at[row, col] += 1
-                        elif ground_value == 1 and resampled_value != ground_value:
+                        elif ground_value == 0 and resampled_value != ground_value:
                             result_df.at[row, col] += 1
 
         return result_df

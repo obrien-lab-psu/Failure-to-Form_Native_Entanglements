@@ -20,8 +20,11 @@ import requests
 import mdtraj as md
 from scipy.spatial.distance import pdist, squareform
 from statsmodels.stats.multitest import fdrcorrection
-from scipy.stats import permutation_test, ttest_ind, false_discovery_control
+from scipy.stats import permutation_test, ttest_ind, false_discovery_control, fisher_exact
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import MaxNLocator
+import seaborn as sns
 from math import comb
 pd.set_option('display.max_rows', 500)
 np.set_printoptions(linewidth=500)
@@ -127,7 +130,7 @@ class FrequencyGenerator:
             self.F_ab_df['AA'] = AA_categories
             #print(f'self.F_ab_df:\n{self.F_ab_df}')
 
-            self.F_ab_df.to_csv(self.F_ab_outfile, index=False)
+            self.F_ab_df.to_csv(self.F_ab_outfile, sep='|', index=False)
             print(f'SAVED: {self.F_ab_outfile}')
             logger.info(f'SAVED: {self.F_ab_outfile}')
 
@@ -136,7 +139,7 @@ class FrequencyGenerator:
             logger.info(f'WARNING: {self.F_ab_outfile} Already exists. Delete if you wish to remake the file.')
             print(f'Loading: {self.F_ab_outfile}')
             logger.info(f'Loading: {self.F_ab_outfile}')
-            self.F_ab_df = pd.read_csv(self.F_ab_outfile)
+            self.F_ab_df = pd.read_csv(self.F_ab_outfile, sep='|')
             #print(f'self.F_ab_df:\n{self.F_ab_df}')
     #################################################################################################################
 
@@ -208,12 +211,12 @@ class FrequencyGenerator:
             
 
             contact_df = pd.DataFrame(contact_df)
-            contact_df.to_csv(contact_outfile, index=False)
+            contact_df.to_csv(contact_outfile, sep='|', index=False)
             print(f'SAVED: {contact_outfile}')
 
         print(f'LOADING: {contact_outfile}')
         logger.info(f'LOADING: {contact_outfile}')
-        contact_df = pd.read_csv(contact_outfile)
+        contact_df = pd.read_csv(contact_outfile, sep='|')
 
         return contact_df
     #################################################################################################################
@@ -238,6 +241,7 @@ class FrequencyGenerator:
                 gene_contacts = contact_df[contact_df['gene'] == gene]
                 print(gene_contacts)
 
+                #uent_df = pd.read_csv(f, sep='|')['contacts'].values
                 uent_df = pd.read_csv(f, sep='|')
                 uent_df = uent_df[uent_df['CCBond'] == False]
                 uent_df = uent_df['contacts'].values
@@ -262,12 +266,12 @@ class FrequencyGenerator:
                 GE_contact_df += [loop_contact_info]
             
             GE_contact_df = pd.concat(GE_contact_df)
-            GE_contact_df.to_csv(GE_contact_outfile, index=False)
+            GE_contact_df.to_csv(GE_contact_outfile, sep='|', index=False)
             print(f'SAVED: {GE_contact_outfile}')
 
         print(f'LOADING: {GE_contact_outfile}')
         logger.info(f'LOADING: {GE_contact_outfile}')
-        GE_contact_df = pd.read_csv(GE_contact_outfile)
+        GE_contact_df = pd.read_csv(GE_contact_outfile, sep='|')
 
         return GE_contact_df
     #################################################################################################################
@@ -282,6 +286,8 @@ class FrequencyGenerator:
 
         # Initialize the Fc_ab outpath
         Fc_ab_outfile = f'{self.FrequencyGeneratorOutpath}Fc_ab_{tag}.csv'
+        Fc_NOTab_outfile = f'{self.FrequencyGeneratorOutpath}Fc_NOTab_{tag}.csv'
+
         #Nc_ab = np.zeros((20,20))
         Nc_ab = np.full((20,20), self.floor)
 
@@ -307,161 +313,126 @@ class FrequencyGenerator:
 
         # Calculate Fc_ab = N_ab/N and make it into a pandas df
         Nc = len(contact_df['contact_mapping2matrix'].values) 
-
-        Fc_ab = Nc_ab/(Nc - Nc_ab)
+        Nc_NOTab = np.full(Nc_ab.shape, Nc)
+        Nc_NOTab -= Nc_ab
+        #print(f'Nc: {Nc}')
+        #print(f'Nc_ab:\n{Nc_ab}')
+        #print(f'Nc_NOTab:\n{Nc_NOTab}')
+        
         AA_categories = self.AAs2idx.keys()
-        Fc_ab_df = pd.DataFrame(Fc_ab, columns = AA_categories)
+        Fc_ab_df = pd.DataFrame(Nc_ab, columns = AA_categories)
         Fc_ab_df['AA'] = AA_categories
 
+        Fc_NOTab_df = pd.DataFrame(Nc_NOTab, columns = AA_categories)
+        Fc_NOTab_df['AA'] = AA_categories
+
         if tag != 'None':
-            print(f'Nc_ab:\n{Nc_ab}')
-            logger.info(f'Nc_ab:\n{Nc_ab}')
 
-            # get zeros locations
-            print('zeros: {zeros}')
-
-            print(f'{tag} Nc: {Nc}')
-            logger.info(f'{tag} Nc: {Nc}')
-            print(f'Fc_ab_df:\n{Fc_ab_df}')
-            logger.info(f'Fc_ab_df:\n{Fc_ab_df}')
-
-            Fc_ab_df.to_csv(Fc_ab_outfile, index=False)
-            #print(f'SAVED: {Fc_ab_outfile}')
+            Fc_ab_df.to_csv(Fc_ab_outfile, sep='|', index=False)
+            print(f'SAVED: {Fc_ab_outfile}')
             logger.info(f'SAVED: {Fc_ab_outfile}')
 
-        return Fc_ab_df, zeros
+            Fc_NOTab_df.to_csv(Fc_NOTab_outfile, sep='|', index=False)
+            print(f'SAVED: {Fc_ab_outfile}')
+            logger.info(f'SAVED: {Fc_NOTab_outfile}')
+
+        return Fc_ab_df, Fc_NOTab_df
     #################################################################################################################
 
     #################################################################################################################
-    def Get_contact_energy_maps(self, F_ab, Fc_ab, FcG_ab, tag):
-        #print(f'{"#"*100}\nGet_contact_energy_maps')
+    def ORandFisherExact(self, EssAB=pd.DataFrame(), EssNotAB=pd.DataFrame(), NonEssAB=pd.DataFrame(), NonEssNotAB=pd.DataFrame()):
+        print(f'Calcualting OR and FisherExact tests')
+        AA_categories = self.AAs2idx.keys()
+        EssAB = EssAB.loc[:, EssAB.columns != 'AA']
+        EssNotAB = EssNotAB.loc[:, EssNotAB.columns != 'AA']
+        NonEssAB = NonEssAB.loc[:, NonEssAB.columns != 'AA']
+        NonEssNotAB = NonEssNotAB.loc[:, NonEssNotAB.columns != 'AA']
 
-        self.Enorm_ab_outfile = f'{self.FrequencyGeneratorOutpath}Enorm_ab_{tag}.csv'
-        self.Ege_ab_outfile = f'{self.FrequencyGeneratorOutpath}Ege_ab_{tag}.csv'
-        self.deltaE_outfile = f'{self.FrequencyGeneratorOutpath}deltaE_{tag}.csv'
+        OR = (EssAB/EssNotAB)/(NonEssAB/NonEssNotAB)
+        print(f'OR:\n{OR}')
 
-        F_ab_sub = F_ab.loc[:, F_ab.columns != 'AA']
-        Fc_ab_sub = Fc_ab.loc[:, Fc_ab.columns != 'AA']
-        FcG_ab_sub = FcG_ab.loc[:, FcG_ab.columns != 'AA']
-        if tag != 'None':
-            print(f'Fc_ab_sub:\n{Fc_ab_sub}')
-            print(f'FcG_ab_sub:\n{FcG_ab_sub}')
+        # Arrays to store the results
+        odds_ratios = np.zeros(OR.shape)
+        p_values = np.zeros(OR.shape)
 
-        Enorm_ab = -100*np.log10(Fc_ab_sub/F_ab_sub)
-        Ege_ab = -100*np.log10(FcG_ab_sub/F_ab_sub)
-        #deltaE = Ege_ab - Enorm_ab
-        deltaE = -100*np.log10(FcG_ab_sub/Fc_ab_sub)
+        # Loop through each element of the arrays to calculate OR and p-value
+        for i in range(OR.shape[0]):
+            for j in range(OR.shape[1]):
+                # Define the contingency table for this element
+                table = [[EssAB.values[i, j], EssNotAB.values[i, j]], [NonEssAB.values[i, j], NonEssNotAB.values[i, j]]]
+                
+                # Perform Fisher's exact test
+                odds_ratio, p_value = fisher_exact(table)
+                
+                # Store the results
+                odds_ratios[i, j] = odds_ratio
+                p_values[i, j] = p_value
+
+        odds_ratios = pd.DataFrame(odds_ratios, columns = AA_categories)
+        odds_ratios['AA'] = AA_categories
+
+        p_values = pd.DataFrame(p_values, columns = AA_categories)
+        FDR_values = self.apply_fdr_correction(p_values)
+        p_values['AA'] = AA_categories
+        FDR_values['AA'] = AA_categories
+
+        print("Odds Ratios:\n", odds_ratios)
+        print("P-values:\n", p_values)
+        print("FDR P-values:\n", FDR_values)
+
+        pvalue_df_outfile = f'{self.FrequencyGeneratorOutpath}EssVNonEss_pvalues.csv'
+        p_values.to_csv(pvalue_df_outfile, index=False)
+        print(f'SAVED: {pvalue_df_outfile}')
+
+        FDR_df_outfile = f'{self.FrequencyGeneratorOutpath}EssVNonEss_FDR_pvalues.csv'
+        FDR_values.to_csv(FDR_df_outfile, index=False)
+        print(f'SAVED: {FDR_df_outfile}')
         
-        # add AA column to all df and print
-        Enorm_ab['AA'] = F_ab['AA']
-        Ege_ab['AA'] = F_ab['AA']
-        deltaE['AA'] = F_ab['AA']
+        OR_df_outfile = f'{self.FrequencyGeneratorOutpath}EssVNonEss_OR.csv'
+        odds_ratios.to_csv(OR_df_outfile, index=False)
+        print(f'SAVED: {OR_df_outfile}')
 
-        if tag != 'None':
-            pd.set_option('display.float_format', lambda x: '%.2f' % x)
-            #print(f'Enorm_ab:\n{Enorm_ab}')
-            Enorm_ab.to_csv(self.Enorm_ab_outfile, index=False)
-            print(f'SAVED: {self.Enorm_ab_outfile}')
-            logger.info(f'SAVED: {self.Enorm_ab_outfile}')
-
-            #print(f'Ege_ab:\n{Ege_ab}')
-            Ege_ab.to_csv(self.Ege_ab_outfile, index=False)
-            print(f'SAVED: {self.Ege_ab_outfile}')
-            logger.info(f'SAVED: {self.Ege_ab_outfile}')
-
-            #print(f'deltaE:\n{deltaE}')
-            deltaE.to_csv(self.deltaE_outfile, index=False)
-            print(f'SAVED: {self.deltaE_outfile}')
-            logger.info(f'SAVED: {self.deltaE_outfile}')
-
-        return deltaE
+        return odds_ratios, FDR_values
     #################################################################################################################
 
     #################################################################################################################
-    def deltaDeltaE(self, Ess_GT_FcG_ab, NonEss_GT_FcG_ab, tag):
-        
-        deltaDeltaE_outfile = f'{self.FrequencyGeneratorOutpath}deltaDeltaE_{tag}.csv'
-        #print(f'Ess_deltaE:\n{Ess_deltaE}')
-        #print(f'NonEss_deltaE:\n{NonEss_deltaE}')
+    def Plot(self, df, pvalues_df, outfiletag='None'):
 
-        Ess_sub = Ess_GT_FcG_ab.loc[:, Ess_GT_FcG_ab.columns != 'AA']
-        NonEss_sub = NonEss_GT_FcG_ab.loc[:, NonEss_GT_FcG_ab.columns != 'AA']
-        
-        deltaDeltaE = Ess_sub/NonEss_sub
-        #deltaDeltaE = NonEss_sub/Ess_sub
-        #print(f'deltaDeltaE:\n{deltaDeltaE}')
+            df.set_index('AA', inplace=True)
+            df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
 
-        deltaDeltaE['AA'] = Ess_GT_FcG_ab['AA'] 
-        deltaDeltaE_full = deltaDeltaE.copy()
-        #print(f'deltaDeltaE_full:\n{deltaDeltaE_full}')
+            pvalues_df.set_index('AA', inplace=True)  
+            # Fill the upper triangle with NaNs (optional for clarity)
+            #pvalues_df = pvalues_df.where(np.tril(np.ones(pvalues_df.shape)).astype(bool))
 
-        if tag != 'None':
-            deltaDeltaE.to_csv(deltaDeltaE_outfile, index=False)
-            print(f'SAVED: {deltaDeltaE_outfile}')
-            logger.info(f'SAVED: {deltaDeltaE_outfile}')
+            # Reflect the lower triangle to the upper triangle
+            pvalues_full_df = pvalues_df + pvalues_df.T - np.diag(np.diag(pvalues_df)) 
 
-        return deltaDeltaE
-    #################################################################################################################
+            plt.figure(figsize=(8, 6))
+            heatmap = sns.heatmap(df, annot=df.round(decimals=1).astype(str), fmt="", cmap="coolwarm", vmin=0, vmax=2, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30})
+            
+            # if there is a valid pvalue dataframe color those with values below 0.05 in a yellow highlight
+            if isinstance(pvalues_full_df, pd.DataFrame):
+                print('Pvalues found')
+                # Highlight cells based on df2 values
+                for i in range(pvalues_full_df.shape[0]):
+                    for j in range(pvalues_full_df.shape[1]):
+                        if pvalues_full_df.iloc[i, j] < 0.05:
+                            heatmap.add_patch(plt.Rectangle((j, i), 1, 1, fill=False, edgecolor='yellow', lw=3))
 
-    #################################################################################################################
-    def permute(self, p, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, deltaDeltaE_GT):
-        #print(f'\nPERMUTATION {p}')
-        #logger.info(f'PERMUTATION {p}')
+            # Set labels
+            heatmap.set_yticklabels(df.index, rotation=0)
+            heatmap.set_xticklabels(df.columns, rotation=90)
 
-        # Combine the DataFrames
-        combined_df = pd.concat([Ess_GE_contacts, NonEss_GE_contacts], ignore_index=True)
-
-        # Shuffle the combined DataFrame
-        shuffled_df = shuffle(combined_df).reset_index(drop=True)
-
-        # Split the shuffled DataFrame back into two DataFrames with the original sizes
-        Ess_GE_contacts_permuted = shuffled_df.iloc[:len(Ess_GE_contacts)]
-        NonEss_GE_contacts_permuted = shuffled_df.iloc[len(Ess_GE_contacts):]
-        #print(f'Ess_GE_contacts_permuted:\n{Ess_GE_contacts_permuted}')
-        #print(f'NonEss_GE_contacts_permuted:\n{NonEss_GE_contacts_permuted}')
-
-        # save the permutated contacts
-        #Ess_GE_contacts_permuted.to_csv(Ess_GE_contact_outfile, sep='|', index=False)
-        #print(f'SAVED: {Ess_GE_contact_outfile}')
-        #NonEss_GE_contacts_permuted.to_csv(NonEss_GE_contact_outfile, sep='|', index=False)
-        #print(f'SAVED: {NonEss_GE_contact_outfile}')
-
-        # calculate the permuted Essential gene deltaE
-        Ess_FcG_ab_permute, _ = self.Fc_ab(Ess_GE_contacts_permuted, 'None')
-        #Ess_FcG_ab_permute = self.Fc_ab(Ess_GE_contacts_permuted, f'Ess_GE_permute{p}')
-        #print(f'Ess_FcG_ab_permute:\n{Ess_FcG_ab_permute}')
-        
-        Ess_deltaE_permute = self.Get_contact_energy_maps(self.F_ab_df, All_Fc_ab, Ess_FcG_ab_permute, 'None')
-        #Ess_deltaE_permute = self.Get_contact_energy_maps(self.F_ab_df, All_Fc_ab, Ess_FcG_ab_permute, f'Ess_permute{p}')
-        #print(f'Ess_deltaE_permute:\n{Ess_deltaE_permute}')
-
-        # calculate the permuted NonEssential gene deltaE
-        NonEss_FcG_ab_permute, _ = self.Fc_ab(NonEss_GE_contacts_permuted, 'None')
-        #NonEss_FcG_ab_permute = self.Fc_ab(NonEss_GE_contacts_permuted, f'NonEss_GE_permute{p}')
-        #print(f'NonEss_FcG_ab_permute:\n{NonEss_FcG_ab_permute}')
-        
-        NonEss_deltaE_permute = self.Get_contact_energy_maps(self.F_ab_df, All_Fc_ab, NonEss_FcG_ab_permute, 'None')
-        #NonEss_deltaE_permute = self.Get_contact_energy_maps(self.F_ab_df, All_Fc_ab, NonEss_FcG_ab_permute, f'NonEss_permute{p}')
-        #print(f'NonEss_deltaE_permute:\n{NonEss_deltaE_permute}')
-
-        # Get permuted deltaDeltaE
-        deltaDeltaE_permute = self.deltaDeltaE(Ess_FcG_ab_permute, NonEss_FcG_ab_permute, 'None')
-        #deltaDeltaE_permute = self.deltaDeltaE(Ess_deltaE_permute, NonEss_deltaE_permute, f'permute{p}')
-        #print(f'deltaDeltaE_permute {p}:\n{deltaDeltaE_permute}')
-
-        # caclualte deltaDeltaE pvalues
-        premuted_dfs = [Ess_deltaE_permute.loc[:, Ess_deltaE_permute.columns != 'AA']]
-        Ess_deltaE_pvalue = self.count_conditionally(Ess_GT_deltaE.loc[:, Ess_GT_deltaE.columns != 'AA'], premuted_dfs)
-
-        # caclualte deltaDeltaE pvalues
-        premuted_dfs = [NonEss_deltaE_permute.loc[:, NonEss_deltaE_permute.columns != 'AA']]
-        NonEss_deltaE_pvalue = self.count_conditionally(NonEss_GT_deltaE.loc[:, NonEss_GT_deltaE.columns != 'AA'], premuted_dfs)
-
-        # caclualte deltaDeltaE pvalues
-        premuted_dfs = [deltaDeltaE_permute.loc[:, deltaDeltaE_permute.columns != 'AA']]
-        deltaDeltaE_pvalue = self.count_conditionally(deltaDeltaE_GT.loc[:, deltaDeltaE_GT.columns != 'AA'], premuted_dfs)
-
-        return Ess_deltaE_pvalue, NonEss_deltaE_pvalue, deltaDeltaE_pvalue
+            #plt.title(info)
+            plt.xlabel('Amino Acids')
+            plt.ylabel('Amino Acids')
+            #plt.show()
+            plt.tight_layout()
+            outfile = os.path.join(self.FrequencyGeneratorOutpath, f'{outfiletag}.png')
+            plt.savefig(outfile)
+            plt.close()
+            print(f'SAVED: {outfile}')
     #################################################################################################################
 
     #################################################################################################################
@@ -474,7 +445,7 @@ class FrequencyGenerator:
         # Zero the upper triangle
         result_df = self.zero_upper_triangle(result_df)
         result_df['AA'] = AA
-        result_df.to_csv(pvalue_df_outfile, index=False)
+        result_df.to_csv(pvalue_df_outfile, sep='|', index=False)
         print(f'SAVED: {pvalue_df_outfile}')
         logger.info(f'SAVED: {pvalue_df_outfile}')
 
@@ -483,7 +454,7 @@ class FrequencyGenerator:
 
         corrected_df['AA'] = AA
         print(f'corrected_df:\n{corrected_df.to_string()}')
-        corrected_df.to_csv(FDR_df_outfile, index=False)
+        corrected_df.to_csv(FDR_df_outfile, sep='|', index=False)
         print(f'SAVED: {FDR_df_outfile}')
         logger.info(f'SAVED: {FDR_df_outfile}')
     #################################################################################################################
@@ -505,11 +476,11 @@ class FrequencyGenerator:
                     resampled_value = resampled_df.at[row, col]
 
                     if pd.notna(ground_value) and pd.notna(resampled_value):  # Check for non-NaN values
-                        if ground_value > 1 and resampled_value > ground_value:
+                        if ground_value > 0 and resampled_value > ground_value:
                             result_df.at[row, col] += 1
-                        elif ground_value < 1 and resampled_value < ground_value:
+                        elif ground_value < 0 and resampled_value < ground_value:
                             result_df.at[row, col] += 1
-                        elif ground_value == 1 and resampled_value != ground_value:
+                        elif ground_value == 0 and resampled_value != ground_value:
                             result_df.at[row, col] += 1
 
         return result_df
@@ -618,8 +589,9 @@ def main():
     All_contacts = Fgen.get_contact_lib(rep_genes['gene'].values, 'All')
     print(f'All_contacts:\n{All_contacts}')
 
-    All_Fc_ab, All_Fc_ab_zeros = Fgen.Fc_ab(All_contacts, 'All')
+    All_Fc_ab, All_Fc_NOTab = Fgen.Fc_ab(All_contacts, 'All')
     print(f'All_Fc_ab:\n{All_Fc_ab.to_string()}')
+    print(f'All_Fc_NOTab:\n{All_Fc_NOTab.to_string()}')
 
     # Load Essential gene info and get ground truth (GT) 
     # (2) get Ess contacts
@@ -632,20 +604,13 @@ def main():
     Ess_contacts = Fgen.get_contact_lib(Ess_gene_mask, 'Ess')
     print(f'Ess_contacts:\n{Ess_contacts}')
 
-    #Ess_GT_Fc_ab = Fgen.Fc_ab(Ess_contacts, 'Ess_GT')
-    #print(f'Ess_GT_Fc_ab:\n{Ess_GT_Fc_ab}')
-
     Ess_GE_contacts = Fgen.get_GE_contact_lib(Ess_gene_mask, uent_files, Ess_contacts, rep_genes, 'Ess_GE_GT')
     print(f'Ess_GE_contacts:\n{Ess_GE_contacts}')
 
-    Ess_GT_FcG_ab, Ess_GT_FcG_ab_zeros = Fgen.Fc_ab(Ess_GE_contacts, 'Ess_GE_GT')
+    Ess_GT_FcG_ab, Ess_GT_FcG_NOTab = Fgen.Fc_ab(Ess_GE_contacts, 'Ess_GE_GT')
     print(f'Ess_GT_FcG_ab:\n{Ess_GT_FcG_ab.to_string()}')
-    print(f'Ess_GT_FcG_ab_zeros: {Ess_GT_FcG_ab_zeros}')
+    print(f'Ess_GT_FcG_NOTab: {Ess_GT_FcG_NOTab.to_string()}')
 
-    # Calulate Enorm_ab, Ege_ab, and deltaE 
-    #Ess_GT_deltaE = Fgen.Get_contact_energy_maps(Fgen.F_ab_df, Ess_GT_Fc_ab, Ess_GT_FcG_ab, 'Ess_GT')
-    Ess_GT_deltaE = Fgen.Get_contact_energy_maps(Fgen.F_ab_df, All_Fc_ab, Ess_GT_FcG_ab, 'Ess_GT')
-    print(f'Ess_GT_deltaE:\n{Ess_GT_deltaE.to_string()}')
 
     # Load Non-Essential gene info and get ground truth (GT) 
     # (2) get Ess contacts
@@ -658,71 +623,19 @@ def main():
     NonEss_contacts = Fgen.get_contact_lib(NonEss_gene_mask, 'NonEss')
     print(f'NonEss_contacts:\n{NonEss_contacts}')
 
-    #NonEss_GT_Fc_ab = Fgen.Fc_ab(NonEss_contacts, 'NonEss_GT')
-    #print(f'NonEss_GT_Fc_ab:\n{NonEss_GT_Fc_ab}')
-
     NonEss_GE_contacts = Fgen.get_GE_contact_lib(NonEss_gene_mask, uent_files, NonEss_contacts, rep_genes, 'NonEss_GE_GT')
     print(f'NonEss_GE_contacts:\n{NonEss_GE_contacts}')
 
-    NonEss_GT_FcG_ab, NonEss_GT_FcG_ab_zeros = Fgen.Fc_ab(NonEss_GE_contacts, 'NonEss_GE_GT')
+    NonEss_GT_FcG_ab, NonEss_GT_FcG_NOTab = Fgen.Fc_ab(NonEss_GE_contacts, 'NonEss_GE_GT')
     print(f'NonEss_GT_FcG_ab:\n{NonEss_GT_FcG_ab.to_string()}')
-    print(f'NonEss_GT_FcG_ab_zeros: {NonEss_GT_FcG_ab_zeros}')
-
-    # Calulate Enorm_ab, Ege_ab, and deltaE 
-    #NonEss_GT_deltaE = Fgen.Get_contact_energy_maps(Fgen.F_ab_df, NonEss_GT_Fc_ab, NonEss_GT_FcG_ab, 'NonEss_GT')
-    NonEss_GT_deltaE = Fgen.Get_contact_energy_maps(Fgen.F_ab_df, All_Fc_ab, NonEss_GT_FcG_ab, 'NonEss_GT')
-    print(f'NonEss_GT_deltaE:\n{NonEss_GT_deltaE.to_string()}')
-
-    # Get GT deltaDeltaE
-    #deltaDeltaE = Fgen.deltaDeltaE(Ess_GT_deltaE, NonEss_GT_deltaE, 'GT')
-    deltaDeltaE = Fgen.deltaDeltaE(Ess_GT_FcG_ab, NonEss_GT_FcG_ab, 'GT')
-    print(f'deltaDeltaE:\n{deltaDeltaE.to_string()}')
-
-    # add all the permuted contact matrixes together for each system
-    pvalues = parallel_permute(Fgen, num_permute, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, deltaDeltaE)
-    Ess_deltaE_pvalues = reduce(lambda df1, df2: df1.add(df2, fill_value=0), [d[0] for d in pvalues])
-    #Ess_deltaE_pvalues[Ess_GT_FcG_ab_zeros] = 0
-
-    NonEss_deltaE_pvalues = reduce(lambda df1, df2: df1.add(df2, fill_value=0), [d[1] for d in pvalues])
-    #NonEss_deltaE_pvalues[NonEss_GT_FcG_ab_zeros] = 0
-
-    deltaDeltaE_pvalues = reduce(lambda df1, df2: df1.add(df2, fill_value=0), [d[2] for d in pvalues])
-    #deltaDeltaE_pvalues[Ess_GT_FcG_ab_zeros] = 0
-    #deltaDeltaE_pvalues[NonEss_GT_FcG_ab_zeros] = 0
-
-    print(f'\n{"#"*50}\nEss_deltaE_pvalues:\n{Ess_deltaE_pvalues.to_string()}')
-    Ess_deltaE_pvalues /= num_permute
-    print(f'Ess_deltaE_pvalues:\n{Ess_deltaE_pvalues.to_string()}')
-    AA = Ess_GT_deltaE['AA'].values
-    Fgen.pvalues(Ess_deltaE_pvalues, 'deltaE_Ess', AA)
-
-    print(f'\n{"#"*50}\nNonEss_deltaE_pvalues:\n{NonEss_deltaE_pvalues.to_string()}')
-    NonEss_deltaE_pvalues /= num_permute
-    print(f'NonEss_deltaE_pvalues:\n{NonEss_deltaE_pvalues.to_string()}')
-    Fgen.pvalues(NonEss_deltaE_pvalues, 'deltaE_NonEss', AA)
-
-    print(f'\n{"#"*50}\ndeltaDeltaE_pvalues:\n{deltaDeltaE_pvalues.to_string()}')
-    deltaDeltaE_pvalues /= num_permute
-    print(f'deltaDeltaE_pvalues:\n{deltaDeltaE_pvalues.to_string()}')
-    Fgen.pvalues(deltaDeltaE_pvalues, 'deltaDeltaE', AA)
+    print(f'NonEss_GT_FcG_NOTab:\n{NonEss_GT_FcG_NOTab.to_string()}')
 
 
+    # Calculate OR and Fisher Exact pvalue
+    OR_df, FDR_df = Fgen.ORandFisherExact(EssAB=Ess_GT_FcG_ab, EssNotAB=Ess_GT_FcG_NOTab, NonEssAB=NonEss_GT_FcG_ab, NonEssNotAB=NonEss_GT_FcG_NOTab)
 
-def parallel_permute(Fgen, num_permute, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, deltaDeltaE):
-    pool = mp.Pool(processes=10)  # Create a pool with 4 processes
-
-    # Create the arguments to pass to the function in parallel
-    args = [(p, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, deltaDeltaE) for p in range(num_permute)]
-
-    # Use pool.starmap to execute the function in parallel
-    pvalues = pool.starmap(Fgen.permute, args)
-
-    pool.close()  # Close the pool to free resources
-    pool.join()   # Ensure all processes have completed
-
-
-    return pvalues
-
+    # Plot the data
+    Fgen.Plot(OR_df, FDR_df, outfiletag=f'EssVNonEss')
 
 start_time = time.time()
 if __name__ == "__main__":
