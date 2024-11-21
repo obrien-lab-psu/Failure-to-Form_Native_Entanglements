@@ -146,7 +146,7 @@ class Plotter:
 
             plt.figure(figsize=(8, 6))
             #heatmap = sns.heatmap(df, annot=df.round(decimal=1).astype(str)), fmt="", cmap="coolwarm", vmin=-60, vmax=60, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30})
-            heatmap = sns.heatmap(df, annot=df.round(decimals=1).astype(str), fmt="", cmap="coolwarm", vmin=0, vmax=2, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30})
+            heatmap = sns.heatmap(df, annot=df.round(decimals=2).astype(str), fmt="", cmap="coolwarm", vmin=0, vmax=2, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30}, annot_kws={"fontsize": 7})
 
             # if there is a valid pvalue dataframe color those with values below 0.05 in a yellow highlight
             if isinstance(pvalues_df, pd.DataFrame):
