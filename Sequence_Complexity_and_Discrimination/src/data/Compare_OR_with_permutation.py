@@ -127,7 +127,7 @@ class FrequencyGenerator:
             self.F_ab_df['AA'] = AA_categories
             #print(f'self.F_ab_df:\n{self.F_ab_df}')
 
-            self.F_ab_df.to_csv(self.F_ab_outfile, sep='|', index=False)
+            self.F_ab_df.to_csv(self.F_ab_outfile, index=False)
             print(f'SAVED: {self.F_ab_outfile}')
             logger.info(f'SAVED: {self.F_ab_outfile}')
 
@@ -136,7 +136,7 @@ class FrequencyGenerator:
             logger.info(f'WARNING: {self.F_ab_outfile} Already exists. Delete if you wish to remake the file.')
             print(f'Loading: {self.F_ab_outfile}')
             logger.info(f'Loading: {self.F_ab_outfile}')
-            self.F_ab_df = pd.read_csv(self.F_ab_outfile, sep='|')
+            self.F_ab_df = pd.read_csv(self.F_ab_outfile)
             #print(f'self.F_ab_df:\n{self.F_ab_df}')
     #################################################################################################################
 
@@ -208,12 +208,12 @@ class FrequencyGenerator:
             
 
             contact_df = pd.DataFrame(contact_df)
-            contact_df.to_csv(contact_outfile, sep='|', index=False)
+            contact_df.to_csv(contact_outfile, index=False)
             print(f'SAVED: {contact_outfile}')
 
         print(f'LOADING: {contact_outfile}')
         logger.info(f'LOADING: {contact_outfile}')
-        contact_df = pd.read_csv(contact_outfile, sep='|')
+        contact_df = pd.read_csv(contact_outfile)
 
         return contact_df
     #################################################################################################################
@@ -238,7 +238,6 @@ class FrequencyGenerator:
                 gene_contacts = contact_df[contact_df['gene'] == gene]
                 print(gene_contacts)
 
-                #uent_df = pd.read_csv(f, sep='|')['contacts'].values
                 uent_df = pd.read_csv(f, sep='|')
                 uent_df = uent_df[uent_df['CCBond'] == False]
                 uent_df = uent_df['contacts'].values
@@ -263,12 +262,12 @@ class FrequencyGenerator:
                 GE_contact_df += [loop_contact_info]
             
             GE_contact_df = pd.concat(GE_contact_df)
-            GE_contact_df.to_csv(GE_contact_outfile, sep='|', index=False)
+            GE_contact_df.to_csv(GE_contact_outfile, index=False)
             print(f'SAVED: {GE_contact_outfile}')
 
         print(f'LOADING: {GE_contact_outfile}')
         logger.info(f'LOADING: {GE_contact_outfile}')
-        GE_contact_df = pd.read_csv(GE_contact_outfile, sep='|')
+        GE_contact_df = pd.read_csv(GE_contact_outfile)
 
         return GE_contact_df
     #################################################################################################################
@@ -276,9 +275,9 @@ class FrequencyGenerator:
     #################################################################################################################
     def Fc_ab(self, contact_df, tag):
         """
-        Fc_ab = Nc(a,b)/Nc 
+        Fc_ab = Nc(a,b)/(Nc - Nc(a,b))
         this is the frequence of a given pair of amino acids (a) and (b) being in contact across the proteome
-        where Nc(a,b) is the number of time (a) and (b) where in contact across the proteome, and Nc is the total number of contacts across the proteome
+        where Nc(a,b) is the number of time (a) and (b) where in contact across the the set of contacts provided, and Nc is the total number of contacts across the proteome  
         """
 
         # Initialize the Fc_ab outpath
@@ -309,7 +308,7 @@ class FrequencyGenerator:
         # Calculate Fc_ab = N_ab/N and make it into a pandas df
         Nc = len(contact_df['contact_mapping2matrix'].values) 
 
-        Fc_ab = Nc_ab/Nc
+        Fc_ab = Nc_ab/(Nc - Nc_ab)
         AA_categories = self.AAs2idx.keys()
         Fc_ab_df = pd.DataFrame(Fc_ab, columns = AA_categories)
         Fc_ab_df['AA'] = AA_categories
@@ -326,7 +325,7 @@ class FrequencyGenerator:
             print(f'Fc_ab_df:\n{Fc_ab_df}')
             logger.info(f'Fc_ab_df:\n{Fc_ab_df}')
 
-            Fc_ab_df.to_csv(Fc_ab_outfile, sep='|', index=False)
+            Fc_ab_df.to_csv(Fc_ab_outfile, index=False)
             #print(f'SAVED: {Fc_ab_outfile}')
             logger.info(f'SAVED: {Fc_ab_outfile}')
 
@@ -361,17 +360,17 @@ class FrequencyGenerator:
         if tag != 'None':
             pd.set_option('display.float_format', lambda x: '%.2f' % x)
             #print(f'Enorm_ab:\n{Enorm_ab}')
-            Enorm_ab.to_csv(self.Enorm_ab_outfile, sep='|', index=False)
+            Enorm_ab.to_csv(self.Enorm_ab_outfile, index=False)
             print(f'SAVED: {self.Enorm_ab_outfile}')
             logger.info(f'SAVED: {self.Enorm_ab_outfile}')
 
             #print(f'Ege_ab:\n{Ege_ab}')
-            Ege_ab.to_csv(self.Ege_ab_outfile, sep='|', index=False)
+            Ege_ab.to_csv(self.Ege_ab_outfile, index=False)
             print(f'SAVED: {self.Ege_ab_outfile}')
             logger.info(f'SAVED: {self.Ege_ab_outfile}')
 
             #print(f'deltaE:\n{deltaE}')
-            deltaE.to_csv(self.deltaE_outfile, sep='|', index=False)
+            deltaE.to_csv(self.deltaE_outfile, index=False)
             print(f'SAVED: {self.deltaE_outfile}')
             logger.info(f'SAVED: {self.deltaE_outfile}')
 
@@ -379,32 +378,33 @@ class FrequencyGenerator:
     #################################################################################################################
 
     #################################################################################################################
-    def deltaDeltaE(self, Ess_GT_FcG_ab, NonEss_GT_FcG_ab, tag):
+    def OR(self, Ess_GT_FcG_ab, NonEss_GT_FcG_ab, tag):
         
-        deltaDeltaE_outfile = f'{self.FrequencyGeneratorOutpath}deltaDeltaE_{tag}.csv'
+        OR_outfile = f'{self.FrequencyGeneratorOutpath}OR_{tag}.csv'
         #print(f'Ess_deltaE:\n{Ess_deltaE}')
         #print(f'NonEss_deltaE:\n{NonEss_deltaE}')
 
         Ess_sub = Ess_GT_FcG_ab.loc[:, Ess_GT_FcG_ab.columns != 'AA']
         NonEss_sub = NonEss_GT_FcG_ab.loc[:, NonEss_GT_FcG_ab.columns != 'AA']
         
-        deltaDeltaE = -100*np.log10(Ess_sub/NonEss_sub)
-        #print(f'deltaDeltaE:\n{deltaDeltaE}')
+        #OR = Ess_sub/NonEss_sub
+        OR = NonEss_sub/Ess_sub
+        #print(f'OR:\n{OR}')
 
-        deltaDeltaE['AA'] = Ess_GT_FcG_ab['AA'] 
-        deltaDeltaE_full = deltaDeltaE.copy()
-        #print(f'deltaDeltaE_full:\n{deltaDeltaE_full}')
+        OR['AA'] = Ess_GT_FcG_ab['AA'] 
+        OR_full = OR.copy()
+        #print(f'OR_full:\n{OR_full}')
 
         if tag != 'None':
-            deltaDeltaE.to_csv(deltaDeltaE_outfile, sep='|', index=False)
-            print(f'SAVED: {deltaDeltaE_outfile}')
-            logger.info(f'SAVED: {deltaDeltaE_outfile}')
+            OR.to_csv(OR_outfile, index=False)
+            print(f'SAVED: {OR_outfile}')
+            logger.info(f'SAVED: {OR_outfile}')
 
-        return deltaDeltaE
+        return OR
     #################################################################################################################
 
     #################################################################################################################
-    def permute(self, p, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, deltaDeltaE_GT):
+    def permute(self, p, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, OR_GT):
         #print(f'\nPERMUTATION {p}')
         #logger.info(f'PERMUTATION {p}')
 
@@ -420,48 +420,37 @@ class FrequencyGenerator:
         #print(f'Ess_GE_contacts_permuted:\n{Ess_GE_contacts_permuted}')
         #print(f'NonEss_GE_contacts_permuted:\n{NonEss_GE_contacts_permuted}')
 
-        # save the permutated contacts
-        #Ess_GE_contacts_permuted.to_csv(Ess_GE_contact_outfile, sep='|', index=False)
-        #print(f'SAVED: {Ess_GE_contact_outfile}')
-        #NonEss_GE_contacts_permuted.to_csv(NonEss_GE_contact_outfile, sep='|', index=False)
-        #print(f'SAVED: {NonEss_GE_contact_outfile}')
-
         # calculate the permuted Essential gene deltaE
         Ess_FcG_ab_permute, _ = self.Fc_ab(Ess_GE_contacts_permuted, 'None')
-        #Ess_FcG_ab_permute = self.Fc_ab(Ess_GE_contacts_permuted, f'Ess_GE_permute{p}')
         #print(f'Ess_FcG_ab_permute:\n{Ess_FcG_ab_permute}')
         
         Ess_deltaE_permute = self.Get_contact_energy_maps(self.F_ab_df, All_Fc_ab, Ess_FcG_ab_permute, 'None')
-        #Ess_deltaE_permute = self.Get_contact_energy_maps(self.F_ab_df, All_Fc_ab, Ess_FcG_ab_permute, f'Ess_permute{p}')
         #print(f'Ess_deltaE_permute:\n{Ess_deltaE_permute}')
 
         # calculate the permuted NonEssential gene deltaE
         NonEss_FcG_ab_permute, _ = self.Fc_ab(NonEss_GE_contacts_permuted, 'None')
-        #NonEss_FcG_ab_permute = self.Fc_ab(NonEss_GE_contacts_permuted, f'NonEss_GE_permute{p}')
         #print(f'NonEss_FcG_ab_permute:\n{NonEss_FcG_ab_permute}')
         
         NonEss_deltaE_permute = self.Get_contact_energy_maps(self.F_ab_df, All_Fc_ab, NonEss_FcG_ab_permute, 'None')
-        #NonEss_deltaE_permute = self.Get_contact_energy_maps(self.F_ab_df, All_Fc_ab, NonEss_FcG_ab_permute, f'NonEss_permute{p}')
         #print(f'NonEss_deltaE_permute:\n{NonEss_deltaE_permute}')
 
-        # Get permuted deltaDeltaE
-        deltaDeltaE_permute = self.deltaDeltaE(Ess_FcG_ab_permute, NonEss_FcG_ab_permute, 'None')
-        #deltaDeltaE_permute = self.deltaDeltaE(Ess_deltaE_permute, NonEss_deltaE_permute, f'permute{p}')
-        #print(f'deltaDeltaE_permute {p}:\n{deltaDeltaE_permute}')
+        # Get permuted OR
+        OR_permute = self.OR(Ess_FcG_ab_permute, NonEss_FcG_ab_permute, 'None')
+        #print(f'OR_permute {p}:\n{OR_permute}')
 
-        # caclualte deltaDeltaE pvalues
+        # caclualte OR pvalues
         premuted_dfs = [Ess_deltaE_permute.loc[:, Ess_deltaE_permute.columns != 'AA']]
         Ess_deltaE_pvalue = self.count_conditionally(Ess_GT_deltaE.loc[:, Ess_GT_deltaE.columns != 'AA'], premuted_dfs)
 
-        # caclualte deltaDeltaE pvalues
+        # caclualte OR pvalues
         premuted_dfs = [NonEss_deltaE_permute.loc[:, NonEss_deltaE_permute.columns != 'AA']]
         NonEss_deltaE_pvalue = self.count_conditionally(NonEss_GT_deltaE.loc[:, NonEss_GT_deltaE.columns != 'AA'], premuted_dfs)
 
-        # caclualte deltaDeltaE pvalues
-        premuted_dfs = [deltaDeltaE_permute.loc[:, deltaDeltaE_permute.columns != 'AA']]
-        deltaDeltaE_pvalue = self.count_conditionally(deltaDeltaE_GT.loc[:, deltaDeltaE_GT.columns != 'AA'], premuted_dfs)
+        # caclualte OR pvalues
+        premuted_dfs = [OR_permute.loc[:, OR_permute.columns != 'AA']]
+        OR_pvalue = self.count_conditionally(OR_GT.loc[:, OR_GT.columns != 'AA'], premuted_dfs)
 
-        return Ess_deltaE_pvalue, NonEss_deltaE_pvalue, deltaDeltaE_pvalue
+        return Ess_deltaE_pvalue, NonEss_deltaE_pvalue, OR_pvalue
     #################################################################################################################
 
     #################################################################################################################
@@ -474,7 +463,7 @@ class FrequencyGenerator:
         # Zero the upper triangle
         result_df = self.zero_upper_triangle(result_df)
         result_df['AA'] = AA
-        result_df.to_csv(pvalue_df_outfile, sep='|', index=False)
+        result_df.to_csv(pvalue_df_outfile, index=False)
         print(f'SAVED: {pvalue_df_outfile}')
         logger.info(f'SAVED: {pvalue_df_outfile}')
 
@@ -483,7 +472,7 @@ class FrequencyGenerator:
 
         corrected_df['AA'] = AA
         print(f'corrected_df:\n{corrected_df.to_string()}')
-        corrected_df.to_csv(FDR_df_outfile, sep='|', index=False)
+        corrected_df.to_csv(FDR_df_outfile, index=False)
         print(f'SAVED: {FDR_df_outfile}')
         logger.info(f'SAVED: {FDR_df_outfile}')
     #################################################################################################################
@@ -505,11 +494,11 @@ class FrequencyGenerator:
                     resampled_value = resampled_df.at[row, col]
 
                     if pd.notna(ground_value) and pd.notna(resampled_value):  # Check for non-NaN values
-                        if ground_value > 0 and resampled_value > ground_value:
+                        if ground_value > 1 and resampled_value > ground_value:
                             result_df.at[row, col] += 1
-                        elif ground_value < 0 and resampled_value < ground_value:
+                        elif ground_value < 1 and resampled_value < ground_value:
                             result_df.at[row, col] += 1
-                        elif ground_value == 0 and resampled_value != ground_value:
+                        elif ground_value == 1 and resampled_value != ground_value:
                             result_df.at[row, col] += 1
 
         return result_df
@@ -632,8 +621,6 @@ def main():
     Ess_contacts = Fgen.get_contact_lib(Ess_gene_mask, 'Ess')
     print(f'Ess_contacts:\n{Ess_contacts}')
 
-    #Ess_GT_Fc_ab = Fgen.Fc_ab(Ess_contacts, 'Ess_GT')
-    #print(f'Ess_GT_Fc_ab:\n{Ess_GT_Fc_ab}')
 
     Ess_GE_contacts = Fgen.get_GE_contact_lib(Ess_gene_mask, uent_files, Ess_contacts, rep_genes, 'Ess_GE_GT')
     print(f'Ess_GE_contacts:\n{Ess_GE_contacts}')
@@ -643,9 +630,9 @@ def main():
     print(f'Ess_GT_FcG_ab_zeros: {Ess_GT_FcG_ab_zeros}')
 
     # Calulate Enorm_ab, Ege_ab, and deltaE 
-    #Ess_GT_deltaE = Fgen.Get_contact_energy_maps(Fgen.F_ab_df, Ess_GT_Fc_ab, Ess_GT_FcG_ab, 'Ess_GT')
     Ess_GT_deltaE = Fgen.Get_contact_energy_maps(Fgen.F_ab_df, All_Fc_ab, Ess_GT_FcG_ab, 'Ess_GT')
     print(f'Ess_GT_deltaE:\n{Ess_GT_deltaE.to_string()}')
+
 
     # Load Non-Essential gene info and get ground truth (GT) 
     # (2) get Ess contacts
@@ -658,9 +645,6 @@ def main():
     NonEss_contacts = Fgen.get_contact_lib(NonEss_gene_mask, 'NonEss')
     print(f'NonEss_contacts:\n{NonEss_contacts}')
 
-    #NonEss_GT_Fc_ab = Fgen.Fc_ab(NonEss_contacts, 'NonEss_GT')
-    #print(f'NonEss_GT_Fc_ab:\n{NonEss_GT_Fc_ab}')
-
     NonEss_GE_contacts = Fgen.get_GE_contact_lib(NonEss_gene_mask, uent_files, NonEss_contacts, rep_genes, 'NonEss_GE_GT')
     print(f'NonEss_GE_contacts:\n{NonEss_GE_contacts}')
 
@@ -669,26 +653,20 @@ def main():
     print(f'NonEss_GT_FcG_ab_zeros: {NonEss_GT_FcG_ab_zeros}')
 
     # Calulate Enorm_ab, Ege_ab, and deltaE 
-    #NonEss_GT_deltaE = Fgen.Get_contact_energy_maps(Fgen.F_ab_df, NonEss_GT_Fc_ab, NonEss_GT_FcG_ab, 'NonEss_GT')
     NonEss_GT_deltaE = Fgen.Get_contact_energy_maps(Fgen.F_ab_df, All_Fc_ab, NonEss_GT_FcG_ab, 'NonEss_GT')
     print(f'NonEss_GT_deltaE:\n{NonEss_GT_deltaE.to_string()}')
 
-    # Get GT deltaDeltaE
-    #deltaDeltaE = Fgen.deltaDeltaE(Ess_GT_deltaE, NonEss_GT_deltaE, 'GT')
-    deltaDeltaE = Fgen.deltaDeltaE(Ess_GT_FcG_ab, NonEss_GT_FcG_ab, 'GT')
-    print(f'deltaDeltaE:\n{deltaDeltaE.to_string()}')
+    # Get GT OR
+    #OR = Fgen.OR(Ess_GT_deltaE, NonEss_GT_deltaE, 'GT')
+    OR = Fgen.OR(Ess_GT_FcG_ab, NonEss_GT_FcG_ab, 'GT')
+    print(f'OR:\n{OR.to_string()}')
 
     # add all the permuted contact matrixes together for each system
-    pvalues = parallel_permute(Fgen, num_permute, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, deltaDeltaE)
+    pvalues = parallel_permute(Fgen, num_permute, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, OR)
     Ess_deltaE_pvalues = reduce(lambda df1, df2: df1.add(df2, fill_value=0), [d[0] for d in pvalues])
-    #Ess_deltaE_pvalues[Ess_GT_FcG_ab_zeros] = 0
-
     NonEss_deltaE_pvalues = reduce(lambda df1, df2: df1.add(df2, fill_value=0), [d[1] for d in pvalues])
-    #NonEss_deltaE_pvalues[NonEss_GT_FcG_ab_zeros] = 0
+    OR_pvalues = reduce(lambda df1, df2: df1.add(df2, fill_value=0), [d[2] for d in pvalues])
 
-    deltaDeltaE_pvalues = reduce(lambda df1, df2: df1.add(df2, fill_value=0), [d[2] for d in pvalues])
-    #deltaDeltaE_pvalues[Ess_GT_FcG_ab_zeros] = 0
-    #deltaDeltaE_pvalues[NonEss_GT_FcG_ab_zeros] = 0
 
     print(f'\n{"#"*50}\nEss_deltaE_pvalues:\n{Ess_deltaE_pvalues.to_string()}')
     Ess_deltaE_pvalues /= num_permute
@@ -701,18 +679,18 @@ def main():
     print(f'NonEss_deltaE_pvalues:\n{NonEss_deltaE_pvalues.to_string()}')
     Fgen.pvalues(NonEss_deltaE_pvalues, 'deltaE_NonEss', AA)
 
-    print(f'\n{"#"*50}\ndeltaDeltaE_pvalues:\n{deltaDeltaE_pvalues.to_string()}')
-    deltaDeltaE_pvalues /= num_permute
-    print(f'deltaDeltaE_pvalues:\n{deltaDeltaE_pvalues.to_string()}')
-    Fgen.pvalues(deltaDeltaE_pvalues, 'deltaDeltaE', AA)
+    print(f'\n{"#"*50}\nOR_pvalues:\n{OR_pvalues.to_string()}')
+    OR_pvalues /= num_permute
+    print(f'OR_pvalues:\n{OR_pvalues.to_string()}')
+    Fgen.pvalues(OR_pvalues, 'OR', AA)
 
 
 
-def parallel_permute(Fgen, num_permute, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, deltaDeltaE):
+def parallel_permute(Fgen, num_permute, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, OR):
     pool = mp.Pool(processes=10)  # Create a pool with 4 processes
 
     # Create the arguments to pass to the function in parallel
-    args = [(p, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, deltaDeltaE) for p in range(num_permute)]
+    args = [(p, Ess_GE_contacts, NonEss_GE_contacts, All_Fc_ab, Ess_GT_deltaE, NonEss_GT_deltaE, OR) for p in range(num_permute)]
 
     # Use pool.starmap to execute the function in parallel
     pvalues = pool.starmap(Fgen.permute, args)
