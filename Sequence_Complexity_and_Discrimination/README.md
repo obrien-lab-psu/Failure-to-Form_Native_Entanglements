@@ -302,6 +302,10 @@ Raw data for these plots can be found [here](data/Trend_analysis/OR_trends/AF/).
 
 ## Results for Fraction of amino acid types in datasets
 ### Experimental structures  
+Fraction of General hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
+![Fraction of General hydrophobic residues per protein](Figures/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_General_hydrophobic.png)   
+The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_General_hydrophobic_STATS.csv)  
+
 Fraction of All hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
 ![Fraction of Total hydrophobic residues per protein](Figures/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_Total_hydrophobic.png)   
 The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_Total_hydrophobic_STATS.csv)  
@@ -327,6 +331,10 @@ Fraction of Weak hydrophobic residues per protein in whole experimental dataset
 The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Weak_hydrophobic_STATS.csv)
 
 ### Alphafold structures
+Fraction of General hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
+![Fraction of General hydrophobic residues per protein](Figures/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_General_hydrophobic.png)   
+The raw stats can be found [here](data/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_General_hydrophobic_STATS.csv) 
+
 Fraction of All hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
 ![Fraction of Total hydrophobic residues per protein](Figures/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_Total_hydrophobic.png)   
 The raw stats can be found [here](data/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_Total_hydrophobic_STATS.csv)  

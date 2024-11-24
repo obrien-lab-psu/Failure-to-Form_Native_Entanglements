@@ -87,6 +87,7 @@ class Analyzer:
         'Strong_hydrophobic':['I', 'L', 'V', 'F', 'C', 'A'],
         'Weak_hydrophobic':['G', 'T', 'S', 'W', 'Y', 'P'],
         'Total_hydrophobic':['I', 'L', 'V', 'F', 'C', 'A', 'G', 'T', 'S', 'W', 'Y', 'P'],
+        'General_hydrophobic':['A', 'V', 'L', 'I', 'M', 'F', 'W', 'P', 'Y'],
         'Hydrophilic':['H', 'Q', 'E', 'N', 'D', 'K', 'R'],
         'Aromatic':['H', 'W', 'Y', 'F']}
 
@@ -255,6 +256,7 @@ def main():
     analysis.Get_FractionHydrophobic(AAtype='Strong_hydrophobic')
     analysis.Get_FractionHydrophobic(AAtype='Weak_hydrophobic')
     analysis.Get_FractionHydrophobic(AAtype='Total_hydrophobic')
+    analysis.Get_FractionHydrophobic(AAtype='General_hydrophobic')
     analysis.Get_FractionHydrophobic(AAtype='Hydrophilic')
     analysis.Get_FractionHydrophobic(AAtype='Aromatic')
 
