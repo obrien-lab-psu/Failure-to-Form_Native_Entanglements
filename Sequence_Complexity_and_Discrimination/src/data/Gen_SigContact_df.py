@@ -274,6 +274,11 @@ class Analyzer:
         sig_contacts['FF-FY-SY-TY-HC'] = [str(s) for s in sig_contacts['FF-FY-SY-TY-HC']]
         outdf['FF-FY-SY-TY-HC'] = []
 
+        ## get group 6 significant contact defs (any F-F, F-Y, T-Y, S-Y H-C contacts)
+        sig_contacts['FF-FY-SY-HC'] = [('F', 'F'), ('F', 'Y'), ('Y', 'F'), ('S', 'Y'), ('Y', 'S'), ('H', 'C'), ('C', 'H')]
+        sig_contacts['FF-FY-SY-HC'] = [str(s) for s in sig_contacts['FF-FY-SY-TY-HC']]
+        outdf['FF-FY-SY-HC'] = []
+
         ## get group 6 significant contact defs (any F-F contacts)
         sig_contacts['FF'] = [('F', 'F')]
         sig_contacts['FF'] = [str(s) for s in sig_contacts['FF']]

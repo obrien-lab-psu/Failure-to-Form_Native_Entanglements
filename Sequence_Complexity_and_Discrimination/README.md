@@ -188,7 +188,6 @@ For the cyto-serum + GroEL only set of observal proteins using 100k permutations
 Raw data for plotting can be found [here](data/Contact_Enrichment/EXP/CG_50_p100000/)  
   
   
-
 ### Alphafold structures
 For the cyto-serum only set of observal proteins using 100k permutations  
 ![Cyto-serum loop forming contact enrichment](Figures/Contact_Enrichment_OR_anal/AF/OR_C_50_p100000_AF.png)  
@@ -202,6 +201,8 @@ For the cyto-serum + GroEL only set of observal proteins using 100k permutations
 ![Cyto-serum + GroEL loop forming contact enrichment](Figures/Contact_Enrichment_OR_anal/AF/OR_CG_50_p100000_AF.png)  
 Raw data for plotting can be found [here](data/Contact_Enrichment_OR_anal/AF/CG_50_p100000/)  
   
+The command files used to run these analysis using the OR instead of the "energetics" can be found [here](src/command_lists/Compare_OR_with_permutation.cmds) and to plot [here](src/command_lists/Plot_compare_OR_with_permutation.cmds). 
+
 
 ## Trend analysis in loop forming contacts 
 From the loop forming contact enrichement analysis we observe that F-F, F-Y, T-Y, S-Y, and H-C loop forming contacts are enriched in non-essential proteins across all three LiPMS experimental conditions. 
@@ -259,37 +260,93 @@ options:
 
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Trend_analysis.cmds) to reproduce the trend analysis for the significant loop forming contacts found in this work in the experimental data set and the AlphaFold structures. Please modify any other pathing as necessary. 
 
-### Results of Trend analysis in number of significant loop forming contacts
-#### Experimental structures
+## Results of Trend analysis in number of significant loop forming contacts
+### Experimental structures
 Fraction of proteins with atleast 1 of a loop closing contact type (cyto-serum only) 
 ![Fraction of proteins with atleast 1 of a loop closing contact type](Figures/Trend_analysis/FractionGenes_w_LoopContacts/EXP/EssVSNonEss_stats_atleast_n1_LFC_EXP_C_spa50_C_spa50_LiPMScov50.png)  
+Raw data for this plot can be found [here](data/Trend_analysis/FractionGenes_w_LoopContacts/EXP/EssVSNonEss_stats_atleast_n1_LFC_EXP_C_spa50_C_spa50_LiPMScov50.csv).  
 Results for other buffer systems can be found here [+Dnak](Figures/Trend_analysis/FractionGenes_w_LoopContacts/EXP/EssVSNonEss_stats_atleast_n1_LFC_EXP_CD_spa50_CD_spa50_LiPMScov50.png) [+GroEL](Figures/Trend_analysis/FractionGenes_w_LoopContacts/EXP/EssVSNonEss_stats_atleast_n1_LFC_EXP_CG_spa50_CG_spa50_LiPMScov50.png)  
 
 <p float="left">
-  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_C_spa50_C_spa50_LiPMScov50.png" width="300" />
-  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
-  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_EXP_C_spa50_C_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_EXP_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/EXP/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_EXP_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
 </p>
 
 <p float="left">
-  <img src="Figures/Trend_analysis/OR_trends/EXP/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_C_spa50_C_spa50_LiPMScov50.png" width="300" />
-  <img src="Figures/Trend_analysis/OR_trends/EXP/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
-  <img src="Figures/Trend_analysis/OR_trends/EXP/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_EXP_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
-</p>
+  <img src="Figures/Trend_analysis/OR_trends/EXP/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_EXP_C_spa50_C_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/EXP/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_EXP_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/EXP/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_EXP_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
+</p>  
 
-#### Alphafold structures
+Raw data for these plots can be found [here](data/Trend_analysis/OR_trends/EXP/).  
+
+### Alphafold structures
 Fraction of proteins with atleast 1 of a loop closing contact type (cyto-serum only)   
 ![Fraction of proteins with atleast 1 of a loop closing contact type](Figures/Trend_analysis/FractionGenes_w_LoopContacts/AF/EssVSNonEss_stats_atleast_n1_LFC_AF_C_spa50_C_spa50_LiPMScov50.png)  
 Results for other buffer systems can be found here [+Dnak](Figures/Trend_analysis/FractionGenes_w_LoopContacts/AF/EssVSNonEss_stats_atleast_n1_LFC_AF_CD_spa50_CD_spa50_LiPMScov50.png) [+GroEL](Figures/Trend_analysis/FractionGenes_w_LoopContacts/AF/EssVSNonEss_stats_atleast_n1_LFC_AF_CG_spa50_CG_spa50_LiPMScov50.png)  
 
 <p float="left">
-  <img src="Figures/Trend_analysis/OR_trends/AF/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_AF_C_spa50_C_spa50_LiPMScov50.png" width="300" />
-  <img src="Figures/Trend_analysis/OR_trends/AF/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_AF_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
-  <img src="Figures/Trend_analysis/OR_trends/AF/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_AF_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/AF/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_AF_C_spa50_C_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/AF/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_AF_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/AF/atleast_n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_AF_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
 </p>
 
 <p float="left">
-  <img src="Figures/Trend_analysis/OR_trends/AF/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_AF_C_spa50_C_spa50_LiPMScov50.png" width="300" />
-  <img src="Figures/Trend_analysis/OR_trends/AF/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_AF_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
-  <img src="Figures/Trend_analysis/OR_trends/AF/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-TY-HC_AF_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
-</p>
+  <img src="Figures/Trend_analysis/OR_trends/AF/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_AF_C_spa50_C_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/AF/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_AF_CD_spa50_CD_spa50_LiPMScov50.png" width="300" />
+  <img src="Figures/Trend_analysis/OR_trends/AF/n_loopcontacts_ORdiff_linear_reg_FF-FY-SY-HC_AF_CG_spa50_CG_spa50_LiPMScov50.png" width="300" />
+</p>  
+
+Raw data for these plots can be found [here](data/Trend_analysis/OR_trends/AF/).  
+
+## Results for Fraction of amino acid types in datasets
+### Experimental structures  
+Fraction of All hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
+![Fraction of Total hydrophobic residues per protein](Figures/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_Total_hydrophobic.png)   
+The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_Total_hydrophobic_STATS.csv)  
+  
+Fraction of strong hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
+![Fraction of strong hydrophobic residues per protein](Figures/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_Strong_hydrophobic.png)   
+The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_Strong_hydrophobic_STATS.csv)  
+
+Fraction of Weak hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
+![Fraction of Weak hydrophobic residues per protein](Figures/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_Weak_hydrophobic.png)   
+The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_C_Rall_spa50_LiPMScov50_perProt_Fraction_Weak_hydrophobic_STATS.csv) 
+
+Fraction of Total hydrophobic residues per protein in whole experimental dataset 
+![Fraction of Total hydrophobic residues per protein](Figures/CalcHydrophobicFraction/EXP/EXP_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Total_hydrophobic.png)  
+The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Total_hydrophobic_STATS.csv)
+
+Fraction of strong hydrophobic residues per protein in whole experimental dataset 
+![Fraction of strong hydrophobic residues per protein](Figures/CalcHydrophobicFraction/EXP/EXP_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Strong_hydrophobic.png)  
+The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Strong_hydrophobic_STATS.csv)
+
+Fraction of Weak hydrophobic residues per protein in whole experimental dataset 
+![Fraction of Weak hydrophobic residues per protein](Figures/CalcHydrophobicFraction/EXP/EXP_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Weak_hydrophobic.png)  
+The raw stats can be found [here](data/CalcHydrophobicFraction/EXP/EXP_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Weak_hydrophobic_STATS.csv)
+
+### Alphafold structures
+Fraction of All hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
+![Fraction of Total hydrophobic residues per protein](Figures/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_Total_hydrophobic.png)   
+The raw stats can be found [here](data/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_Total_hydrophobic_STATS.csv)  
+  
+Fraction of strong hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
+![Fraction of strong hydrophobic residues per protein](Figures/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_Strong_hydrophobic.png)   
+The raw stats can be found [here](data/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_Strong_hydrophobic_STATS.csv)  
+
+Fraction of Weak hydrophobic residues per protein in the cyto-serum only buffer at the 50th SPA and LiPMScov thresholds
+![Fraction of Weak hydrophobic residues per protein](Figures/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_Weak_hydrophobic.png)   
+The raw stats can be found [here](data/CalcHydrophobicFraction/AF/AF_C_Rall_spa50_LiPMScov50_perProt_Fraction_Weak_hydrophobic_STATS.csv) 
+
+Fraction of Total hydrophobic residues per protein in whole AF dataset 
+![Fraction of Total hydrophobic residues per protein](Figures/CalcHydrophobicFraction/AF/AF_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Total_hydrophobic.png)  
+The raw stats can be found [here](data/CalcHydrophobicFraction/AF/AF_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Total_hydrophobic_STATS.csv)
+
+Fraction of strong hydrophobic residues per protein in whole AF dataset 
+![Fraction of strong hydrophobic residues per protein](Figures/CalcHydrophobicFraction/AF/AF_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Strong_hydrophobic.png)  
+The raw stats can be found [here](data/CalcHydrophobicFraction/AF/AF_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Strong_hydrophobic_STATS.csv)
+
+Fraction of Weak hydrophobic residues per protein in whole AF dataset 
+![Fraction of Weak hydrophobic residues per protein](Figures/CalcHydrophobicFraction/AF/AF_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Weak_hydrophobic.png)  
+The raw stats can be found [here](data/CalcHydrophobicFraction/AF/AF_Total_Rall_spaTotal_LiPMScovTotal_perProt_Fraction_Weak_hydrophobic_STATS.csv)

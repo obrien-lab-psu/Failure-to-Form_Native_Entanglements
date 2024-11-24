@@ -168,11 +168,13 @@ Test 2: Is the OR (misfolding Y/N, entangled region Y/N) dependant on the number
         #'Essential False n']
         for n, n_df in outdf.groupby('n'):
             outfile = f'{self.FractionGenes_w_LoopContactsOutpath}EssVSNonEss_stats_atleast_n{n}_LFC_{self.tag}_{self.buff}_spa{self.spa}_LiPMScov{self.LiPMScov}.png'
+            outfile_csv = f'{self.FractionGenes_w_LoopContactsOutpath}EssVSNonEss_stats_atleast_n{n}_LFC_{self.tag}_{self.buff}_spa{self.spa}_LiPMScov{self.LiPMScov}.csv'
 
             n1_df = n_df[['Metric', 'Essential True Mean', 'Essential True 95% CI low', 'Essential True 95% CI high', 'Permutation Test p-value', 'Essential True n']] 
             n2_df = n_df[['Metric', 'Essential False Mean', 'Essential False 95% CI low', 'Essential False 95% CI high', 'Permutation Test p-value', 'Essential False n']] 
             print(n1_df)
             print(n2_df)
+
             # Plot the data and the regression line
             fig,ax = plt.subplots(4,1, figsize=(6,6), sharex=True)
             
@@ -193,6 +195,14 @@ Test 2: Is the OR (misfolding Y/N, entangled region Y/N) dependant on the number
             pvalues = false_discovery_control(pvalues) 
             y1_size = n_df['Essential True n']
             y2_size = n_df['Essential False n']
+
+            ## make the plot dataframe and save it
+            plot_df = {'Metric':x, 'Essential':y1, 'Essential_lb':y1err[0], 'Essential_ub':y1err[1], 'Essential_n':y1_size, 
+                        'NonEssential':y2, 'NonEssential_lb':y2err[0], 'NonEssential_ub':y2err[1], 'NonEssential_n':y2_size, 'pvalues':pvalues}
+            plot_df = pd.DataFrame(plot_df) 
+            print(f'plot_df:\n{plot_df}')
+            plot_df.to_csv(outfile_csv)
+            logging.info(f'SAVED: {outfile_csv}')
 
             ax[0].errorbar(x, y1, yerr=y1err, label='Essential', capsize=3, marker='o', ls='None', markerfacecolor='none')
             ax[0].errorbar(x, y2, yerr=y2err, label='NonEssential', capsize=3, marker='o', ls='None', markerfacecolor='none')
@@ -227,6 +237,7 @@ Test 2: Is the OR (misfolding Y/N, entangled region Y/N) dependant on the number
             # Show the plot
             #plt.show()
             plt.savefig(outfile)
+            logging.info(f'SAVED: {outfile}')
             plt.close()
     ##################################################################
 
@@ -678,6 +689,14 @@ Test 2: Is the OR (misfolding Y/N, entangled region Y/N) dependant on the number
         # Get the model summary
         #summary = model.summary()
         
+        ## save plot data
+        plot_df = {'n_contacts':x, 'OddsDiff':y, 'OddsDiff_lb':yerr[0], 'OddsDiff_ub':yerr[1], 'sample_size':n}
+        plot_df = pd.DataFrame(plot_df)
+        print(f'plot_df:\n{plot_df}')
+        outfile_csv = outfile.replace('.png', '.csv')
+        plot_df.to_csv(outfile_csv)
+        logging.info(f'SAVED: {outfile_csv}')
+
         # Plot the data and the regression line
         fig,ax = plt.subplots(2,1, figsize=(6,4), sharex=True)
 
@@ -709,7 +728,7 @@ Test 2: Is the OR (misfolding Y/N, entangled region Y/N) dependant on the number
         #plt.show()
         plt.savefig(outfile)
         plt.close()
-        print(f'SAVED: {outfile}')
+        logging.info(f'SAVED: {outfile}')
         
         #return summary, slope, p_value
         return intercept, slope, p_value
@@ -1161,6 +1180,8 @@ def main():
 
     # Do analysis 5: Binomial regression with dependance on n -> cut ~ AA + region + n
     #analysis.Binom_reg_n_dep()
+
+    print(f'Logfile: {log_file}')
 
 
 if __name__ == "__main__":
