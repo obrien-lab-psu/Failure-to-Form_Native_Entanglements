@@ -67,6 +67,13 @@ class Analysis:
         self.end = args.end
         self.stride = args.stride
         print(f'START: {self.start} | END: {self.end} | STRIDE: {self.stride}')
+
+        self.topoly = args.topoly
+        if self.topoly == 'True':
+            self.topoly = True
+        else:
+            self.topoly = False
+        print(f'User topoly {self.topoly}')
     #######################################################################################
 
     #######################################################################################
@@ -175,6 +182,7 @@ class Analysis:
         EntOutput = {'Time(ns)':[], 'Frame':[], 'i':[], 'j':[], 'gn':[], 'Gn':[], 'crossingsN':[], 'gc':[], 'Gc':[], 'crossingsC':[], 'NchangeType':[], 'CchangeType':[]}
         nc_list = []
         for nc, ref_info in ref_nc_gdict.items():
+            print(f'REF: {nc} {ref_info}')
             i,j = nc[0], nc[1]
             nc_list += [[i, j]] # update this list for the contact_mask when looping through the trajectory data
             EntOutput['Time(ns)'] += [-1]
@@ -190,15 +198,16 @@ class Analysis:
             EntOutput['NchangeType'] += ['None-Ref']
             EntOutput['CchangeType'] += ['None-Ref']
             
-
+      
         # Step 1b: Initiate the output dataframe that will contain the high level stats for changes in entanglement and the G metric used in higherarchical modeling
         Goutput = {'Time(ns)':[], 'Frame':[], 
                     'Nnative':[], 'N-Loss':[], 'N-LossChiral':[], 'N-Gain':[], 'N-GainChiral':[], 'N-PureChiral':[], 
-                    'C-Loss':[], 'C-LossChiral':[], 'C-Gain':[], 'C-GainChiral':[], 'C-PureChiral':[], 'G':[]}
+                    'C-Loss':[], 'C-LossChiral':[], 'C-Gain':[], 'C-GainChiral':[], 'C-PureChiral':[], 'FrameNC':[], 'G':[]}
 
         # Step 2: loop through the frames and calculate the changes in entanglement
         print(f'Step 2: loop through the frames and calculate the changes in entanglement')
         cpu_cores = os.cpu_count()
+        logging.info(f"Number of available CPU cores: {cpu_cores}")
         print(f"Number of available CPU cores: {cpu_cores}")
 
         # Define the input data for each frame
@@ -222,8 +231,10 @@ class Analysis:
             # Map the process_frame function to the frames_data
             results = executor.map(process_frame, frames_data)
 
+            #print(f'Number of results: {len(results)}')#
             # Collect the results
             for change_info, count_info in results:
+                #print(f'change_info: {change_info}')
 
                 # Adding values of change_info to the master EntOutput dictionary
                 for key in EntOutput:
@@ -242,7 +253,7 @@ class Analysis:
         # Step 4a: save the dataframe that contains the detailed information about entanglementts
         print(f'Step 4: Save both the detailed entanglment info file .EntInfo and the stats summary file .G')
         EntOutput = pd.DataFrame(EntOutput)
-        print(f'EntOutput:\n{EntOutput.to_string()}')
+        #print(f'EntOutput:\n{EntOutput.to_string()}')
         Entoutfile = os.path.join(self.Gpath, f'{self.outname}.EntInfo')
         EntOutput.to_csv(Entoutfile, index=False)
         print(f'SAVED: {Entoutfile}')
@@ -252,7 +263,7 @@ class Analysis:
         # should have 1 line per frame of the trajectory
         Goutput = pd.DataFrame(Goutput)
         #Goutput['G'] /= Nnative
-        print(f'Goutput:\n{Goutput.to_string()}')
+        #print(f'Goutput:\n{Goutput.to_string()}')
         Goutfile = os.path.join(self.Gpath, f'{self.outname}.G')
         Goutput.to_csv(Goutfile, index=False)
         print(f'SAVED: {Goutfile}')
@@ -333,9 +344,10 @@ class Analysis:
             }
 
         # Get crossings for native contacts
-        res = lasso_type(coor.tolist(), loop_indices=ent_nc, more_info=True, min_dist=[10, 6, 5])
-        for nc, top_info in res.items():
-            nc_gdict[nc]['crossingsN'], nc_gdict[nc]['crossingsC'] = ','.join(top_info['crossingsN']), ','.join(top_info['crossingsC'])
+        if self.topoly:
+            res = lasso_type(coor.tolist(), loop_indices=ent_nc, more_info=True, min_dist=[10, 6, 5])
+            for nc, top_info in res.items():
+                nc_gdict[nc]['crossingsN'], nc_gdict[nc]['crossingsC'] = ','.join(top_info['crossingsN']), ','.join(top_info['crossingsC'])
 
         return nc_gdict
     #######################################################################################
@@ -361,92 +373,111 @@ class Analysis:
 
         # This dictionary will track the counts of the changes to output a less detailed text file
         counts = {'N-Loss':0, 'N-LossChiral':0, 'N-Gain':0, 'N-GainChiral':0, 'N-PureChiral':0, 
-                    'C-Loss':0, 'C-LossChiral':0, 'C-Gain':0, 'C-GainChiral':0, 'C-PureChiral':0, 'G':0}
+                    'C-Loss':0, 'C-LossChiral':0, 'C-Gain':0, 'C-GainChiral':0, 'C-PureChiral':0, 'FrameNC':0, 'G':0}
 
         # loop through frame native contacts and look for changes
-        for nc, frame_ent_info in frame_data.items():
-            ref_Gn = ref_data[nc]['Gn']
-            ref_Gc = ref_data[nc]['Gc']
-            
-            frame_Gn = frame_ent_info['Gn']
-            frame_Gc = frame_ent_info['Gc']
-            
-            # determine N change type
-            Nloss = abs(frame_Gn) < abs(ref_Gn)
-            Ngain = abs(frame_Gn) > abs(ref_Gn)
-            NnoChange = abs(frame_Gn) == abs(ref_Gn)
-            NchiralChange = np.sign(frame_Gn) != np.sign(ref_Gn)
-            
-            if Nloss and not NchiralChange:
-                NchangeType = 'Loss' # Loss of entanglement but no chiral switch
-                counts['N-Loss'] += 1
+        #logging.info(f'Frame: {frame} has {len(frame_data)} native contacts')
+        if len(frame_data) != 0:
+            for nc, frame_ent_info in frame_data.items():
+                counts['FrameNC'] += 1
 
-            elif Nloss and NchiralChange:
-                NchangeType = 'LossChiral' # Loss of entanglement with chiral switch
-                counts['N-LossChiral'] += 1
-
-            elif Ngain and not NchiralChange:
-                NchangeType = 'Gain' # Gain of entanglement but no chiral switch
-                counts['N-Gain'] += 1
-
-            elif Ngain and NchiralChange:
-                NchangeType = 'GainChiral' # Gain of entanglement with chiral switch
-                counts['N-GainChiral'] += 1
-
-            elif NnoChange and NchiralChange:
-                NchangeType = 'PureChiral' # No change in abs(linking value) but a pure chiral switch
-                counts['N-PureChiral'] += 1
+                ref_Gn = ref_data[nc]['Gn']
+                ref_Gc = ref_data[nc]['Gc']
                 
-            elif NnoChange and not NchiralChange:
-                NchangeType = 'NoChange' # No change in abs(linking value) and no change in chirality
+                frame_Gn = frame_ent_info['Gn']
+                frame_Gc = frame_ent_info['Gc']
+                
+                # determine N change type
+                Nloss = abs(frame_Gn) < abs(ref_Gn)
+                Ngain = abs(frame_Gn) > abs(ref_Gn)
+                NnoChange = abs(frame_Gn) == abs(ref_Gn)
+                NchiralChange = np.sign(frame_Gn) != np.sign(ref_Gn)
+                
+                if Nloss and not NchiralChange:
+                    NchangeType = 'Loss' # Loss of entanglement but no chiral switch
+                    counts['N-Loss'] += 1
 
-            Closs = abs(frame_Gc) < abs(ref_Gc)
-            Cgain = abs(frame_Gc) > abs(ref_Gc)
-            CnoChange = abs(frame_Gc) == abs(ref_Gc)
-            CchiralChange = np.sign(frame_Gc) != np.sign(ref_Gc)
+                elif Nloss and NchiralChange:
+                    NchangeType = 'LossChiral' # Loss of entanglement with chiral switch
+                    counts['N-LossChiral'] += 1
 
-            if Closs and not CchiralChange:
-                CchangeType = 'Loss' # Loss of entanglement but no chiral switch
-                counts['C-Loss'] += 1
+                elif Ngain and not NchiralChange:
+                    NchangeType = 'Gain' # Gain of entanglement but no chiral switch
+                    counts['N-Gain'] += 1
 
-            elif Closs and CchiralChange:
-                CchangeType = 'LossChiral' # Loss of entanglement with chiral switch
-                counts['C-LossChiral'] += 1
+                elif Ngain and NchiralChange:
+                    NchangeType = 'GainChiral' # Gain of entanglement with chiral switch
+                    counts['N-GainChiral'] += 1
 
-            elif Cgain and not CchiralChange:
-                CchangeType = 'Gain' # Gain of entanglement but no chiral switch
-                counts['C-Gain'] += 1
+                elif NnoChange and NchiralChange:
+                    NchangeType = 'PureChiral' # No change in abs(linking value) but a pure chiral switch
+                    counts['N-PureChiral'] += 1
+                    
+                elif NnoChange and not NchiralChange:
+                    NchangeType = 'NoChange' # No change in abs(linking value) and no change in chirality
 
-            elif Cgain and CchiralChange:
-                CchangeType = 'GainChiral' # Gain of entanglement with chiral switch
-                counts['C-GainChiral'] += 1
+                Closs = abs(frame_Gc) < abs(ref_Gc)
+                Cgain = abs(frame_Gc) > abs(ref_Gc)
+                CnoChange = abs(frame_Gc) == abs(ref_Gc)
+                CchiralChange = np.sign(frame_Gc) != np.sign(ref_Gc)
 
-            elif CnoChange and CchiralChange:
-                CchangeType = 'PureChiral' # No change in abs(linking value) but a pure chiral switch
-                counts['C-PureChiral'] += 1
+                if Closs and not CchiralChange:
+                    CchangeType = 'Loss' # Loss of entanglement but no chiral switch
+                    counts['C-Loss'] += 1
 
-            elif CnoChange and not CchiralChange:
-                CchangeType = 'NoChange' # No change in abs(linking value) and no change in chirality
+                elif Closs and CchiralChange:
+                    CchangeType = 'LossChiral' # Loss of entanglement with chiral switch
+                    counts['C-LossChiral'] += 1
 
-            # count if any change occured to track G metric
-            if NchangeType != 'NoChange' or CchangeType != 'NoChange':
-                counts['G'] += 1
+                elif Cgain and not CchiralChange:
+                    CchangeType = 'Gain' # Gain of entanglement but no chiral switch
+                    counts['C-Gain'] += 1
 
-            #print(nc, ref_data[nc], frame_ent_info, NchangeType, CchangeType)
-            
-            i,j = nc[0], nc[1]
+                elif Cgain and CchiralChange:
+                    CchangeType = 'GainChiral' # Gain of entanglement with chiral switch
+                    counts['C-GainChiral'] += 1
+
+                elif CnoChange and CchiralChange:
+                    CchangeType = 'PureChiral' # No change in abs(linking value) but a pure chiral switch
+                    counts['C-PureChiral'] += 1
+
+                elif CnoChange and not CchiralChange:
+                    CchangeType = 'NoChange' # No change in abs(linking value) and no change in chirality
+
+                # count if any change occured to track G metric
+                if NchangeType != 'NoChange' or CchangeType != 'NoChange':
+                    counts['G'] += 1
+
+                #print(nc, ref_data[nc], frame_ent_info, NchangeType, CchangeType)
+                
+                i,j = nc[0], nc[1]
+                changes['Time(ns)'] += [frame_time]
+                changes['Frame'] += [frame]
+                changes['i'] += [i]
+                changes['j'] += [j]
+                changes['gn'] += [frame_ent_info['gn']]
+                changes['Gn'] += [frame_ent_info['Gn']]
+                changes['crossingsN'] += [frame_ent_info['crossingsN']]
+                changes['gc'] += [frame_ent_info['gc']]
+                changes['Gc'] += [frame_ent_info['Gc']]
+                changes['crossingsC'] += [frame_ent_info['crossingsC']]
+                changes['NchangeType'] += [NchangeType]
+                changes['CchangeType'] += [CchangeType]
+
+        # if no native contacts were present make blank row in dataframe
+        else:
             changes['Time(ns)'] += [frame_time]
             changes['Frame'] += [frame]
-            changes['i'] += [i]
-            changes['j'] += [j]
-            changes['gn'] += [frame_ent_info['gn']]
-            changes['Gn'] += [frame_ent_info['Gn']]
-            changes['crossingsN'] += [frame_ent_info['crossingsN']]
-            changes['gc'] += [frame_ent_info['gc']]
-            changes['Gc'] += [frame_ent_info['Gc']]
-            changes['crossingsC'] += [frame_ent_info['crossingsC']]
-            changes['NchangeType'] += [NchangeType]
-            changes['CchangeType'] += [CchangeType]
+            changes['i'] += [np.nan]
+            changes['j'] += [np.nan]
+            changes['gn'] += [np.nan]
+            changes['Gn'] += [np.nan]
+            changes['crossingsN'] += [np.nan]
+            changes['gc'] += [np.nan]
+            changes['Gc'] += [np.nan]
+            changes['crossingsC'] += [np.nan]
+            changes['NchangeType'] += [np.nan]
+            changes['CchangeType'] += [np.nan]
 
         counts["G"] /= Nnative
         logging.info(f'Time(ns): {frame_time} Frame: {frame} with G: {counts}')
@@ -465,11 +496,16 @@ def custom_round(number):
         return np.floor(number) if abs(abs(number) % 1) >= 0.6 else np.ceil(number)
 
 def process_frame(frame_data):
-    frame_coor, nc_list, ref_nc_gdict, time, frame, GaussLink, GetLinkChanges, Nnative = frame_data
+    frame_coor, nc_list, ref_nc_gdict, frame_time, frame, GaussLink, GetLinkChanges, Nnative = frame_data
     # Call GaussLink function
+    t1 = time.time()
     frame_nc_gdict = GaussLink(frame_coor, contact_mask=nc_list)
+    #print(f'FRAME: {frame} GaussLink time: {time.time() - t1}')
+
     # Call GetLinkChanges function
-    change_info, count_info = GetLinkChanges(ref_nc_gdict, frame_nc_gdict, time, frame, Nnative)
+    t1 = time.time()
+    change_info, count_info = GetLinkChanges(ref_nc_gdict, frame_nc_gdict, frame_time, frame, Nnative)
+    #print(f'FRAME: {frame} GetLinkChanges time: {time.time() - t1}')
     return change_info, count_info
  
 ############## MAIN #################
@@ -486,6 +522,7 @@ def main():
     parser.add_argument("--start", type=int, required=False, help="First frame to analyze 0 indexed", default=0)
     parser.add_argument("--end", type=int, required=False, help="Last frame to analyze 0 indexed", default=None)
     parser.add_argument("--stride", type=int, required=False, help="Frame stride", default=1)
+    parser.add_argument("--topoly", type=str, required=False, help="True = Use Topoly to find crossings. False = Do not find crossings (much faster)", default='True')
     args = parser.parse_args()
 
     ## make output folder

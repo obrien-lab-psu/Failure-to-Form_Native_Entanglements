@@ -9,10 +9,13 @@ import pyemma as pem
 import parmed as pmd
 import mdtraj as mdt
 import matplotlib.pyplot as plt
-import msmtools
+#import msmtools
+import deeptime
 from matplotlib.cm import get_cmap
 from matplotlib.colors import ListedColormap, BoundaryNorm
-
+import matplotlib.colors as mcolors
+import seaborn as sns
+from scipy.stats import mode
 #pd.set_option('display.max_rows', 5000)
 
 class Analysis:
@@ -28,8 +31,6 @@ class Analysis:
         ("--outpath", type=str, required=True, help="Path to output directory")
         ("--OPpath", type=str, required=True, help="Path to directory containing G and Q directories created by GQ.py")
         ("--outname", type=str, required=True, help="base name for output files")
-        ("--psf", type=str, required=True, help="Path to CA protein structure file")
-        ("--dcds", type=str, required=True, help="Path to trajectory to analyze")
         ("--start", type=int, required=False, help="First frame to analyze 0 indexed", default=0)
         ("--end", type=int, required=False, help="Last frame to analyze 0 indexed", default=-1)
         ("--stride", type=int, required=False, help="Frame stride", default=1)
@@ -45,18 +46,16 @@ class Analysis:
         self.outname = args.outname
         logging.info(f'outname: {self.outname}')
 
-        self.psf = args.psf
-        logging.info(f' psf: {self. psf}')
 
-        self.dcds = args.dcds 
-        logging.info(f'dcds: {self.dcds}')
+        #self.dcds = args.dcds 
+        #logging.info(f'dcds: {self.dcds}')
 
         self.start = args.start
         self.end = args.end
         self.stride = args.stride
         print(f'START: {self.start} | END: {self.end} | STRIDE: {self.stride}')
 
-        self.n_cluster = 50 # Number of k-means clusters to group. Default is 400.
+        self.n_cluster = 250 # Number of k-means clusters to group. Default is 400.
         self.kmean_stride = 10 # Stride of reading trajectory frame when clustring by k-means. 
         self.n_small_states = 2 # Number of clusters for the inactive microstates after MSM modeling to be clustered into
         self.n_large_states = 10  # Adjust based on your system
@@ -103,7 +102,7 @@ class Analysis:
                 raise ValueError(f'Q and G do not have the same shape! {Qdata.shape} {Gdata.shape}')
             
             data = np.stack((Qdata, Gdata)).T
-            print(data[:3, :])
+            print(data[:3, :], data.shape)
             cor_list.append(data)
 
         print(f'Number of trajecotry OP coordinate loaded: {len(cor_list)}')
@@ -142,14 +141,56 @@ class Analysis:
         Cluster the GQ data across all trajectories using kmeans. 
         dtrajs contains the resulting kmeans cluster labels for each trajectory time series 
         centers contains the standardized GQ coordinates of the cluster centers
+
+        if the number of unique centers found is not equal to self.n_cluster then adjust it to reflect the number found. This can happen if you have data that has a narrow distribution. 
         """
         self.clusters = pem.coordinates.cluster_kmeans(self.standard_cor_list, k=self.n_cluster, max_iter=5000, stride=self.kmean_stride)
-        #print(cluster)
-        dtrajs = self.clusters.dtrajs
-        print(f'dtrajs: {len(dtrajs)} {dtrajs[0].shape}\n{dtrajs[0][:10]}')
+        
+        # Get the microstate tagged trajectories and their state counts
+        self.dtrajs = self.clusters.dtrajs
+        print(f'dtrajs: {len(self.dtrajs)} {self.dtrajs[0].shape}\n{self.dtrajs[0][:10]}')
+        clusterIDs, counts = np.unique(self.dtrajs, return_counts=True)
+        print(f'Number of unique microstate IDs: {len(clusterIDs)} {clusterIDs}')
+        
+        state_counts = {}
+        for i,c in zip(clusterIDs, counts):
+            state_counts[i] = c
+        print(f'state_counts: {state_counts}')
+        
+        # Quality check that all microstate ids are assigned
+        # If not renumber from 0
+        if len(clusterIDs) != self.n_cluster:
+            print(f'The number of microstate IDs assigned does not match the number specified: {len(clusterIDs)} != {self.n_cluster}')
+
+            mapping_dict = {}
+            for new,old in enumerate(clusterIDs):
+                mapping_dict[old] = new
+            print(f'mapping_dict: {mapping_dict}')
+
+            # Convert the dictionary to a numpy array for efficient mapping
+            max_key = max(mapping_dict.keys())
+            mapping_array = np.zeros(max_key + 1, dtype=int)
+            for key, value in mapping_dict.items():
+                mapping_array[key] = value
+
+            # Map the arrays using the mapping array
+            self.dtrajs = [mapping_array[arr] for arr in self.dtrajs]
+            
+            clusterIDs, counts = np.unique(self.dtrajs, return_counts=True)
+            print(f'Number of unique microstate IDs after mapping: {len(clusterIDs)} {clusterIDs}')
+            state_counts = {}
+            for i,c in zip(clusterIDs, counts):
+                state_counts[i] = c
+            print(f'state_counts: {state_counts}')
+
+            self.n_cluster = len(clusterIDs)
+        
+
         standard_centers = self.clusters.clustercenters
         unstandard_centers = self.unstandardize(standard_centers)
         print(f'unstandard_centers:\n{unstandard_centers} {unstandard_centers.shape}')
+        print(f'self.n_cluster: {self.n_cluster}')
+        
     #######################################################################################
 
     #######################################################################################
@@ -157,24 +198,26 @@ class Analysis:
         print(f'Building MSM model with a lag time of {lagtime}')
 
         # Get count matrix and connective groups of microstates
-        c_matrix = msmtools.estimation.count_matrix(self.clusters.dtrajs, lagtime).toarray()
+        c_matrix = deeptime.markov.tools.estimation.count_matrix(self.dtrajs, lagtime).toarray()
         print(f'c_matrix:\n{c_matrix} {c_matrix.shape}')
-        sub_groups = msmtools.estimation.connected_sets(c_matrix)
+        
+        sub_groups = deeptime.markov.tools.estimation.connected_sets(c_matrix)
         print(f'Total number of sub_groups: {len(sub_groups)}\n{sub_groups}')
         
         # Build the MSM models for any connected sets that have more than 1 microstate
         msm_list = []        
         for sg in sub_groups:
-            cm = msmtools.estimation.largest_connected_submatrix(c_matrix, lcc=sg)
+            cm = deeptime.markov.tools.estimation.largest_connected_submatrix(c_matrix, lcc=sg)
             print(f'For sub_group: {sg}')
             if len(cm) == 1:
                 msm = None
             else:
                 print(f'Building Transition matrix and MSM model')
-                T = msmtools.estimation.transition_matrix(cm, reversible=True)
+                T = deeptime.markov.tools.estimation.transition_matrix(cm, reversible=True)
                 msm = pem.msm.markov_model(T, dt_model=str(self.dt)+' ns')
             msm_list.append(msm)
         logging.info(f'Number of models: {len(msm_list)}')
+        print(f'Number of models: {len(msm_list)}')
 
         # Coarse grain out the metastable macrostates in the models
         print(f'Coarse grain out the metastable macrostates in the models')
@@ -237,13 +280,14 @@ class Analysis:
                         meta_dist.append(dist)
                         meta_set.append(set_0)
         meta_dist = np.array(meta_dist)
-        meta_set = np.array(meta_set)
+        print(f'meta_set: {meta_set}')
+        #meta_set = np.array(meta_set)
    
         ## make microstate to metastable state mapping object
-        logging.info(f'\nMetastable state assignment')
+        print(f'\nMetastable state assignment')
         meta_mapping = {}
         for metaID, microstates in enumerate(meta_set):
-            logging.info(metaID, microstates)
+            print(metaID, microstates)
             for m in microstates:
                 if m not in meta_mapping:
                     meta_mapping[m] = metaID
@@ -253,7 +297,7 @@ class Analysis:
 
         # map those microstate states to the metastable state
         metastable_dtraj = []
-        for dtraj_idx, dtraj in enumerate(self.clusters.dtrajs):
+        for dtraj_idx, dtraj in enumerate(self.dtrajs):
             mapped_dtraj = []
             for d in dtraj:
                 mapped_dtraj.append(meta_mapping[d])
@@ -263,16 +307,16 @@ class Analysis:
 
         print(f'Metastable state mapping:')
         for dtraj_idx, dtraj in enumerate(metastable_dtraj):
-            print(dtraj_idx, self.clusters.dtrajs[dtraj_idx][:10] , dtraj[:10])
+            print(dtraj_idx, self.dtrajs[dtraj_idx][:10] , dtraj[:10], dtraj.shape)
+      
 
         ## get samples of metastable states by most populated microstates
-        cluster_indexes = msmtools.dtraj.index_states(self.clusters.dtrajs)
-        if len(cluster_indexes) < self.n_cluster:
-            cluster_indexes = list(cluster_indexes)
-            for i in range(len(cluster_indexes), self.n_cluster):
-                cluster_indexes.append(np.array([[]]))
-            cluster_indexes = np.array(cluster_indexes)
-        samples = msmtools.dtraj.sample_indexes_by_distribution(cluster_indexes, meta_dist, 5)
+        print(len(self.dtrajs), self.dtrajs[0].shape)
+        cluster_indexes = deeptime.markov.sample.compute_index_states(self.dtrajs)
+        print(f'cluster_indexes: {len(cluster_indexes)}')
+        print(f'meta_dist: {len(meta_dist)} {meta_dist.shape}')
+
+        samples = deeptime.markov.sample.indices_by_distribution(cluster_indexes, meta_dist, 5)
         print(f'samples: {samples} {len(samples)}')
         
         ## Make the output dataframe that has assignments for each frame of each traj
@@ -282,7 +326,7 @@ class Analysis:
             traj = self.cor_list_idx_2_traj[k]
             print(k, traj, v[:10])
             for frame, macrostate in enumerate(v):
-                microstate = self.clusters.dtrajs[k][frame]
+                microstate = self.dtrajs[k][frame]
                 Q = self.cor_list[k][frame, 0]
                 G = self.cor_list[k][frame, 1]
 
@@ -304,6 +348,7 @@ class Analysis:
         df_outfile = os.path.join(self.outpath, f'{self.outname}_MSMmapping.csv')
         df.to_csv(df_outfile, index=False)
         logging.info(f'SAVED: {df_outfile}')
+        print(f'SAVED: {df_outfile}')
 
         # Plot the metastable state membership and free energy surface
         xall = np.hstack([dtraj[:, 0] for dtraj in self.cor_list])
@@ -330,43 +375,85 @@ class Analysis:
             alpha (float): Transparency of the points (default is 0.7).
             title (str): Title of the plot (default is 'State Map with Labels').
         """
-
+        #############################################################################################
         # Create a figure and subplots with 1 row and 2 columns
-        fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+        fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 
-        # Ensure states are integers
-        states = np.asarray(states, dtype=int)
-        unique_states = np.unique(states)
-        n_states = len(unique_states)
+        ### plot FE surface on left plot
+        # Define the number of bins for the 2D histogram
+        num_bins = 20
 
-        # Create a colormap with distinct colors for each state
-        if isinstance(cmap, str):
-            cmap = plt.get_cmap(cmap, n_states)
-        else:
-            cmap = ListedColormap(cmap.colors[:n_states])
+        # Calculate the 2D histogram
+        hist, xedges, yedges = np.histogram2d(x, y, bins=num_bins, density=True)
 
-        # Create a normalized colormap with discrete boundaries
-        norm = BoundaryNorm(boundaries=np.arange(n_states+1)-0.5, ncolors=n_states)
+        # Calculate the probability as the histogram values
+        probability = hist / np.sum(hist)
+        #print(f'probability: {probability} {np.unique(probability)}')
 
-        # Plot the state map
-        scatter = axes[0].scatter(x, y, c=states, cmap=cmap, s=point_size, edgecolor='k', alpha=alpha, norm=norm)
+        # Compute the free energy as -log10(probability)
+        with np.errstate(divide='ignore'):  # Ignore divide-by-zero warnings
+            free_energy = -np.log10(probability)
+            #free_energy[np.isinf(free_energy)] = np.nan  # Set infinities to NaN for better plotting
+            free_energy[np.isinf(free_energy) | np.isnan(free_energy)] = np.nanmax(free_energy[np.isfinite(free_energy)]) #+ 1  # Replace NaN/Inf with a large value
+        print(f'free_energy: {free_energy} {free_energy.shape} {np.unique(free_energy)}')
 
-        # Create a colorbar with state labels
-        cbar = fig.colorbar(scatter, ax=axes[0], ticks=np.arange(n_states), boundaries=np.arange(n_states + 1) - 0.5)
-        cbar.set_label('States')
-        cbar.set_ticks(unique_states)
-        cbar.set_ticklabels([f'{state}' for state in unique_states])
+        # Create the meshgrid for the contour plot
+        X, Y = np.meshgrid(xedges[:-1], yedges[:-1])
+        print(f'X: {X.shape}\nY: {Y.shape}')
 
+        # Create a custom colormap
+        #cmap = plt.cm.viridis
+        #cmap = plt.cm.magma
+        cmap = plt.cm.gist_ncar
+
+        # Plotting the contour plot
+        contour = axes[0].contourf(X, Y, free_energy.T, levels=100, cmap=cmap)  # Transpose to align axes
+        fig.colorbar(contour, ax=axes[0], label='Free Energy (-log10 Probability)')
         axes[0].set_xlabel('Q')
         axes[0].set_ylabel('G')
-        axes[0].set_title(title)
-        axes[0].grid(True)
+        axes[0].set_title('2D Free Energy Contour Plot')
+        axes[0].set_xlim(0,1)
 
-        _, axes[1] = pem.plots.plot_free_energy(x, y, cmap='viridis')
-        axes[1].set_title('Population map')
-        plt.tight_layout()
+
+        #############################################################################################
+        ## Plot state map
+        #_, axes[1], _ = pem.plots.plot_state_map(x, y, states)
+
+        # Create a 2D histogram to determine the bin index for each (x, y) pair
+        #############################################################################################
+        # Step 1: Identify unique states
+        unique_states = np.unique(states)
+        n_states = len(unique_states)
+        print(f'unique_states: {unique_states} {n_states}')
+
+        # Step 2: Create a colormap with one color per unique state
+        # You can use any colormap, or define specific colors if desired
+        colors = plt.cm.get_cmap('tab20', n_states)  # 'tab10' has up to 10 colors; change if needed
+        cmap = ListedColormap([colors(i) for i in range(n_states)])
+
+        # Step 3: Map states to color indices
+        state_to_index = {state: i for i, state in enumerate(unique_states)}
+        color_indices = np.vectorize(state_to_index.get)(states)
+
+        # # Step 4: Create scatter plot
+        scatter = axes[1].scatter(x, y, c=color_indices, cmap=cmap, s=50, edgecolor='k')  # Customize marker size, etc.
+
+        # Step 5: Add a colorbar with labels
+        cbar = plt.colorbar(scatter, ax=axes[1], ticks=np.linspace(0.5, n_states - 1.5, num=n_states), label=f'Metastable States')
+        cbar.ax.set_yticklabels(unique_states)  # Label colorbar with the unique state values
+        #############################################################################################
+
+        axes[1].set_xlabel('Q')
+        axes[1].set_ylabel('G')
+        axes[1].set_title('2D state map')
+        axes[1].set_xlim(0,1)
+
+        #plt.tight_layout()
         plt.savefig(outfile)
         logging.info(f'SAVED: {outfile}')
+        print(f'SAVED: {outfile}')
+        plt.clf()
+
     #######################################################################################
 
     #######################################################################################
@@ -378,12 +465,13 @@ class Analysis:
         """
         #nits = -1
         lag_times = np.arange(1, 100, 10)  # adjust the range based on your system
-        n_states = len(np.unique(self.clusters.dtrajs))  # or a predefined number of states
-        its = pem.msm.its(self.clusters.dtrajs, lags=lag_times, errors='bayes')
+        n_states = len(np.unique(self.dtrajs))  # or a predefined number of states
+        its = pem.msm.its(self.dtrajs, lags=lag_times, errors='bayes')
         pem.plots.plot_implied_timescales(its)
         ITS_outfile = os.path.join(self.outpath, f'{self.outname}_ITS.png')
         plt.savefig(ITS_outfile)
         logging.info(f'SAVED: {ITS_outfile}')
+        print(f'SAVED: {ITS_outfile}')
     #######################################################################################
 
     #######################################################################################
@@ -395,11 +483,11 @@ def main():
     parser.add_argument("--outpath", type=str, required=True, help="Path to output directory")
     parser.add_argument("--OPpath", type=str, required=True, help="Path to directory containing G and Q directories created by GQ.py")
     parser.add_argument("--outname", type=str, required=True, help="base name for output files")
-    parser.add_argument("--psf", type=str, required=True, help="Path to CA protein structure file")
-    parser.add_argument("--dcds", type=str, required=True, help="Path to trajectories created by ")
     parser.add_argument("--start", type=int, required=False, help="First frame to analyze 0 indexed", default=0)
     parser.add_argument("--end", type=int, required=False, help="Last frame to analyze 0 indexed", default=None)
     parser.add_argument("--stride", type=int, required=False, help="Frame stride", default=1)
+    parser.add_argument("--ITS", type=str, required=False, help="Find optimal lag time with ITS", default='False')
+    parser.add_argument("--lagtime", type=int, required=False, help="lagtime to build the model", default=1)
     args = parser.parse_args()
 
     ## make output folder
@@ -433,15 +521,18 @@ def main():
 
     # genereate the implied timescales plot to check for a suitable lag time
     # Should be done first before building the model to choose a suitable lag time
-    #anal.plot_implied_timescales()
+    if args.ITS == 'True':
+        anal.plot_implied_timescales()
+        print(f'Analysis terminated since ITS was selected. Check the figure and choose an approrate lagtime')
+        quit()
     
     # Build the MSM model with the choosen lagtime
-    anal.build_msm(lagtime=40)
+    anal.build_msm(lagtime=args.lagtime)
 
 if __name__ == "__main__":
     start_time = time.time()
     main()
     end_time = time.time()
     
-print(f'NORMAL TERMINATION: {time.time() - start_time}')
-logging.info(f'NORMAL TERMINATION: {time.time() - start_time}')
+#print(f'NORMAL TERMINATION: {time.time() - start_time}')
+#logging.info(f'NORMAL TERMINATION: {time.time() - start_time}')

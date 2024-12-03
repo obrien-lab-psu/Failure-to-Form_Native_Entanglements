@@ -469,8 +469,9 @@ class MotifScanner:
         if OnlyEnt == True:
             Ess_gene_scan = Ess_gene_scan[Ess_gene_scan['ent_present'] == True]
             NonEss_gene_scan = NonEss_gene_scan[NonEss_gene_scan['ent_present'] == True]
-        #print(f'Ess_gene_scan:\n{Ess_gene_scan}')
-        #print(f'NonEss_gene_scan:\n{NonEss_gene_scan}')
+        print(f'Ess_gene_scan:\n{Ess_gene_scan}')
+        print(f'NonEss_gene_scan:\n{NonEss_gene_scan}')
+        quit()
 
         Dstats_results = {'motif':[], 
                             'D_type':[], 

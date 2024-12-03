@@ -138,17 +138,18 @@ def bootstrap_ci(data, n_resamples=10000, ci=95):
     return np.mean(data), lower_bound, upper_bound
 
 # Function to perform permutation test
-#def permutation_test(data1, data2, n_permutations=10000):
-#    observed_stat = np.abs(np.mean(data1) - np.mean(data2))
-#    combined_data = np.concatenate([data1, data2])
-#    permuted_stats = []
-#    for _ in range(n_permutations):
-#        np.random.shuffle(combined_data)
-#        perm_data1 = combined_data[: len(data1)]
-#        perm_data2 = combined_data[len(data1):]
-#        permuted_stats.append(np.abs(np.mean(perm_data1) - np.mean(perm_data2)))
-#    p_value = np.mean(np.array(permuted_stats) >= observed_stat)
-#    return observed_stat, p_value
+def permutation_test2(data1, data2, n_permutations=100000):
+    observed_stat = np.abs(np.mean(data1) - np.mean(data2))
+    combined_data = np.concatenate([data1, data2])
+    permuted_stats = []
+    for _ in range(n_permutations):
+        np.random.shuffle(combined_data)
+        perm_data1 = combined_data[: len(data1)]
+        perm_data2 = combined_data[len(data1):]
+        permuted_stats.append(np.abs(np.mean(perm_data1) - np.mean(perm_data2)))
+    p_value = np.mean(np.array(permuted_stats) >= observed_stat)
+    return observed_stat, p_value
+
 def statistic(x, y, axis):
     return np.mean(x, axis=axis) - np.mean(y, axis=axis)
 
@@ -175,6 +176,9 @@ def analyze_and_plot(dataframe, outfile, stats_outfile, tag, varKey):
     (name1, data1), (name2, data2) = data_ess
     res = permutation_test((data1, data2), statistic)
     test_stat, p_value = res.statistic, res.pvalue
+    print(f'test_stat: {test_stat} | p_value: {p_value}')
+    #test_stat, p_value = permutation_test2(data1, data2)
+    #print(f'test_stat: {test_stat} | p_value: {p_value}')
     #test_stat, p_value = mannwhitneyu(data1, data2)
     #test_stat, p_value = ttest_ind(data1, data2)
 
@@ -253,10 +257,10 @@ def main():
     analysis = Analyzer(outpath, feature_files, Ess_gene_list, NonEss_gene_list, tag)
 
     # Get fraction AAtypes in gene lists and calc some stats 
+    analysis.Get_FractionHydrophobic(AAtype='General_hydrophobic')
     analysis.Get_FractionHydrophobic(AAtype='Strong_hydrophobic')
     analysis.Get_FractionHydrophobic(AAtype='Weak_hydrophobic')
     analysis.Get_FractionHydrophobic(AAtype='Total_hydrophobic')
-    analysis.Get_FractionHydrophobic(AAtype='General_hydrophobic')
     analysis.Get_FractionHydrophobic(AAtype='Hydrophilic')
     analysis.Get_FractionHydrophobic(AAtype='Aromatic')
 

@@ -9,7 +9,7 @@ print(tags)
 for tag in tags:
     tag_file = f'src/command_files/{tag}_Quenching.cmds'
     cmds = []
-    for t in np.arange(0,1):
+    for t in np.arange(1,50):
         
         # find final PDB file
         #print(os.path.join(top_level, f'{tag}/Unfolding/*_t{t}_unfolding_finalframe*.pdb'))
@@ -17,6 +17,13 @@ for tag in tags:
         if len(final_cor) > 1:
             raise ValueError(f'There was more than 1 final frame found for trajectory {t} in {tag}:\n{final_cor}')
         elif len(final_cor) == 1:
+
+            # check to ensure that there is no already completed finalframe
+            quench_ff = f'../../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Simulations_of_Native_Entanglement_Misfolding/Temp_Quench_Dynamics/{tag}/Quenching/{tag}_t{t}_quench_finalframe26667.pdb'
+            if os.path.exists(quench_ff):
+                print(f'Quench Final Frame already exists for {tag} {t}')
+                continue
+            
             final_cor = final_cor[0]
             #print(f'final_cor: {final_cor}')
             script = f'python src/data/Dynamics.py'
@@ -40,6 +47,6 @@ for tag in tags:
         print(f'No commands made for {tag}')
 
     ## submit commands
-    submission = f'python src/data/submit_cmds.py {tag_file} data/temp.slurm {tag.split("_")[1]} 1'
-    print(submission)
+    #submission = f'python src/data/submit_cmds.py {tag_file} data/temp.slurm {tag.split("_")[1]} 1'
+    #print(submission)
     #os.system(submission)

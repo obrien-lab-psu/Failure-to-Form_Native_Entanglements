@@ -1,5 +1,4 @@
-# Make_Protein_Feature_Files   
-This analysis generates a feature file for each protein in your dataset and then makes lists of genes to use in further analysis.
+# Prepare protein feature files and make gene lists 
 
 ## General workflow
 ```mermaid
@@ -10,10 +9,14 @@ graph TD
 ``` 
 
 ## Generate Feature Files
-Here we collate information from various databases to make the set of feature files.
-[SCOP](https://www.ebi.ac.uk/pdbe/scop/)
-[DEG](http://origin.tubic.org/deg/public/index.php)
-[DisProt](https://disprot.org/)
+Here we collate information from various databases to make a static feature file for each protein in our dataset(s). 
+Structural classification [SCOP](https://www.ebi.ac.uk/pdbe/scop/)  
+Protein essentiality [DEG](http://origin.tubic.org/deg/public/index.php) - MG1655 II [[1]](#1)  
+Disordered content [DisProt](https://disprot.org/)   
+Native entanglements found by [user](https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Native_Entanglements_in_PDBs)  
+Secondary structure content [STRIDE](https://webclu.bio.wzw.tum.de/stride/)  
+Local changes in conformation observed in LiPMS experiments  
+
 
 ### Usage of [Gen_proteome_features.py](src/data/Gen_proteome_features.py)
 ```
@@ -66,6 +69,55 @@ path_to_contact_pt = data/*_contact_potential.csv
 
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/Gen_proteome_features_EXP_FLiPPR.cmds) to reproduce the features files used in this work for the experimental structures and [here](src/command_lists/Gen_proteome_features_AF_FLiPPR.cmds) for the AlphaFold structures. Please modify any other pathing as necessary. 
 
+### output file descriptions
+#### Protein feature files located in outpath/res_features_lib/
+A "|" separated file with 1 row per residue in the structure
+
+| Name                  | Description   |
+|-----------------------|---------------|
+| gene                  | Uniprot accession ID              |
+| pdb                   | Protein databank ID              |
+| chain                 | Chain ID from PDB file              |
+| uniprot_length        | Canonical length of protein in AA              |
+| essential             | Protein essential or not [[1]](#1)             |
+| ent_present           | Native entanglement present              |
+| pdb_resid             | PDB residue ID              |
+| resname               | Residue type in 3 letter code             |
+| AA                    | Residue type in 1 letter code              |
+| nearest_neighbors     | Residue IDs of those residues with alpha carbons within 8A of this residue              |
+| num_nearest_neighbors | # of nearest neighbors to this residue              |
+| region                | Residue was in an entangled region              |
+| ent_idx               | Index of the entangled region the residue was in              |
+| res_sasa              | Solvant accessible surface area              |
+| median_sasa           | Median solvant accessible surface area of this residue and its nearest neighbors             |
+| NC                    | 0 = not a unique entanglement native contact <br> 1 = a unique entanglement native contact <br> 2 = within the +/- 3 buffer of the native contact              |
+| crossing              | 0 = not a unique entanglement crossing residue <br> 1 = a unique entanglement crossing residue <br> 2 = within the +/- 3 buffer of the crossing residue              |
+| mapped_resid          | Mapped residue ID in the canonical FASTA sequence              |
+| secondary_struct      | Secondary structure determined by STRIDE              |
+| SCOP_class            | SCOP classificiation              |
+| IDR                   | In an IDR determined by DisProt              |
+| cut_str               | A "/" separated string containing detailed information about which LiPMS experiments this residue was determined to have a signficant change in conformation              |
+| cut_C_Rall            | A cut was observed at any timepoint in the cyto-serum only buffer LiPMS experiments              |
+| cut_CD_Rall           | A cut was observed at any timepoint in the cyto-serum + DnaK buffer LiPMS experiments              |
+| cut_CG_Rall           | A cut was observed at any timepoint in the cyto-serum + GroEL buffer LiPMS experiments              |
+| pdb_coverage          | Percent of the canonical sequence resolved in the PDB              |
+| unresolved_IDR        | Depriciated - IGNORE              |
+| buried                | Depriciated - IGNORE              |
+
+#### Contact files located in outpath/contact_type{n}_lib/
+A "|" separated file with 1 contact per row. There are three different types of contacts calculated:
+1. Alpha carbons with in 8A of eachother  
+2. any heavy atoms within 4.5A  
+3. side-chain heavy atoms within 4.5A  
+For each contact an estimate of the potential is reported using three different scales commonly used in litterature.  
+  
+Betancourt-Thirumalai (BT) scale [[2]](#2)  
+Kolinski-Godzik-Skolnick (KGS) scale [[3]](#3)  
+Miyazawa-Jernigan (MJ) scale [[4]](#4)  
+  
+#### Unique entanglement feature files located in outpath/uent_features_lib/
+A "|" separated file with 1 unique entanglement per row. The definitions of the unique entanglement features are defined [here](docs/entanglement_complexity_metrics.jpg). 
+  
 
 ## Generate Gene Lists for all other analysis
 Here we generate all lists of genes used in this analysis by applying all combinations of several thresholds to the Feature Files.
@@ -108,3 +160,14 @@ options:
 If you have the [SLUG] then you can use the command files located [here](src/command_lists/MakeGeneLists_EXP_Rall.cmds) to reproduce the gene lists used in this work for the experimental structures and [here](src/command_lists/MakeGeneLists_EXP_Rall.cmds) for the AlphaFold structures. Please modify any other pathing as necessary. 
 
 The count statistics of each gene list can be found [here](data/Combined_genelist_counts_EXP.csv) for the experimental dataset and [here](data/Combined_genelist_counts_AF.csv) for the Alphafold datasets. 
+
+
+### References  
+
+<a id="1">[1]</a>: Baba, T., Ara, T., Hasegawa, M., Takai, Y., Okumura, Y., Baba, M., Datsenko, K. A., Tomita, M., Wanner, B. L., & Mori, H. (2006). Construction of Escherichia coli K-12 in-frame, single-gene knockout mutants: The Keio collection. Molecular Systems Biology, 2. https://doi.org/10.1038/msb4100050
+
+<a id="2">[2]</a>: Betancourt, M. R., & Thirumalai, D. (1999). Pair potentials for protein folding: choice of reference states and sensitivity of predicted native states to variations in the interaction schemes. Protein Science : A Publication of the Protein Society, 8(2), 361. https://doi.org/10.1110/PS.8.2.361
+
+<a id="3">[3]</a>: Skolnick, J., Jaroszewski, L., Kolinski, A., & Godzik, A. (1997). Derivation and testing of pair potentials for protein folding. When is the quasichemical approximation correct? Protein Science, 6(3), 676–688. https://doi.org/10.1002/pro.5560060317
+
+<a id="4">[4]</a>: Miyazawa, S., & Jernigan, R. L. (1996). Residue-Residue Potentials with a Favorable Contact Pair Term and an Unfavorable High Packing Density Term, for Simulation and Threading. In J. Mol. Biol (Vol. 256).

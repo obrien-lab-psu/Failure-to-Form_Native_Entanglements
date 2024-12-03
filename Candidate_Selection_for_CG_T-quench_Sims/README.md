@@ -12,6 +12,47 @@ graph TD
 
 ## Simulated annealing MC for Candidate selection
 
+For a given LiP-MS condition (i.e., *cyto-serum only*, *cyto-serum + DnaK*, or *cyto-serum + GroEL*), proteins that meet the following criteria are randomly distributed amongst four groups. The proteins must:
+
+1. Have at least 50% of their canonical sequence observed in the LiP-MS experiments.
+2. Have a sum of their peptide abundance (SPA) greater than the 50th SPA percentile of all proteins in that condition.
+3. Be non-refoldable in the absence of chaperones (i.e., have at least 1 significant PK site).
+
+For each group of proteins $ i $, there is an objective function defined as:
+
+$$
+E_i = -C_1 \log(\text{OR}_i) + C_2 D_i
+$$
+
+Where:
+- $ \text{OR}_i $ is the ratio of the odds of misfolding in the entangled region relative to the odds of misfolding in the non-entangled region of the protein group $ i $.
+- $ D_i $ is the Kolmogorov–Smirnov test statistic for the protein size distribution and the reference distribution, taken as the superset of all four groups.
+
+One MC step is taken by randomly swapping 5 proteins between each pair of neighboring group indexes. $ C_1 = 1 $ and $ C_2 = 2.5 $ in this work, optimized to ensure penalties for deviations from the reference protein size distribution are balanced by the opportunity to increase the odds ratio.
+
+The **Metropolis criterion** is applied to determine if any given swap is accepted or rejected. The acceptance ratio for a swap between groups $ j $ and $ k $ at MC step $ x $ is defined as:
+
+$$
+P \equiv \frac{P_{\text{new}}(j, k, x)}{P_{\text{old}}(j, k, x-1)} \propto e^{-\beta \Delta E} = e^{-\beta (E_{\text{new}} - E_{\text{old}})} = e^{-\beta (E_j^x + E_k^x - E_j^{x-1} - E_k^{x-1})}
+$$
+
+The swap is accepted if either $ P \geq 1 $ or $ 1 > P > u $, where $ u $ is a random number sampled from a uniform distribution bounded by $[0, 1]$. $ \beta $ is an inverse temperature scaling factor that starts very low at 0.05 to allow ample room for the simulation to explore the objective function landscape, scaling linearly to 1000 after every 750 MC steps and remains constant at 1000 thereafter.
+
+Plots of the energy derivative as a function of temperature show a clear phase transition over this window [here](Figures/Rand-False/EXP/PhaseT_system8_EXP_Rand-False_C.png).
+
+## Simulation Details
+- In total, 10 independent trajectories are run for the set of proteins with native entanglements likely to be non-refoldable.
+- A parallel set of 10 independent simulations was run with a randomized proteome sample, where the significant PK cut-sites are distributed randomly across the proteome. This set acts as a randomized control to measure the inherent shuffling of noise in these simulations.
+
+## Candidate Selection
+Candidates predicted to be highly likely to misfold involving their native entanglement were selected by rank ordering the proteins by their fractional presence in the group with the largest OR at the end of each trajectory:
+
+$$
+f_M \geq 0.7
+$$
+
+The largest OR group is defined as the group with the highest mean OR over the last 10 frames of the trajectory.
+
 ### Usage of [Optimizer_SimulatedAnnealing.py](src/data/Optimizer_SimulatedAnnealing.py)
 ```
 usage: Optimizer_SimulatedAnnealing.py [-h] -f RESFEAT_FILES -o OUTPATH --ent_gene_list ENT_GENE_LIST --nonRefold_gene_list NONREFOLD_GENE_LIST -t TAG -b BUFFER -s SPA -c COV -n N_GROUPS -r

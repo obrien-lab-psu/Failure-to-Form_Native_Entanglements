@@ -170,6 +170,12 @@ class DataAnalysis:
     #######################################################################################
     # Function to determine the case value for each row
     def determine_case(self, row):
+        """
+        Case 0: Invalid peptide - not enough abundance
+        Case 1: No missing peptides
+        Case 2: 1 abundance missing from either the Native or Refolded samples
+        Case 3: All-or-None: One sample is missing all 3 abundances while the other has all 3
+        """
         n_values = [row['N1'], row['N2'], row['N3']]
         r_values = [row['R1'], row['R2'], row['R3']]
         

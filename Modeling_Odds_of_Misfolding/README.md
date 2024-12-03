@@ -1,9 +1,5 @@
 # Modeling_Odds_of_Misfolding  
-Here we model the log-odds of observing a change in proteolysis suseptibility (i.e. misfolding) as a function of the amino acid composition and the region of the protein it was observed in (i.e. entangled region or non-entangled region). We use logistic regression and fit the following model using the maximal likelihood optimiztion method.
-
-$$
-\text{log(odds)} \approx B_0 + B_1 \cdot X_1 + B_2 \cdot X_2
-$$
+Here we model the log-odds of observing a change in proteolysis suseptibility (i.e. misfolding) as a function of the amino acid composition and the region of the protein it was observed in (i.e. entangled region or non-entangled region).
 
 ## General workflow
 ```mermaid
@@ -16,11 +12,88 @@ graph TD
     click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Modeling_Odds_of_Misfolding#usage-of-plot_regression_resultspy"
     click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Modeling_Odds_of_Misfolding#usage-of-plot_regression_resultspy-1"
 ``` 
+## Basic theory  
+### How Binomial Logistic Regression Works
+1. **Binary Outcome**:
+   - The dependent variable is binary, meaning it takes on one of two possible values, usually coded as 0 and 1.
 
-## Binomial logistic regression
+2. **Odds and Logits**:
+   - The **odds** of an event occurring are defined as:
+     $$
+     \text{Odds} = \frac{p}{1 - p}
+     $$
+     where $ p $ is the probability of the event.
+   - The **logit** is the natural logarithm of the odds:
+     $$
+     \text{Logit}(p) = \log\left(\frac{p}{1 - p}\right)
+     $$
+   - Logistic regression models the **logit of the probability** rather than the probability itself.
 
+3. **Logistic Regression Equation**:
+   - The logistic regression model is:
+     $$
+     \text{Logit}(p) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_n x_n
+     $$
+   - It can be transformed to estimate the probability $ p $ using the **logistic function**:
+     $$
+     p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_1 + \ldots + \beta_n x_n)}}
+     $$
+
+### Deriving and Interpreting Odds Ratios from Coefficients
+1. **Coefficients in Logistic Regression**:
+   - The coefficients $ \beta_0, \beta_1, \ldots, \beta_n $ represent the change in the **log-odds** of the outcome for a one-unit change in the predictor variables.
+
+2. **Calculating Odds Ratios**:
+   - The **odds ratio (OR)** is calculated by taking the **exponent of the logistic regression coefficient**:
+     $$
+     \text{Odds Ratio} = e^{\beta_i}
+     $$
+   - For each predictor variable $ x_i $, the corresponding odds ratio $ e^{\beta_i} $ tells us how the odds of the outcome change with a one-unit increase in $ x_i $.
+
+3. **Interpreting Odds Ratios**:
+   - An **odds ratio > 1** indicates that an increase in the predictor variable is associated with higher odds of the event occurring.
+   - An **odds ratio < 1** indicates that an increase in the predictor variable is associated with lower odds of the event occurring.
+   - An **odds ratio = 1** suggests no effect of the predictor on the odds of the outcome.
+
+### Advantages of Binomial Logistic Regression
+1. **Probabilistic Predictions**:
+   - Provides probabilities that can be used for decision-making.
+   
+2. **Interpretable Coefficients**:
+   - Coefficients are interpretable in terms of log-odds, and the odds ratios offer an intuitive understanding of the effect size.
+
+3. **Flexibility**:
+   - Works well with both continuous and categorical predictors.
+
+4. **Non-linearity Handling**:
+   - While the model assumes linearity in the logit, the resulting probability curve is S-shaped, allowing for more flexibility than linear regression.
+
+5. **Well-Suited for Binary Outcomes**:
+   - Designed specifically to handle binary outcomes, making it ideal for classification tasks.
+
+### Limitations of Binomial Logistic Regression
+1. **Linearity Assumption in the Logit**:
+   - Assumes a linear relationship between the log-odds of the outcome and the predictors, which may not always hold.
+
+2. **Sensitive to Outliers**:
+   - Outliers can affect the model’s performance, as they do in other regression models.
+
+3. **No Inherent Handling of Non-linearity**:
+   - Without transformations or interaction terms, it may struggle to capture complex relationships.
+
+4. **Binary Outcome Only**:
+   - Limited to cases where the response variable is binary, unlike multinomial or ordinal logistic regression, which can handle multiple classes.
+
+5. **No Handling of Multicollinearity**:
+   - Highly correlated predictors can cause instability in the estimation of coefficients.
 
 ### Usage of [src/data/Regression.py](src/data/Regression.py)
+Will fit the following model 
+$$
+\text{Logit}(p) = \beta_0 + \beta_{region} x_{region} + \sum_{AA} \beta_{AA} x_{AA} 
+$$
+where $\text{Logit}(p)$ is the log-odds of observing a change in proteolysis suseptibility. $x_{region}$ is a binary classifier of whether the potential PK cut-site was in an entangled region or not. $x_{AA}$ is a binary classifier of whether the potential PK cut-site was of amino acid type $AA$.  
+
 ```
 usage: Regression.py [-h] -f RESFEAT_FILES -o OUTPATH -g GENE_LIST -t TAG -l LOAD_STYLE -b BUFFER -s SPA -c COV -r REG_FORMULA -v HOLD_VAR
 
@@ -71,13 +144,16 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 ### Results of modeling log-odds of misfolding
 When considering only those proteins with native entanglements we observe a statistically significant greater odds of misfolding in the entangled region of proteins rather than not. Even in the presence of DnaK and GroEL.  
 ![All proteins with native entanglements](Figures/Regressions/whole_proteome/EXP/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)    
-  
+![All proteins with native entanglements](Figures/Odds/whole_proteome/EXP/ent_genes_Rall_binomial_regression_odds_results_var-region_LiPMScov50.png)    
+
 When we restrict ourselves to the set of essential proteins determined by knockout experiments reported in the [DEG](http://origin.tubic.org/deg/public/index.php) database we observe no statistical association in the presence of chaperones.  
 ![Essential proteins with native entanglements](Figures/Regressions/whole_proteome/EXP/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)  
+![Essential proteins with native entanglements](Figures/Odds/whole_proteome/EXP/essential_ent_genes_Rall_binomial_regression_odds_results_var-region_LiPMScov50.png)  
   
 While for the complimentary set of non-essential proteins we still observe the bias towards misfolding involving native entanglements in the presence of chaperones.  
 ![Non-Essential proteins with native entanglements](Figures/Regressions/whole_proteome/EXP/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)  
-  
+![Non-Essential proteins with native entanglements](Figures/Odds/whole_proteome/EXP/nonessential_ent_genes_Rall_binomial_regression_odds_results_var-region_LiPMScov50.png)  
+
   
 Below is a table of all our results across both the sets of experimentally derived structures and Alphafold structures as well as at each individual time point observed in the LiPMS experiments.  
 

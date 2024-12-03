@@ -30,8 +30,31 @@ AlphaFold structures do not require cleaning and are good to use as is.
   
   
 ## Deconstructing structure topology into raw entanglements
-Here we take a protein structure file (PDB) and deconstruct it into all possible loops closed by native contacts that have threading events (entanglements) identified by the Gauss Linking Integration method.  
-For the theory of how this works please see [PAPER link PLACEHOLDER].  
+Here we take a protein databank (PDB) structure file and deconstruct it into all possible loops closed by native contacts that have threading events (entanglements) identified by the Gauss Linking Integration method[[1]](#1). 
+We define a loop as being composed of the backbone trace connecting residues *i* and *j*, which have formed a native 
+contact in the given protein conformation.
+
+The native contact between *i* and *j* is considered to close this loop, even though there is no covalent bond between these two residues. 
+Outside this loop is an N-terminal segment, composed of residues 1 through *i*-1, and a C-terminal segment composed of residues *j*+1 through *N*. 
+These two segments represent open curves, whose entanglement through the closed loop we characterize with linking numbers denoted as *g<sub>N</sub>* and *g<sub>C</sub>*. 
+We calculate these numbers using the partial Gauss double integration method proposed by Baiesi and co-workers[[2]](#2).
+
+For a given structure of an *N*-length protein, with a native contact present at residues (*i*, *j*), the coordinates *R<sub>l</sub>* 
+and the gradient *dR<sub>l</sub>* of the point *l* on the curves were calculated as:
+
+$$R_l = \frac{r_l + r_{l+1}}{2}\\
+dR_l = r_{l+1} - r_l$$
+
+
+where *r<sub>l</sub>* is the coordinates of the Cα atom in residue *l*. The linking numbers *g<sub>N</sub>(*i*,*j*)* and *g<sub>C</sub>(*i*,*j*)* were calculated as:
+
+$$ g_N(i, j) = \frac{1}{4\pi} \sum_{m=6}^{i-5} \sum_{n=i}^{j-1} \frac{R_m - R_n}{|R_m - R_n|^3} \cdot (dR_m \times dR_n) $$
+
+$$ g_C(i, j) = \frac{1}{4\pi} \sum_{m=i}^{j-1} \sum_{n=j+4}^{N-6} \frac{R_m - R_n}{|R_m - R_n|^3} \cdot (dR_m \times dR_n) $$
+
+where we excluded the first 5 residues on the N-terminal curve, last 5 residues on the C-terminal curve, and 4 residues before and after the native contact 
+to eliminate the error induced by both the high flexibility and contiguity of those tails. A given loop is determined to be entangled if $|g_N(i, j)| \geq 0.6$ or  $|g_C(i, j)| \geq 0.6$. If an entanglement is detected for a give native contact we use [Topoly](https://topoly.cent.uw.edu.pl/documentation.html)[[3]](#3) to identify the residues at which the termini crosses the loop plane. 
+
 The script is standalone and can be applied to any PDB [gaussian_entanglement.py](src/data/gaussian_entanglement.py). 
 
 ### Usage of [gaussian_entanglement.py](src/data/gaussian_entanglement.py)
@@ -175,14 +198,13 @@ A file containing the \<pLDDT> for each AlphaFold structure is located [here](da
 There is a standalone example for experimentally derived structures located [here](examples/AF/).  
 
 ## Clustering raw entanglements to representative entanglements
-For each protein structure there are many degenerate entanglements and therefore we seek to derive a set of unique representative entanglements through a clustering algorithm we divised in [PATH TO VIRAJ PAPER]. In a high level description this algorithm has three main steps:
+For each protein structure there are many degenerate entanglements and therefore we seek to derive a set of unique representative entanglements through a clustering algorithm we divised in [[4]](#4). In a high level description this algorithm has three main steps:
 1. Cluster together loops that share the same crosings identified by topoly and choose the smallest loop to be the representative loop of each subcluster. 
 2. Then merge subclusters based on meeting three criteria.
     - the crossings between the two sets of entanglements is spatially close. (the details of this are complex and denoted in the cited paper)
     - loops overlap to any extent.
     - no crossing from either entanglement consideredis within the loops of another in the cluster. 
 3. Finally subclusters are merged based on whether the distance between their representative native contacts and crossings is less than a treshold defined by examining handcurated sets of entanglements.  
-See the cited paper for much more detail regarding this algorithm. 
 
 
 The script used to cluster the raw entangleents is [clustering.py](src/data/clustering.py).  
@@ -206,3 +228,14 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 
 ### Standalone examples
 There is a standalone example for experimentally derived structures located [here](examples/EXP/) and for AlphaFold structures [here](examples/AF/). 
+
+
+### References  
+
+<a id="1">[1]</a>: Kauffman, L., & Balachandran, A. P. (1992). Knots and Physics. Physics Today. https://doi.org/10.1063/1.2809632  
+
+<a id="2">[2]</a>: Baiesi, M., Orlandini, E., Seno, F., & Trovato, A. (2017). Exploring the correlation between the folding rates of proteins and the entanglement of their native states. Journal of Physics A: Mathematical and Theoretical. https://doi.org/10.1088/1751-8121/aa97e7 
+
+<a id="3">[3]</a>: Pawel Dabrowski-Tumanski, Pawel Rubach, Wanda Niemyska, Bartosz Ambrozy Gren, Joanna Ida Sulkowska, Topoly: Python package to analyze topology of polymers, Briefings in Bioinformatics, bbaa196, https://doi.org/10.1093/bib/bbaa196
+
+<a id="4">[4]</a>: Rana, V., Sitarik, I., Petucci, J., Jiang, Y., Song, H., O’brien, E. P., & Sternberg, M. (n.d.). Non-covalent Lasso Entanglements in Folded Proteins: Prevalence, Functional Implications, and Evolutionary Significance. https://doi.org/10.1016/j.jmb.2024.168459

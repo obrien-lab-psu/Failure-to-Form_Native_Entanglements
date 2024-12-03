@@ -39,7 +39,7 @@ class DataAnalysis:
 
     """
 
-    def __init__(self, outpath, uent_files, buff, spa):
+    def __init__(self, outpath, uent_files, buff, spa, num_permute):
         """
         Initializing the DataAnalysis object and ensure atleast the top level outpath is present and makes it if not. 
         """
@@ -74,6 +74,7 @@ class DataAnalysis:
 
         self.buff = buff
         self.spa = spa
+        self.num_permute = num_permute
 
     #################################################################################################################
     def load_files(self, mask):
@@ -116,7 +117,7 @@ class DataAnalysis:
         return uent_df
 
 
-    def DistStats(self, df, keys, dist_tag, n_resamples=1000, alpha=0.05):
+    def DistStats(self, df, keys, dist_tag, n_resamples=10000, alpha=0.05):
         """
         Calculate various parameters of the data distributions
         (1) mean, median, mode
@@ -221,8 +222,9 @@ class DataAnalysis:
             print(f'column: {res.pvalue}')
 
         return results
+    ##########################################################################################################
 
-        
+    ##########################################################################################################
     def LassoRegression(self, df, X_keys, Y_key):
 
         ### Get input data 
@@ -243,13 +245,18 @@ class DataAnalysis:
         #print(f'y:\n{y}')
 
         logistic_regression =  LogisticRegression(penalty='l1', solver='liblinear')
-        Cs = np.linspace(0.00001, 10, 1000)
-        #Cs = np.linspace(0.00001, 10, 10)
+        Cs = np.linspace(0.00001, 10, 30)
+        #Cs = np.linspace(0.0001, 10, 10)
 
         fit_data = {'C':[], 'fold':[], 'balanced_accuracy':[], 'accuracy':[]}
+        plot_df = {'C':[], '<BA>':[], 'pvalue':[], 'num_nonzero':[], 'num_nonzero_and_robust':[]}
         for C in Cs:
-
             print(f'{"#"*100}\nTESTING C: {C}')
+            plot_df['C'] += [C]
+
+            # Generate the null dist
+            C_null_BA = self.GenNullBA(X, y, C)
+            #print(f'C_null_BA: {C_null_BA}')
 
             for col in X_keys:
                 if col not in fit_data:
@@ -258,8 +265,97 @@ class DataAnalysis:
             ## make folds and fit model
             skf = StratifiedKFold(n_splits=5, shuffle=True)
             #skf = StratifiedKFold(n_splits=5)
-
+            avg_BA = 0
+            CV_coefs = []
             for i, (train_index, test_index) in enumerate(skf.split(X, y)):
+                #print(f"Fold {i}:")
+                #print(f"  Train: index={train_index} {len(train_index)}")
+                #print(f"  Test:  index={test_index} {len(test_index)}")
+
+                X_train = X[train_index]
+                y_train = y[train_index]
+                X_test = X[test_index]
+                y_test = y[test_index]
+
+                # Get features for optimal regularization ceof
+                logistic_regression =  LogisticRegression(penalty='l1', solver='liblinear', C=C)
+                logistic_regression.fit(X_train, y_train)
+
+                coefs = logistic_regression.coef_[0].tolist()
+                CV_coefs += [coefs]
+                #print(f'coefs: {coefs}')
+
+                # Predict on the testing data
+                y_pred = logistic_regression.predict(X_test)
+                #print(f'y_pred: {y_pred}')
+                # Calculate balanced accuracy
+                balanced_accuracy = balanced_accuracy_score(y_test, y_pred)
+                accuracy = accuracy_score(y_test, y_pred)
+
+                fit_data['C'] += [C]
+                fit_data['fold'] += [i]
+                fit_data['balanced_accuracy'] += [balanced_accuracy]
+                fit_data['accuracy'] += [accuracy]
+                for col_i, col in enumerate(X_keys):
+                    fit_data[col] += [coefs[col_i]]
+                avg_BA += balanced_accuracy
+            avg_BA /= 5
+
+            # Calculate the pvalue
+            observed = abs(avg_BA - 0.5)
+            print(f'observed: {observed}')
+            C_null_BA -= 0.5
+            C_null_BA = np.abs(C_null_BA)
+            #print(f'C_null_BA: {C_null_BA}')
+            pvalue = np.mean(np.where(C_null_BA >= observed, 1, 0))
+            print(f'pvalue: {pvalue}')
+            plot_df['<BA>'] += [avg_BA]
+            plot_df['pvalue'] += [pvalue]
+
+            CV_coefs = np.asarray(CV_coefs)
+            print(f'CV_coefs:\n{CV_coefs}')
+            # Check which columns have all non-zero values
+            non_zero_columns = np.all(CV_coefs != 0, axis=0)
+            print(f'non_zero_columns: {non_zero_columns}')
+
+            # Check if all values in each column have the same sign
+            same_sign_columns = np.all(CV_coefs > 0, axis=0) | np.all(CV_coefs < 0, axis=0)
+            same_sign_columns *= non_zero_columns
+            print(f'same_sign_columns: {same_sign_columns}')
+            
+            plot_df['num_nonzero'] += [np.sum(non_zero_columns)]
+            plot_df['num_nonzero_and_robust'] += [np.sum(same_sign_columns)]
+            
+        ## make plot_df
+        plot_df = pd.DataFrame(plot_df)
+        print(f'plot_df:\n{plot_df}')
+
+        fit_data = pd.DataFrame(fit_data)
+        print(f'fit_data:\n{fit_data}')
+        return fit_data, plot_df
+    ##########################################################################################################
+
+    ##########################################################################################################
+    def GenNullBA(self, X, y, C):
+        """
+        Generate a null distribution of BA by randomly permuting the essential labels and fitting the model. 
+        """
+
+        logistic_regression =  LogisticRegression(penalty='l1', solver='liblinear')
+
+        fit_data = []
+
+        print(f'Gen null for C: {C}')
+
+        ## make folds and fit model
+        skf = StratifiedKFold(n_splits=5, shuffle=True)
+        #skf = StratifiedKFold(n_splits=5)
+        rng = np.random.default_rng()
+
+        for p in range(self.num_permute):
+            avg_BA = 0
+            py = rng.permuted(y)
+            for i, (train_index, test_index) in enumerate(skf.split(X, py)):
                 #print(f"Fold {i}:")
                 #print(f"  Train: index={train_index} {len(train_index)}")
                 #print(f"  Test:  index={test_index} {len(test_index)}")
@@ -281,45 +377,25 @@ class DataAnalysis:
                 #print(f'y_pred: {y_pred}')
                 # Calculate balanced accuracy
                 balanced_accuracy = balanced_accuracy_score(y_test, y_pred)
-                accuracy = accuracy_score(y_test, y_pred)
+                #accuracy = accuracy_score(y_test, y_pred)
+                avg_BA += balanced_accuracy
+            avg_BA /= 5
+            fit_data += [avg_BA]
+        return np.asarray(fit_data)
+    ##########################################################################################################
 
-                fit_data['C'] += [C]
-                fit_data['fold'] += [i]
-                fit_data['balanced_accuracy'] += [balanced_accuracy]
-                fit_data['accuracy'] += [accuracy]
-                for col_i, col in enumerate(X_keys):
-                    fit_data[col] += [coefs[col_i]]
-                    
-        fit_data = pd.DataFrame(fit_data)
-        print(f'fit_data:\n{fit_data}')
-        return fit_data
-
-    def Plot_Lasso(self, df, keys, outfile):
+    ##########################################################################################################
+    def Plot_Lasso(self, df, outfile):
         
         #        C  fold  balanced_accuracy  accuracy  
         # Create subplots
-        fig, axes = plt.subplots(1, 3, figsize=(12, 4))
-        X = []
-        num_nonzero = []
-        num_robust_nonzero = []
-        BA = []
-        for C, C_df in df.groupby('C'):
-            #print(C_df)
+        fig, axes = plt.subplots(1, 4, figsize=(12, 4))
 
-            num_nonzero_coef = []
-            num_robust_nonzero_coef = []
-            for key in keys:
-                coefs = C_df[key].values
-                all_nonzero = np.all(coefs != 0)
-                same_sign = np.all(coefs >= 0) or np.all(coefs <= 0)
-                #print(C, key, coefs, all_nonzero, same_sign)
-                num_nonzero_coef += [all_nonzero]
-                num_robust_nonzero_coef += [same_sign]
-
-            X += [C]
-            num_nonzero += [np.sum(num_nonzero_coef)]
-            num_robust_nonzero += [np.sum(num_robust_nonzero_coef)]
-            BA += [np.mean(C_df['balanced_accuracy'].values)]
+        X = df['C']
+        BA = df['<BA>']
+        num_nonzero = df['num_nonzero']
+        num_robust_nonzero = df['num_nonzero_and_robust']
+        pvalue = df['pvalue']
 
         axes[0].plot(X, num_nonzero)
         axes[0].set_ylabel('# non-zero ceof.')
@@ -333,11 +409,16 @@ class DataAnalysis:
         axes[2].set_ylabel('Balanced Accuracy')
         axes[2].set_xlabel('inverse regularization strength')
         axes[2].set_ylim(0, 1)
+        axes[3].plot(X, pvalue)
+        axes[3].set_ylabel('permutation pvalue')
+        axes[3].set_xlabel('inverse regularization strength')
+        axes[3].set_ylim(0, 1)
+        axes[3].axhline(y=0.05, color='black', linestyle='--', linewidth=1)
 
         plt.tight_layout()
         plt.savefig(outfile)
         print(f'SAVED: {outfile}')
-
+        ##########################################################################################################
 #################################################################################################################
 
 def main():
@@ -376,7 +457,7 @@ def main():
         print(f'Made directory: {outpath}')
 
     # Initalize the DataAnalysis class object
-    Analyzer = DataAnalysis(outpath, uent_files, buff, spa)
+    Analyzer = DataAnalysis(outpath, uent_files, buff, spa, num_permute)
     print(f'Analyzer: {Analyzer}')
 
     ## Get the Essential gene data and stats
@@ -450,15 +531,19 @@ def main():
     combined_df.to_csv(combined_data_outfile, sep='|', index=False)
     print(f'SAVED: {combined_data_outfile}')
 
-
-    Lasso_results = Analyzer.LassoRegression(combined_df, Analyzer.keys, 'Essential')
+    ## LASSO regression
+    Lasso_results, Lasso_plot_results = Analyzer.LassoRegression(combined_df, Analyzer.keys, 'Essential')
     print(f'Lasso_results:\n{Lasso_results}')
+    
     Lasso_results_outfile = f'{Analyzer.outpath}Lasso_results_{buff}_{spa}.csv'
     Lasso_results.to_csv(Lasso_results_outfile, sep='|', index=False)
     print(f'SAVED: {Lasso_results_outfile}')
+    Lasso_plot_results_outfile = f'{Analyzer.outpath}Lasso_plot_results_{buff}_{spa}.csv'
+    Lasso_plot_results.to_csv(Lasso_plot_results_outfile, sep='|', index=False)
+    print(f'SAVED: {Lasso_plot_results_outfile}')
 
     Lasso_results_plot_outfile = f'{Analyzer.outpath}Lasso_results_{buff}_{spa}.png'
-    Analyzer.Plot_Lasso(Lasso_results, Analyzer.keys, Lasso_results_plot_outfile)
+    Analyzer.Plot_Lasso(Lasso_plot_results, Lasso_results_plot_outfile)
 
 if __name__ == "__main__":
     main()

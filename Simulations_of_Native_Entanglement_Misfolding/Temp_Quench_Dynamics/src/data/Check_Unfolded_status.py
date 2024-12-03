@@ -26,7 +26,7 @@ for i, tag in enumerate(list_dirs):
             print(f'No final frame found for traj {t} in {tag}')
             #get the command from the command files and double to unfolding time
             cmd = list(os.popen(f'grep {tag}_t{t}_ src/command_files/{tag}_unfolding.cmds'))[0]
-            cmd = cmd.replace('66666667', '266666668').replace('\n', '') + ' --restart True\n'
+            cmd = cmd.replace('66666667', '66666667').replace('\n', '') #+ ' --restart True\n'
             #print(cmd)  
             cmds += [cmd]
            
@@ -42,8 +42,8 @@ for i, tag in enumerate(list_dirs):
 
                 #get the command from the command files and double to unfolding time
                 cmd = list(os.popen(f'grep {tag}_t{t}_ src/command_files/{tag}_unfolding.cmds'))[0]
-                cmd = cmd.replace('66666667', '266666668').replace('\n', '') + ' --restart True\n'                #print(cmd)  
-                cmds += [cmd]
+                cmd = cmd.replace('66666667', '266666668').replace('\n', '') #+ ' --restart True\n'                #print(cmd)  
+                #cmds += [cmd]
 
             else:
                 completed_traj += [traj]
@@ -63,6 +63,6 @@ print(f'SAVED: data/Check_Unfolding.csv')
 print(len(cmds))
 with open('restart.cmds', 'w') as fh:
     for cmd in cmds:
-        fh.write(cmd)
+        fh.write(f'{cmd}\n')
 print(f'SAVED: restart.cmds')
     
