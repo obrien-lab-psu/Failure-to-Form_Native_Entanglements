@@ -1,5 +1,25 @@
 # Trajectory Analysis
+## Workflow
 
+```mermaid
+graph TD
+    A[GQ] --> B[Cluster Changes] --> E[Collect OP]
+    A[GQ] --> C[MSM] --> E[Collect OP]
+    D[ID Mirrors] --> E[Collect OP]
+    E[Collect OP] --> F[Misf. Prop.]
+    E[Collect OP] --> G[Misf. Mech.]
+    E[Collect OP] --> H[Misf. Overlap]
+    
+    click A "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis#fraction-of-native-contacts-q--fraction-of-native-contacts-with-a-change-in-entanglement-g"
+    click B "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis#clustering-of-change-on-entanglement-in-cg-trajectories"
+    click C "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis#building-heirarchical-kinetic-models-across-quenched-trajectories"
+    click D "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis#find-mirror-images"
+    click E "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis#collect-the-order-parameter-data"
+    click F "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis#calculate-the-fraction-of-native-frames"
+    click G "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis#calculate-the-probability-of-various-change-in-entanglement-types"
+    click H "https://github.com/obrien-lab-psu/Failure-to-Form_Native_Entanglements/tree/main/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis#calculate-the-probability-of-a-given-unique-change-in-entanglement-having-overlap-with-another"
+    
+```
 ## Fraction of native contacts (Q) <br> Fraction of native contacts with a change in entanglement (G)  
 ### Basic theory
 #### 0. Fraction of native contacts (Q) 
