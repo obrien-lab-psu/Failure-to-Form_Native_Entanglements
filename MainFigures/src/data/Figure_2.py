@@ -454,17 +454,31 @@ def main():
     """
     slug_path = ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/
 
-    Figure 2a: 
-        Entanglement complexity as a discriminator
-        C, CD, CG buffers at spa50 and LiPMScov 50
-        EXP, AF
+    Figure 1a: 
+        Association between non-refoldability and the presence of a native entanglement
+        C buffers at spa50 and LiPMScov 50
+        EXP, AF, and both EXP & AF
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Association_Native_Entanglements_and_Misfolding/EntanglementsAndNonrefoldability/Plot_EntanglementsAndNonrefoldability/entanglement_and_nonrefoldability_plot_data_all_genes.csv
+
     
-    Figure 2b:
-        DnaK binding motif its
-        C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement
-        EXP, AF
-        Dall, Dthread, Dloop
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Chaperone_Client_Associations/Dnak_simple_motif_scan/Plots/consolidated_Dnak_binding_data_EXP.csv
+    Figure 1b:
+        Association between change in proteolysis suseptibility and protein region (entangled versus non-entangled)
+        C, Cpsm, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement
+        EXP, AF, and both EXP & AF
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
+        
+    Figure 1c: 
+        Association between change in proteolysis suseptibility and protein region (entangled versus non-entangled)
+        C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement and be essential
+        C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement and be non-essential   
+        EXP, AF, and both EXP & AF
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv  
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
+        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
 
     """
     parser = argparse.ArgumentParser(description="Process regression data and generate plots.")
