@@ -73,29 +73,39 @@ class Analysis:
         cor_list = []
         cor_list_idx_2_traj = {}
         Qfiles = glob.glob(os.path.join(self.OPpath, 'Q/*.Q'))
-        Gfiles = glob.glob(os.path.join(self.OPpath, 'G/*.G'))
+        Gfiles = glob.glob(os.path.join(self.OPpath, 'Cluster_ChangesInEnt/*_clustered.G'))
         print(f'Number of Q files found: {len(Qfiles)} | Number of G files found: {len(Gfiles)}')
 
         # loop through the Qfiles and find matching Gfile
         # then load the Q and G time series into a 2D array
         idx = 0
         for Qf in Qfiles:
-            
+            print(f'Qf: {Qf}')
+
             traj = Qf.split('_')[-1].replace('.Q','').replace('t','')
+            print(f'Traj: {traj}')
             cor_list_idx_2_traj[idx] = int(traj)
             idx += 1
 
             # get the cooresponding G file
-            Gf = [f for f in Gfiles if f't{traj}.G' in f]
+            Gf = [f for f in Gfiles if f't{traj}_clustered.G' in f]
             # quality check to ensure that only 1 Gfile was found for each Qfile
             if len(Gf) != 1:
                 raise ValueError(f'Zero or more than 1 Gfile found for traj {traj}')
             else:
                 Gf = Gf[0]
+            print(f'Gf: {Gf}')
 
             # load the G Q data and extract only the time series column
-            Qdata = pd.read_csv(Qf)['Q'].values[self.start:self.end:self.stride]
-            Gdata = pd.read_csv(Gf)['G'].values[self.start:self.end:self.stride]
+            #Qdata = pd.read_csv(Qf)['Q'].values[self.start:self.end:self.stride]
+            Qdata = pd.read_csv(Qf)
+            Qdata = Qdata[(Qdata['Frame'] >= self.start) & (Qdata['Frame'] <= self.end)]
+            Qdata = Qdata['Q'].values
+
+            Gdata = pd.read_csv(Gf)
+            Gdata = Gdata[(Gdata['Frame'] >= self.start) & (Gdata['Frame'] <= self.end)]
+            Gdata = Gdata['G'].values 
+            print(f'Shape of OP: Q {Qdata.shape} G {Gdata.shape}')
 
             # Quality check that both time series have the same length
             if Qdata.shape != Gdata.shape:
@@ -344,6 +354,7 @@ class Analysis:
                 df['StateSample'] += [StateSample]
 
         df = pd.DataFrame(df)
+        df['frame'] += self.start # correct the frame index to start from the start specified by the user as this frame index starts from 0
         print(f'Final MSM mapping DF:\n{df}')
         df_outfile = os.path.join(self.outpath, f'{self.outname}_MSMmapping.csv')
         df.to_csv(df_outfile, index=False)
@@ -484,7 +495,7 @@ def main():
     parser.add_argument("--OPpath", type=str, required=True, help="Path to directory containing G and Q directories created by GQ.py")
     parser.add_argument("--outname", type=str, required=True, help="base name for output files")
     parser.add_argument("--start", type=int, required=False, help="First frame to analyze 0 indexed", default=0)
-    parser.add_argument("--end", type=int, required=False, help="Last frame to analyze 0 indexed", default=None)
+    parser.add_argument("--end", type=int, required=False, help="Last frame to analyze 0 indexed", default=9999999)
     parser.add_argument("--stride", type=int, required=False, help="Frame stride", default=1)
     parser.add_argument("--ITS", type=str, required=False, help="Find optimal lag time with ITS", default='False')
     parser.add_argument("--lagtime", type=int, required=False, help="lagtime to build the model", default=1)

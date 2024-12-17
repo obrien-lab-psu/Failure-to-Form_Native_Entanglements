@@ -2,7 +2,7 @@
 #SBATCH -J  
 #SBATCH --partition=mgc-open
 #SBATCH -N 1
-#SBATCH -n 2
+#SBATCH -n 20
 #SBATCH -t 48:00:00
 #SBATCH --account=epo2_nih
 #SBATCH --mem=50G

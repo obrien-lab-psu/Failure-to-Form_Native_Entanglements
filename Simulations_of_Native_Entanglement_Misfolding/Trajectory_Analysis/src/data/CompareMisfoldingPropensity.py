@@ -70,15 +70,28 @@ class Analysis:
         1. Collected G, Q, K and native frame reference df
         """
 
-        OPFiles = glob.glob(os.path.join(self.CollectedOPpath, f'CollectedGQK.csv'))
-        print(f'OPFiles: {OPFiles}')
-        if len(OPFiles) != 1:
-            raise ValueError(f'There should only be 1 G,Q,K collection file named CollectedGQK.csv not {len(OPFiles)}')
-        self.OP_df = pd.read_csv(OPFiles[0])
-        print(f'OP_df:\n{self.OP_df}')  
-    #######################################################################################  
+        ### Load candidate set 1 collected OP data
+        set1_OPfile = os.path.join(self.CollectedOPpath, f'setID1/DATA/Quench_Collected_GQK.csv')
+        print(f'set1_OPfile: {set1_OPfile}')
+        if not os.path.exists(set1_OPfile):
+            raise ValueError(f'No set 1 OP file!')
+        else:
+            self.set1_OP = pd.read_csv(set1_OPfile)
+            self.set1_OP = self.set1_OP[self.set1_OP['Mirror'] == False]
+            print(f'set1_OP:\n{self.set1_OP}')
 
-    #######################################################################################
+        
+        ### Load candidate set 1 collected OP data
+        set2_OPfile = os.path.join(self.CollectedOPpath, f'setID2/DATA/Quench_Collected_GQK.csv')
+        print(f'set2_OPfile: {set2_OPfile}')
+        if not os.path.exists(set2_OPfile):
+            raise ValueError(f'No set 1 OP file!')
+        else:
+            self.set2_OP = pd.read_csv(set2_OPfile)
+            self.set2_OP = self.set2_OP[self.set2_OP['Mirror'] == False]
+            print(f'set2_OP:\n{self.set2_OP}')
+
+    #######################################################################################  
 
     #######################################################################################
     def CalcFractMisfolded(self, NativeBy='MSM', scope='full'):
@@ -126,33 +139,37 @@ class Analysis:
             tag = f'{gene}_{pdb}_{chain}'
             print(gene, pdb, chain, setID, set_name)
 
-            if setID in [1,2]:
-                loc_df = self.OP_df[self.OP_df['gene'] == gene]
-                print(f'loc_df:\n{loc_df}')
+            if setID == 1:
+                loc_df = self.set1_OP[self.set1_OP['gene'] == gene]
+            elif setID == 2:
+                loc_df = self.set2_OP[self.set2_OP['gene'] == gene]
+            else:
+                continue
+            #print(f'loc_df:\n{loc_df}')
 
-                for traj, traj_df in loc_df.groupby('traj'):
-                    #print(traj_df)
-                    fract_misfolded_df['tag'] += [tag]
-                    fract_misfolded_df['setID'] += [setID]
-                    fract_misfolded_df['traj'] += [traj]
-                    fract_misfolded_df['NativeBy'] += [NativeBy]
-                    fract_misfolded_df['Metric'] += ['FracMisfolded']
+            for traj, traj_df in loc_df.groupby('traj'):
+                #print(traj_df)
+                fract_misfolded_df['tag'] += [tag]
+                fract_misfolded_df['setID'] += [setID]
+                fract_misfolded_df['traj'] += [traj]
+                fract_misfolded_df['NativeBy'] += [NativeBy]
+                fract_misfolded_df['Metric'] += ['FracMisfolded']
 
-                    for i,label in scope_dict.items():
-                        # Calculate the percentile range
-                        lower_bound = frame_chunks[i][0]
-                        upper_bound = frame_chunks[i][-1]
-                        lower_bound, upper_bound = int(lower_bound), int(upper_bound)
-                        #print(i, lower_bound, upper_bound)
-                        
-                        # Filter the DataFrame for rows within this percentile range
-                        chunk = traj_df[(traj_df['frame'] >= lower_bound) & (traj_df['frame'] < upper_bound)]
-                        #print(chunk)
-                        if len(chunk) == 0:
-                            R = np.nan
-                        else:
-                            R = np.mean(chunk[f'NativeBy{NativeBy}'].values)
-                        fract_misfolded_df[label] += [R]
+                for i,label in scope_dict.items():
+                    # Calculate the percentile range
+                    lower_bound = frame_chunks[i][0]
+                    upper_bound = frame_chunks[i][-1]
+                    lower_bound, upper_bound = int(lower_bound), int(upper_bound)
+                    #print(i, lower_bound, upper_bound)
+                    
+                    # Filter the DataFrame for rows within this percentile range
+                    chunk = traj_df[(traj_df['frame'] >= lower_bound) & (traj_df['frame'] < upper_bound)]
+                    #print(chunk)
+                    if len(chunk) == 0:
+                        R = np.nan
+                    else:
+                        R = 1 - np.mean(chunk[f'NativeBy{NativeBy}'].values)
+                    fract_misfolded_df[label] += [R]
 
         fract_misfolded_df = pd.DataFrame(fract_misfolded_df)           
         logging.info(f'fract_misfolded_df:\n{fract_misfolded_df}')

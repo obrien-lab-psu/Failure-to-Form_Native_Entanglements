@@ -17,6 +17,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn import metrics
 from sklearn.cluster import DBSCAN
 pd.set_option('display.max_rows', 5000)
+from scipy.spatial.distance import pdist, squareform
 
 class Analysis:
     """
@@ -53,24 +54,139 @@ class Analysis:
     def load_OP(self,):
         """
         """
-        self.EntInfo_df = pd.read_csv(self.EntInfofile)
+        self.EntInfo_df = pd.read_csv(self.EntInfofile, low_memory=False)
         #print(f'EntInfo_df:\n{self.EntInfo_df}')     
-
-        # add column with counts of unique crossings for N and C terminus
-        self.EntInfo_df['len_crossingsN'] = self.EntInfo_df['crossingsN'].apply(crossings_length)
-        self.EntInfo_df['len_crossingsC'] = self.EntInfo_df['crossingsC'].apply(crossings_length)
-        print(f'EntInfo_df:\n{self.EntInfo_df}')  
-        #print(self.EntInfo_df[self.EntInfo_df['Frame'] == 8154])
 
         # convert all NaN values in the crossings columns to 0
         self.EntInfo_df['crossingsN'] = self.EntInfo_df['crossingsN'].fillna(0)
         self.EntInfo_df['crossingsC'] = self.EntInfo_df['crossingsC'].fillna(0)
         #print(self.EntInfo_df[self.EntInfo_df['Frame'] == 8154])
 
-
-
     #######################################################################################  
 
+    #######################################################################################
+    def agg_method(self, df, ref_df):
+        """
+        This is a clustering method that first clusters based on median crossing and then loop overlap. 
+        See https://github.com/obrien-lab/cg_simtk_protein_folding/wiki/find_representative_chg_ent.py for more details
+        """
+        #print(df)
+        frame = df['Frame'].values[0]
+
+        df.loc[:, 'crossingsN'] = df['crossingsN'].astype(str)
+        df.loc[:, 'crossingsC'] = df['crossingsC'].astype(str)
+
+        # count the number of crossings
+        df['len_crossingsN'] = df['crossingsN'].apply(crossings_length)
+        df['len_crossingsC'] = df['crossingsC'].apply(crossings_length)
+        #print(df)
+
+        cID = 0
+        df['cID'] = -1
+        for change_vec, change_df in df.groupby(['Gn', 'NchangeType', 'Gc', 'CchangeType', 'len_crossingsN', 'len_crossingsC']):
+
+            ######################################################
+            ## get the i, j, and median crossings array for further agglomerative cluststering
+            #print(f'change_vec: {change_vec}')
+            ijr = []
+            for rowi, row in change_df.iterrows():
+                i = row['i']
+                j = row['j']
+                Ncrossings = row['crossingsN']
+                Ccrossings = row['crossingsC']
+
+                #print(i, j, Ncrossings, Ccrossings)
+                crossings = []
+                if row['NchangeType'] != 'NoChange':
+                    if isinstance(Ncrossings, float):
+                        crossings += [float(Ncrossings)]
+                    else:
+                        Ncrossings = str(Ncrossings).split(',')
+                        crossings += [float(c) for c in Ncrossings]    
+
+                if row['CchangeType'] != 'NoChange':
+                    if isinstance(Ccrossings, float):
+                        crossings += [float(Ccrossings)]
+                    else:  
+                        Ccrossings = str(Ccrossings).split(',')
+                        crossings += [float(c) for c in Ccrossings]   
+
+                #print(i, j, crossings, np.median(crossings))   
+                ijr += [[i, j, np.median(crossings)]]  
+            ijr = np.asarray(ijr)
+            #print(ijr)
+
+            ######################################################
+            ## cluster based on crossing medians
+            crossing_dists = ijr[:,2].reshape(-1, 1)
+            distances = squareform(pdist(crossing_dists, metric='euclidean'))
+            #print(distances)
+            db = DBSCAN(eps=10, min_samples=1, metric='precomputed').fit(distances)
+            labels = db.labels_
+            #print(f'labels: {labels} {np.unique(labels)}')
+
+            ######################################################
+            ## within each crossing cluster cluster based on loop distance
+            ijr = np.hstack([ijr, labels[:, None]])
+            for crossing_cluster in np.unique(labels):
+                cluster_ijr = ijr[np.where(ijr[:,-1] == crossing_cluster)]
+                #print(cluster_ijr)
+
+                db = DBSCAN(eps=1, min_samples=1, metric=custom_distance).fit(cluster_ijr[:, :2])
+                labels = db.labels_
+                #print(f'labels: {labels} {np.unique(labels)}')
+
+                cluster_ijr = np.hstack([cluster_ijr, labels[:, None]])
+                #print(cluster_ijr)
+                
+                ## update the final dataframe
+                for loop_cluster in np.unique(labels):
+                    loop_ijr = cluster_ijr[np.where(cluster_ijr[:,-1] == loop_cluster)]
+                    #print(loop_ijr)
+           
+                    for i,j in loop_ijr[:, :2]:
+                        df.loc[(df['i'] == i) & (df['j'] == j), 'cID'] = cID
+                    cID += 1
+
+        #########################################################
+        ### check for cross contamination
+        # have not had to deal with this in my dataset since I cluster on the frame level
+        # if someone comes after you can choose to divisivly cluster if necessary
+        for cID, cID_df in df.groupby('cID'):
+            #print(cID_df)
+            ij = cID_df[['i', 'j']].values
+            Nchange = cID_df['NchangeType'].values[0]
+            Cchange = cID_df['CchangeType'].values[0]
+            contamination = []
+            if Nchange != 'NoChange':
+                for cross in cID_df['crossingsN']:
+                    cross = str(cross)
+                    for c in cross.split(','):
+                        c = abs(float(c))
+                        for i,j in ij:
+                            if c > i and c < j:
+                                d = min([c - i, j - c])/(j-i)
+                                if d > 0.1:
+                                    contamination += [d]
+            if Cchange != 'NoChange':
+                for cross in cID_df['crossingsC']:
+                    cross = str(cross)
+                    for c in cross.split(','):
+                        c = abs(float(c))
+                        for i,j in ij:
+                            if c > i and c < j:
+                                d = min([c - i, j - c])/(j-i)
+                                if d > 0.1:
+                                    contamination += [d]
+            if len(contamination) > 0:
+                print(df.to_string())
+                print(cID_df)
+                print(f'contamination: {contamination}')
+                #raise ValueError(f'Found contamination in frame: {frame} {cID}')
+
+        return df
+
+    #######################################################################################
 
     #######################################################################################
     def Cluster(self,):
@@ -92,13 +208,20 @@ class Analysis:
 
         ########################################################################################
         # Loop through frames and cluster the changes in ent in each
+        frame_N = 0
+        newGs = {'Frame':[], 'G':[]}
         for frame, frame_df in self.EntInfo_df.groupby('Frame'):
+
+            frame_df = frame_df.copy()
+
             # skip the -1 frame as it is a reference structure
             if frame == -1:
-                print(f'Reference:\n{frame_df}')
+                #print(f'Reference:\n{frame_df}')
                 frame_df['cID'] = -1
                 ref_df = frame_df.copy()
-                clustered_dfs += [ref_df]
+                ref_N = len(ref_df)
+                #print(ref_df.to_string())
+                #clustered_dfs += [ref_df]
                 continue
 
             # check if the frame is outside the specified window
@@ -110,106 +233,196 @@ class Analysis:
             NchangeType, CchangeType = frame_df['NchangeType'].value_counts(), frame_df['CchangeType'].value_counts()
             if len(NchangeType) == 1 and len(CchangeType) == 1:
                 if NchangeType['NoChange'] and CchangeType['NoChange']:
+                    newGs['Frame'] += [frame]
+                    newGs['G'] += [0]                    
                     continue
 
             # check if the frame has no contacts as can be the case in the first frame of quenching sometimes
             if len(frame_df) == 1 and all(frame_df[['i', 'j']].isnull()):
-                print(f'No native contacts found this frame {frame} and will skip')
+                #print(f'No native contacts found this frame {frame} and will skip')
+                newGs['Frame'] += [frame]
+                newGs['G'] += [0]     
                 continue
 
             ########################################################################################
             ## Step 1: get only the change row
             frame_df = frame_df[(frame_df['NchangeType'] != 'NoChange') | (frame_df['CchangeType'] != 'NoChange')]
-            print(frame_df)
+            #print(frame_df)
 
+            ## Step 2: check for phantom entanglement changes by calculating the deltagn and deltagc metrics and removing those below a certain threshold (0.35)
+            frame_df = self.check_for_phantoms(frame_df, ref_df)
+            #print(frame_df.to_string())
 
-            ########################################################################################
-            ## Step 2: scan for changes of entanglement that are around the threshold of 0.6
-            ref_rows = ref_df.merge(frame_df[['i', 'j']], on=['i', 'j'], how='inner')
-            #print(ref_rows)
+            ## Step 3: if any gains do not have a crossing identified by topoly in the frame or any loses do not have a crossing identified by topoly in the ref then remove
+            frame_df = self.check_for_crossings(frame_df, ref_df)
+            #print(frame_df.to_string())
 
-            if len(frame_df) != len(ref_rows):
-                raise ValueError(f'The number of rows found in the reference df does not match those in the frame df {len(frame_df)} != {len(ref_rows)}\nframe_df:\n{frame_df}\nref_rows:\n{ref_rows}')
+            ## Step 4: IF there are remaining changes after controling for the phatom changes then cluster
+            if len(frame_df) != 0:
 
-            rowidx_to_drop = []
-            for idx, (rowi, row) in enumerate(frame_df.iterrows()):
-                #print(idx, rowi)
-                ref_row = ref_rows.iloc[idx]
+                frame_df = self.agg_method(frame_df, ref_df)
+                #print(frame_df.to_string())
 
-                #QC to ensure the ij match for the rows being compared
-                if row['i'] != ref_row['i'] or row['j'] != ref_row['j']:
-                    raise ValueError(f'There is a mismatch in the native contacts between the row in the frame df and the row in the reference df')
-                
-                # check if there is a N terminal change and if it was around the threshold
-                if row['NchangeType'] != 'NoChange':
-                    if row['gn'] < 0:
-                        lb, ub = -0.7, -0.5
-                    elif row['gn'] > 0:
-                        lb, ub = 0.5, 0.7
+                frame_N = len(frame_df)
+                clustered_dfs += [frame_df]
 
-                    if abs(row['gn']) < ub and abs(row['gn']) > lb:
-                        if abs(ref_row['gn']) < ub and abs(ref_row['gn']) > lb:
-                            #print(f'Found a potential false change due to threshold at rowi {rowi}')
-                            rowidx_to_drop += [rowi]
+            newG = frame_N/ref_N
+            newGs['Frame'] += [frame]
+            newGs['G'] += [newG]
 
-            #print(f'rowidx_to_drop: {rowidx_to_drop}')
-            if len(rowidx_to_drop) != 0:
-                frame_df = frame_df.drop(rowidx_to_drop)
-            
-            # check that if after the removal of changes around the threshold that there are no ents left. if so skip this frame
-            if len(frame_df) == 0:
-                continue
+        if len(clustered_dfs) == 0:
+            print(f'No changes in ENT found in this traj')
+        else:
+            clustered_dfs = pd.concat(clustered_dfs)
+            #print(f'clustered_dfs:\n{clustered_dfs}')
 
-            ########################################################################################
-            ## Step 3: DBSCAN cluster the ij array
-            ij = frame_df[['i', 'j']].values
-            print(f'ij:\n{ij}')
-            db = DBSCAN(eps=20, min_samples=1).fit(ij)
-            labels = db.labels_
-            print(f'labels: {labels} {np.unique(labels)}')
-            
-            ## Step 4: for each cluster of loop closing contacts with change in entanglement
-            # (1) cluster based on the following vector [Gn, NchangeType, Gc, CchangeType]
-            # (2) for each of those resulting clusters cluster based on the 
-            cID = 0
-            for label in np.unique(labels):
+            outfile = os.path.join(self.outpath, f'{self.outname}_clustered.EntInfo')
+            clustered_dfs.to_csv(outfile, index=False)
+            logging.info(f'SAVED: {outfile}')
+            print(f'SAVED: {outfile}')
 
-                # get the rows in the ij cluster
-                label_idx = np.where(labels == label)
-                label_df = frame_df.iloc[label_idx]
-
-                # group by [Gn, NchangeType, Gc, CchangeType]
-                for change_vec, change_df in label_df.groupby(['Gn', 'NchangeType', 'Gc', 'CchangeType', 'len_crossingsN', 'len_crossingsC']):
-
-                    # group by the number of N and C crossings 
-                    #for crossing_vec, crossings_df in change_df.groupby(['len_crossingsN', 'len_crossingsC']):
-
-                    # DBSCAN the crossings to get the final clustered change in ent
-                    #crossings = crossings_df[['crossingsN', 'crossingsC']].values
-                    crossings = change_df[['crossingsN', 'crossingsC']].values
-                    crossings = processes_crossings_array(crossings)
-                    cross_db = DBSCAN(eps=10, min_samples=1).fit(crossings)
-                    cross_labels = cross_db.labels_
-                    #print(f'cross_labels: {cross_labels} {np.unique(cross_labels)}')
-
-                    # for each final group of raw changes in ent prepare the output data
-                    for cross_label in np.unique(cross_labels):
-                        #cross_label_df = crossings_df.iloc[np.where(cross_labels == cross_label)]
-                        cross_label_df = change_df.iloc[np.where(cross_labels == cross_label)]
-                        cross_label_df['cID'] = cID
-                        cID += 1
-                        clustered_dfs += [cross_label_df]
-
-        clustered_dfs = pd.concat(clustered_dfs)
-        print(f'clustered_dfs:\n{clustered_dfs}')
-
-        outfile = os.path.join(self.outpath, f'{self.outname}_clustered.EntInfo')
-        clustered_dfs.to_csv(outfile, index=False)
-        logging.info(f'SAVED: {outfile}')
+        # save the new G file
+        outfile = os.path.join(self.outpath, f'{self.outname}_clustered.G')
+        newGs = pd.DataFrame(newGs)
+        newGs.to_csv(outfile, index=False)
         print(f'SAVED: {outfile}')
 
- 
     #######################################################################################
+
+    #######################################################################################
+    def check_for_phantoms(self, df, ref_df, threshold=0.35):
+        """
+        For a given EntInfo dataframe determine if the absolute value of the change in linking value is greater than 0.35 and only pass those that are
+        """
+        delta_gns = []
+        delta_gcs = []
+        for rowi, row in df.iterrows():
+            i, j = row['i'], row['j']
+            gn, gc = row['gn'], row['gc']
+            Nchange, Cchange = row['NchangeType'], row['CchangeType']
+
+            ref_rows = ref_df[(ref_df['i'] == i) & (ref_df['j'] == j)]
+            ref_gn, ref_gc = ref_rows['gn'].values[0], ref_rows['gc'].values[0]
+
+            if Nchange != 'NoChange':
+                delta_gns += [abs(gn - ref_gn)]
+            else:
+                delta_gns += [99]
+
+            if Cchange != 'NoChange':  
+                delta_gcs += [abs(gc - ref_gc)]  
+            else:
+                delta_gcs += [99]
+
+        #df['delta_gn'] = delta_gns
+        #df['delta_gc'] = delta_gcs
+        df.loc[:, 'delta_gn'] = delta_gns
+        df.loc[:, 'delta_gc'] = delta_gcs
+        df = df[(df['delta_gn'] > threshold) & (df['delta_gc'] > threshold)]
+        return df
+    #######################################################################################
+
+    #######################################################################################
+    def check_for_crossings(self, df, ref_df):
+        """
+        This function checks a frame dataframe for topoly crossings. 
+        If it is a gain and there is no crossing in the frame then set changeType to NoChange
+        If it is a loss and there is no crossing in the ref then set changeType to NoChange
+        """
+
+        df.loc[:, 'crossingsN'] = df['crossingsN'].astype(str)
+        df.loc[:, 'crossingsC'] = df['crossingsC'].astype(str)
+        
+        ## if loss is present get native crossings
+        for rowi, row in df.iterrows():
+            i = row['i']
+            j = row['j']
+            Ncrossings = str(row['crossingsN'])
+            Ccrossings = str(row['crossingsC'])
+
+            Gn_sign = np.sign(row['Gn'])
+            if Gn_sign > 0:
+                Gn_sign = '+'
+            elif Gn_sign < 0:
+                Gn_sign = '-'
+            else:
+                Gn_sign = ''
+
+            Gc_sign = np.sign(row['Gc'])
+            if Gc_sign > 0:
+                Gc_sign = '+'
+            elif Gc_sign < 0:
+                Gc_sign = '-'
+            else:
+                Gc_sign = ''
+
+
+            ref_ij = ref_df[(ref_df['i'] == i) & (ref_df['j'] == j)]
+            ref_Ncrossings = str(ref_ij['crossingsN'].values[0])
+            ref_Ccrossings = str(ref_ij['crossingsC'].values[0])
+
+            ref_Gn_sign = np.sign(ref_ij['Gn'].values[0])
+            if ref_Gn_sign > 0:
+                ref_Gn_sign = '+'
+            elif ref_Gn_sign < 0:
+                ref_Gn_sign = '-'
+            else:
+                ref_Gn_sign = ''
+
+            ref_Gc_sign = np.sign(ref_ij['Gc'].values[0])
+            if ref_Gc_sign > 0:
+                ref_Gc_sign = '+'
+            elif ref_Gc_sign < 0:
+                ref_Gc_sign = '-'
+            else:
+                ref_Gc_sign = ''
+            #print(i, j, Ncrossings, Ccrossings, [Gn_sign, Gc_sign], ref_Ncrossings, ref_Ccrossings, [ref_Gn_sign, ref_Gc_sign])
+
+            ## if loss was detected then replace crossing with that from reference state
+            # if there is a * make sure to add the chirality using the Gn or Gc value as a proxy
+            if 'Loss' in row['NchangeType']:
+                if ref_Ncrossings == '0':
+                    df.loc[rowi, 'NchangeType'] = 'NoChange'
+                else:
+                    df.loc[rowi, 'crossingsN'] = ref_Ncrossings.replace('*', ref_Gn_sign)
+            elif 'Gain' in row['NchangeType']:
+                if Ncrossings == '0':
+                    df.loc[rowi, 'NchangeType'] = 'NoChange'
+                else:
+                    df.loc[rowi, 'crossingsN'] = Ncrossings.replace('*', Gn_sign)
+            elif 'Pure' in row['NchangeType']:
+                df.loc[rowi, 'crossingsN'] = Ncrossings.replace('*', Gn_sign)
+            elif 'NoChange' in row['NchangeType']:
+                df.loc[rowi, 'crossingsN'] = Ncrossings.replace('*', Gn_sign)
+
+            if 'Loss' in row['CchangeType']:
+                if ref_Ccrossings == '0':
+                    df.loc[rowi, 'CchangeType'] = 'NoChange'
+                else:
+                    df.loc[rowi, 'crossingsC'] = ref_Ccrossings.replace('*', ref_Gc_sign)
+            elif 'Gain' in row['CchangeType']:
+                if Ccrossings == '0':
+                    df.loc[rowi, 'CchangeType'] = 'NoChange'
+                else:
+                    df.loc[rowi, 'crossingsC'] = Ccrossings.replace('*', Gc_sign)
+            elif 'Pure' in row['CchangeType']:
+                df.loc[rowi, 'crossingsC'] = Ccrossings.replace('*', Gn_sign)
+            elif 'NoChange' in row['CchangeType']:
+                df.loc[rowi, 'crossingsC'] = Ccrossings.replace('*', Gc_sign)
+
+        df = df[(df['NchangeType'] != 'NoChange') | (df['CchangeType'] != 'NoChange')]
+        return df
+    #######################################################################################
+
+# Define a custom distance function
+def custom_distance(point1, point2):
+    # Example: Weighted Euclidean distance
+    point1_L = np.arange(point1[0], point1[1] + 1)
+    point2_L = np.arange(point2[0], point2[1] + 1)
+    combined = np.hstack([point1_L, point2_L])
+    d = (max(combined) - min(combined))/(len(point1_L) + len(point2_L))
+    #print(point1, point2, d)
+    return d
 
 #######################################################################################
 # Define function to calculate length
@@ -292,6 +505,8 @@ def main():
 
     # Step 3: for each candidate get the native G and Q states
     anal.Cluster()
+
+    # Step 4: updated G values 
 
 
 if __name__ == "__main__":
