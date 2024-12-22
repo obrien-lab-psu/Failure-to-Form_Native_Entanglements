@@ -102,14 +102,15 @@ class Plotter:
         self.OR.set_index('AA', inplace=True)
         print(f'self.OR:\n{self.OR.to_string()}')
 
+
         self.OR_pvalues_file = self.__dict__['OR_pvalues_file']
         print(f'self.OR_pvalues_file: {self.OR_pvalues_file}')
         if os.path.exists(self.OR_pvalues_file):
             self.OR_pvalues = pd.read_csv(self.OR_pvalues_file)
             self.OR_pvalues.set_index('AA', inplace=True)
-            a = self.OR_pvalues.values
-            symmetric_a = np.maximum(a, a.T)
-            self.OR_pvalues = pd.DataFrame(symmetric_a, index=self.OR_pvalues.index, columns=self.OR_pvalues.columns)
+            #a = self.OR_pvalues.values
+            #symmetric_a = np.maximum(a, a.T)
+            #self.OR_pvalues = pd.DataFrame(symmetric_a, index=self.OR_pvalues.index, columns=self.OR_pvalues.columns)
             self.OR_pvalues.at['C', 'C'] = 1
             print(f'self.OR_pvalues:\n{self.OR_pvalues.to_string()}')
             self.data['OR'] = {'df':self.OR, 'pvalues':self.OR_pvalues}
@@ -140,6 +141,7 @@ class Plotter:
             #print(info, data_dict)
 
             df = data_dict['df']
+            print(df)
             pvalues_df = data_dict['pvalues']
 
             df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
@@ -154,8 +156,9 @@ class Plotter:
                 # Highlight cells based on df2 values
                 for i in range(pvalues_df.shape[0]):
                     for j in range(pvalues_df.shape[1]):
-                        if pvalues_df.iloc[i, j] < 0.05:
+                        if pvalues_df.iloc[i, j] < 0.05 and df.iloc[i,j] != np.nan: 
                             heatmap.add_patch(plt.Rectangle((j, i), 1, 1, fill=False, edgecolor='yellow', lw=3))
+                            heatmap.add_patch(plt.Rectangle((i, j), 1, 1, fill=False, edgecolor='yellow', lw=3))
 
             # Set labels
             heatmap.set_yticklabels(df.index, rotation=0)
