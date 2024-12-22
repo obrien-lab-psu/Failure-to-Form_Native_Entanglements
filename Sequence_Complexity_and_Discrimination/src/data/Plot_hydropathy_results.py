@@ -74,8 +74,9 @@ class Plotter:
         :param variable: The variable on which regression is performed.
         """
         outfile = os.path.join(outpath, f'hydropathy_results.png')
-        fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(12, 8))
-        for Hclass_i, Hclass in enumerate(['SHphob', 'WHphob', 'Hphil', 'Arom']):
+        fig, axes = plt.subplots(nrows=7, ncols=3, figsize=(8, 12))
+        plt.rcParams['font.size'] = 6  # Default font size
+        for Hclass_i, Hclass in enumerate(['SHphob', 'WHphob', 'Hphil', 'Arom', 'pureHphob', 'pureHphil', 'pureArom']):
 
             Hclass_df = self.data[self.data['class'] == Hclass]
             min_y = np.min(Hclass_df[['lower_ci_Ess', 'lower_ci_NonEss']].values) - 0.02
@@ -111,7 +112,7 @@ class Plotter:
                     axes[Hclass_i, buff_i].yaxis.set_major_locator(MultipleLocator(rung))
 
                     if buff_i == 2:
-                        axes[Hclass_i, buff_i].legend(loc='upper left', bbox_to_anchor=(1, 1))
+                        axes[Hclass_i, buff_i].legend(bbox_to_anchor=(1, 1))
 
 
                 for i, (xi, yi, upper, pval) in enumerate(zip(x, y, plot_df[f'upper_ci_max'], plot_df['pvalue'])):
