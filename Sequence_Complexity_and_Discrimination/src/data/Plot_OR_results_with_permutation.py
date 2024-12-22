@@ -141,14 +141,21 @@ class Plotter:
             #print(info, data_dict)
 
             df = data_dict['df']
-            print(df)
             pvalues_df = data_dict['pvalues']
 
-            df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
+            #df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
 
             plt.figure(figsize=(8, 6))
+
+            # Create a DataFrame for annotations, replacing `np.inf` with 'inf'
+            annotations = df.round(decimals=1).replace(np.inf, "inf").astype(str)
+            annotations.at['C', 'C'] = 'NA'
+            print(annotations)
+
+            df = df.replace([np.inf, -np.inf], np.nan).fillna(np.max(df.values[np.where(df.values != np.inf)]))
+            print(df)
             #heatmap = sns.heatmap(df, annot=df.round(decimal=1).astype(str)), fmt="", cmap="coolwarm", vmin=-60, vmax=60, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30})
-            heatmap = sns.heatmap(df, annot=df.round(decimals=2).astype(str), fmt="", cmap="coolwarm", vmin=0, vmax=2, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30}, annot_kws={"fontsize": 7})
+            heatmap = sns.heatmap(df, annot=annotations, fmt="", cmap="coolwarm", vmin=0, vmax=2, linewidths=.5, cbar_kws={"shrink": .8, "aspect": 30}, annot_kws={"fontsize": 7})
 
             # if there is a valid pvalue dataframe color those with values below 0.05 in a yellow highlight
             if isinstance(pvalues_df, pd.DataFrame):
