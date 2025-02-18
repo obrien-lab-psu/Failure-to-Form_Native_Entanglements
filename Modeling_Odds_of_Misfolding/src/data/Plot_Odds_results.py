@@ -4,7 +4,8 @@ import glob
 import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import MultipleLocator, MaxNLocator
+import numpy as np
 
 class RegressionDataLoader:
     """
@@ -66,6 +67,8 @@ class RegressionPlotter:
                 print(plot_df.to_string())
 
                 # get and plot data for non-entangled region
+                min_y = []
+                max_y = []
                 for region,color,label in [(0,'k','non-entR'), (1, 'r', 'entR')]:
                     df = plot_df[plot_df['hold_value'] == region]
                     print(df)
@@ -76,6 +79,10 @@ class RegressionPlotter:
                     pvalues = df['P>|z|'].replace(0, 0.00000000000001)
                     n = df['n']
 
+                    # Update min and max y-values for error bars
+                    min_y += [(Odds - Odds_lb_delta).min()]
+                    max_y += [(Odds + Odds_ub_delta).max()]
+
                     axes[0, buff_i].errorbar(x, Odds, yerr=[Odds_lb_delta, Odds_ub_delta], label=label, marker='o', ls='none', fillstyle='none', color=color, capsize=3)
                     axes[0, buff_i].set_title(buff_tag[buff])
                     #axes[0, buff_i].axhline(y=1, color='red', linestyle='--')
@@ -84,7 +91,7 @@ class RegressionPlotter:
                     axes[1, buff_i].axhline(y=0.05, color='red', linestyle='--')
 
                     axes[2, buff_i].plot(x, n, label='counts', marker='o', ls='none', fillstyle='none', color='k')
-                    self._configure_axes(axes, buff_i)
+                    #self._configure_axes(axes, buff_i)
 
 
                     #add data to save_df
@@ -98,6 +105,7 @@ class RegressionPlotter:
                     save_df['pvalues'] += [p for p in pvalues]
                     save_df['n'] += [n for n in n]
 
+                self._configure_axes(axes, buff_i, min(min_y), max(max_y))
                 
             save_df = pd.DataFrame(save_df)
             print(f'save_df:\n{save_df}')
@@ -113,7 +121,7 @@ class RegressionPlotter:
             print(f'SAVED: {outfile}')
         
 
-    def _configure_axes(self, axes, buff_i):
+    def _configure_axes(self, axes, buff_i, min_y, max_y):
         """
         Configures the axes properties for the plot.
 
@@ -125,11 +133,11 @@ class RegressionPlotter:
         for i in range(3):
             ax = axes[i, buff_i]
             if i == 0:
+                print(f'min_y: {min_y}, max_y: {max_y}')
                 ax.set_ylabel('Odds obs. change')
-                #ax.set_ylim(0.5, 2)
-                #ax.yaxis.set_major_locator(MultipleLocator(1))
-                #ax.yaxis.set_minor_locator(MultipleLocator(0.5))
-                ax.set_yscale('log')
+                ax.set_ylim(min_y-0.1*min_y, max_y+0.1*max_y)
+                ax.yaxis.set_major_locator(MaxNLocator(nbins=5))
+                ax.set_yscale('log')             
                 ax.grid(True, which='both', linestyle='--', linewidth=0.5)
             elif i == 1:
                 ax.set_yscale('log')
@@ -143,7 +151,12 @@ class RegressionPlotter:
                 ax.grid(True, which='both', linestyle='--', linewidth=0.5)
 
 
-
+def average_order_of_magnitude(arr):
+    arr = np.array(arr)
+    log_magnitudes = np.log10(np.abs(arr))  # Take log10 of absolute values
+    avg_log = np.mean(log_magnitudes)  # Compute the mean log10
+    rounded_log = round(avg_log)  # Round to nearest integer
+    return 10**rounded_log  # Convert back to power of ten
 
 def main():
     parser = argparse.ArgumentParser(description="Process regression data and generate plots.")

@@ -206,8 +206,7 @@ class DataAnalysis:
         for aa, freq in freq_AA.items():
             # Intercept + coefficient for AA + coefficient for hold
             coef_intercept = coefficients['Intercept']
-            #coef_aa = coefficients.get(aa, 0)
-            coef_aa = coefficients[aa]
+            coef_aa = coefficients.get(aa, 0)
             coef_hold = coefficients[hold]
 
             log_odds = coef_intercept + coef_aa + coef_hold * value
@@ -242,7 +241,7 @@ class DataAnalysis:
         overall_odds = np.exp(weighted_log_odds)
         overall_odds_lower = np.exp(weighted_log_odds_lower)
         overall_odds_upper = np.exp(weighted_log_odds_upper)
-        print(f'overall_odds: {overall_odds} {overall_odds_lower} {overall_odds_upper}')
+
         return {
             'var': hold,
             'hold_value': value,
