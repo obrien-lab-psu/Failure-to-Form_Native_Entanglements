@@ -1,0 +1,12 @@
+total_res_bin,avg_cut_CD_Rall,cut_CD_Rall_CI,n
+0,1.0,"ConfidenceInterval(low=0.0, high=2.0)",2
+100,1.15,"ConfidenceInterval(low=0.725, high=1.725)",40
+200,1.7058823529411764,"ConfidenceInterval(low=1.1764705882352942, high=2.323529411764706)",34
+300,2.8214285714285716,"ConfidenceInterval(low=1.6785714285714286, high=5.178571428571429)",28
+400,2.7777777777777777,"ConfidenceInterval(low=1.8333333333333333, high=3.8333333333333335)",18
+500,6.583333333333333,"ConfidenceInterval(low=2.9166666666666665, high=13.25)",12
+600,2.5,"ConfidenceInterval(low=1.0, high=4.0)",2
+700,7.0,"(0, 0)",1
+800,5.0,"ConfidenceInterval(low=3.0, high=7.0)",2
+900,2.0,"(0, 0)",1
+1300,7.0,"(0, 0)",1

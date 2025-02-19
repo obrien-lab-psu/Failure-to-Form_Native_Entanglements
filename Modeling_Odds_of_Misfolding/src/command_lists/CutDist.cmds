@@ -1,0 +1,3 @@
+python src/data/CutDist.py -f ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/res_features_lib/\*.csv -o data/CutDist/ -t spa50_LiPMScov50 -b C
+python src/data/CutDist.py -f ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/res_features_lib/\*.csv -o data/CutDist/ -t spa50_LiPMScov50 -b CD
+python src/data/CutDist.py -f ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Make_Protein_Feature_Files/Gen_proteome_features_EXP/res_features_lib/\*.csv -o data/CutDist/ -t spa50_LiPMScov50 -b CG

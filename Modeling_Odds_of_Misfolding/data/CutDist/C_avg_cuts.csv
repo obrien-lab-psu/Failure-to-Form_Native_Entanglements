@@ -1,0 +1,12 @@
+total_res_bin,avg_cut_C_Rall,cut_C_Rall_CI,n
+0,1.5,"ConfidenceInterval(low=1.0, high=2.0)",2
+100,3.293103448275862,"ConfidenceInterval(low=2.4655172413793105, high=4.5)",58
+200,4.202898550724638,"ConfidenceInterval(low=3.36231884057971, high=5.391304347826087)",69
+300,5.898305084745763,"ConfidenceInterval(low=4.593220338983051, high=8.389830508474576)",59
+400,7.85,"ConfidenceInterval(low=5.875, high=10.6)",40
+500,15.65,"ConfidenceInterval(low=10.2, high=26.1)",20
+600,8.5,"ConfidenceInterval(low=3.6666666666666665, high=17.166666666666668)",6
+700,27.0,"(0, 0)",1
+800,8.0,"ConfidenceInterval(low=4.428571428571429, high=14.428571428571429)",7
+900,17.0,"(0, 0)",1
+1300,53.0,"(0, 0)",1
