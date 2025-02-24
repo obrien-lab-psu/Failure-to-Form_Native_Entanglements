@@ -1,0 +1,4 @@
+,C,<BA>,BA_lb,BA_ub,pvalue,num_nonzero,num_nonzero_and_robust,robust_features,buff,xlabel
+7,1.5,0.5541491803019867,0.5518312537760816,0.5564671068278918,0.0,13,12,"C_term_thread,Gc,N_term_thread,RCO,ent_coverage,loopsize,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res",C,cyto-serum
+9,2.5,0.558851495304979,0.5482738125578633,0.5694291780520947,0.0225727455881713,12,10,"ACO,C_term_thread,Gc,N_term_thread,RCO,ent_coverage,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors",CD,+DnaK
+9,2.5,0.5749487240235565,0.5577856715334614,0.5921117765136515,0.0,14,13,"ACO,C_term_thread,Gc,Gn,N_term_thread,RCO,min_C_prot_depth_right,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res,num_zipper_nc",CG,+GroEL

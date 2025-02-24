@@ -1,0 +1,5 @@
+python src/data/Figure_2.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o Figure2
+python src/data/Figure_3.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o Figure3
+python src/data/Figure_4.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o Figure4
+python src/data/Figure_5.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o Figure5
+python src/data/Figure_6.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o Figure6

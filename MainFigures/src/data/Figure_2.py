@@ -1,41 +1,83 @@
 import os
-from scipy.stats import false_discovery_control
 import glob
 import argparse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
+from matplotlib import font_manager as fm
+import matplotlib as mpl
+from matplotlib.colors import TwoSlopeNorm
+from matplotlib.patches import PathPatch
+from matplotlib.path import Path
+import matplotlib.image as mpimg
+from PIL import Image
+import matplotlib.gridspec as gridspec
+#os.environ["PYMOL_LICENSE_FILE"] = "/storage/home/ims86/pymolLicenseFile.lic"
+#import pymol
 
 class Plotter:
     """
+    -------------------------------------------------------------------------------------------------
+    Figure formating requirements for Nature
+    https://research-figure-guide.nature.com/figures/preparing-figures-our-specifications/?utm_source=chatgpt.com#we-require
+
+    Figure Sizing and Positioning
+    Dimensions: Figures should fit within a single page, ideally leaving space for the legend below. 
+                The maximum page dimensions are 180 mm wide by 170 mm tall (170 mm to accommodate a legend underneath).
+    
+    Placement: Position each figure centrally on a new page. Avoid placing multiple figures on the same page. 
+
+    Line Weights: Set lines and strokes between 0.25 and 1 point to ensure clarity.
+
+    Text and Fonts: All text within figures should be legible and editable. 
+                    Use standard sans-serif fonts like Arial or Helvetica. 
+                    Avoid outlining text and ensure fonts are embedded (True Type 2 or 42). 
+                    Text size should range between 5-point (minimum) and 7-point (maximum)
+                    Present amino-acid sequences in Courier (or other monospaced) font using the one-letter code in lines of 50 or 100 characters
+                    Separate panels in multi-panelled figures should be labelled with 8-pt bold, upright (not italic) and lowercase a, b, c, etc.
+                    If you are using Python please use the following setting: Matplotlib.rcParams['pdf.fonttype']=42
+
+    Color and Accessibility: Use accessible color palettes to accommodate readers with color vision deficiencies. 
+                             Avoid red/green combinations and rainbow scales. Ensure high-contrast text (>4.5 contrast ratio) for readability.
+                             Use the RGB color space never the CMYK color space  
+
+    Panel Arrangement: Arrange multi-panel figures neatly, minimizing white space and ordering panels alphabetically. 
+                       Separate panels in multi-panelled figures should be labelled with 8-pt bold, upright (not italic) and lowercase a, b, c, etc.
+
+    Axis labels and tickmarks: All tick marks should be included for any number on the axis. 
+                               All axis should have a label with units in parentheses
+
+    Avoid: Background grid lines
+           superfluous icons and other decorative elements
+           drop shadows
+           text place on top of a busy image and hard-to-read background
+           overlaping text
+           coloured text
+           pattern filling of bars, pies, ect...
+
+    legends: should use color boxes not colored text
+        
+    Exporting: please export figure panels as vector artwork 
+                .pdf or .eps preferred
+                For images, minimum 450 dpi
+    -------------------------------------------------------------------------------------------------
+    Raw data paths required and summary of each panel
+
     slug_path = ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/
 
-    Figure 1a: 
-        Association between non-refoldability and the presence of a native entanglement
-        C buffers at spa50 and LiPMScov 50
-        EXP, AF, and both EXP & AF
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Association_Native_Entanglements_and_Misfolding/EntanglementsAndNonrefoldability/Plot_EntanglementsAndNonrefoldability/entanglement_and_nonrefoldability_plot_data_all_genes.csv
+    Figure is 2 row by 4 column 
+    Figure 2a (row 1 column 1)
 
-    Figure 1b:
-        Association between change in proteolysis suseptibility and protein region (entangled versus non-entangled)
-        C, Cpsm, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement
-        EXP, AF, and both EXP & AF
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
+
+    Figure 2b (row 1 column 2): 
+        Pie charts showing counts of proteins that passed our filters in this study
+
+    
+    Figure 2c (row 1 column 3): 
+
         
-    Figure 1c: 
-        Association between change in proteolysis suseptibility and protein region (entangled versus non-entangled)
-        C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement and be essential
-        C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement and be non-essential   
-        EXP, AF, and both EXP & AF
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv  
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-
+    
     """
     def __init__(self, args):
         """
@@ -49,437 +91,108 @@ class Plotter:
     #################################################################################################################
 
     #################################################################################################################
-    def load_data(self,):
-        print(f'Loading data from SLUG: {self.slug_path}')
+    def plot_Figure_2a(self, ax):
+        """
+        Figure 5a
 
+        """
+
+    #################################################################################################################
+
+    #################################################################################################################
+    def plot_Figure_2b(self, ax):
+        """
+        Figure 5b (row 1 column 1): 
+            ../Make_Protein_Feature_Files/data/Combined_genelist_counts_EXP.csv
+
+        """
+        buff_tag = {'C': 'cyto-serum', 'CD': '+DnaK', 'CG': '+GroEL'}
         #######################################
-        ## Load Figure 1a data
-        #../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Association_Native_Entanglements_and_Misfolding/EntanglementsAndNonrefoldability/Plot_EntanglementsAndNonrefoldability/entanglement_and_nonrefoldability_plot_data_all_genes.cs
-        inp = f'{self.slug_path}/Association_Native_Entanglements_and_Misfolding/EntanglementsAndNonrefoldability/Plot_EntanglementsAndNonrefoldability/entanglement_and_nonrefoldability_plot_data_all_genes.csv'
+        ## Load Figure 2b data
+        inp = f'../Make_Protein_Feature_Files/data/Combined_genelist_counts_EXP.csv'
         print(f'inp: {inp}')
-        self.Figure_1a_df = pd.read_csv(inp)
-        print(f'Figure_1a_df:\n{self.Figure_1a_df}')
-
+        Figure_2b_df = pd.read_csv(inp)
+        Figure_2b_df = Figure_2b_df[(Figure_2b_df['timepoint'] == 'Rall') & (Figure_2b_df['spa_threshold'] == 50) & (Figure_2b_df['LiPMScov_threshold'] == 50)]
+        Figure_2b_df = Figure_2b_df[['buff', 'essential_ent_genes_n', 'essential_nonent_genes_n', 'nonessential_ent_genes_n', 'nonessential_nonent_genes_n']]
+        Figure_2b_df = Figure_2b_df.rename(columns={'essential_ent_genes_n':'Ess + Ent', 'essential_nonent_genes_n':'Ess - Ent', 'nonessential_ent_genes_n':'NonEss + Ent', 'nonessential_nonent_genes_n':'NonEss - Ent'})
+        custom_order = ["C", "CD", "CG"]
+        Figure_2b_df["buff"] = pd.Categorical(Figure_2b_df["buff"], categories=custom_order, ordered=True)
+        Figure_2b_df = Figure_2b_df.sort_values("buff")
+        Figure_2b_df['buff'] = [buff_tag[buff] for buff in Figure_2b_df['buff']]
+        print(f'Figure_2b_df:\n{Figure_2b_df}')
+        print(Figure_2b_df.keys())
         #######################################
-        ## Load Figure 1b data
-        #../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        #../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        #../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        #../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        EXP_whole = f'{self.slug_path}/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv'
-        print(f'EXP_whole: {EXP_whole}')
-        EXP_whole_df = pd.read_csv(EXP_whole)
-        EXP_whole_df['tag'] = 'EXP_Whole'
-        print(f'EXP_whole_df:\n{EXP_whole_df}')
 
-        AF_whole = f'{self.slug_path}/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv'
-        print(f'AF_whole: {AF_whole}')
-        AF_whole_df = pd.read_csv(AF_whole)
-        AF_whole_df['tag'] = 'AF_Whole'
-        print(f'AF_whole_df:\n{AF_whole_df}')
 
-        EXP_PSM = f'{self.slug_path}/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv'
-        print(f'EXP_PSM: {EXP_PSM}')
-        EXP_PSM_df = pd.read_csv(EXP_PSM)
-        EXP_PSM_df['tag'] = 'EXP_PSM'
-        print(f'EXP_PSM_df:\n{EXP_PSM_df}')
-        #AF_PSM = f'{self.slug_path}/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv'
-        #print(f'AF_PSM: {AF_PSM}')
-        #AF_PSM_df = pd.read_csv(AF_PSM)
-        AF_PSM_df = EXP_PSM_df.copy()
-        AF_PSM_df['tag'] = 'AF_PSM'
-        print(f'AF_PSM_df:\n{AF_PSM_df}')
+        # Save the Figure 2b raw plot df
+        Figure_2b_outfile_csv = os.path.join(self.out_path, f'Figure_2b.csv')
+        Figure_2b_df.to_csv(Figure_2b_outfile_csv)
+        print(f'SAVED: {Figure_2b_outfile_csv}')
 
-        self.Figure_1b_df = pd.concat((EXP_whole_df, AF_whole_df, EXP_PSM_df, AF_PSM_df))
-        print(f'self.Figure_1b_df:\n{self.Figure_1b_df}')
+        # Loop through each row and create a pie chart
+        colors = ["#37B2E6", "#B7E3F6", "#EC5B69", "#FAD4D8"]
+        #colors = ["blue", "purple", "red", "pink"]
+        labels = ["Ess + Ent", "Ess - Ent", "NonEss + Ent", "NonEss - Ent"]
+        x_offset = 0  # Initial x offset for positioning
+        for _, row in Figure_2b_df.iterrows():
+            # Exclude the "buff" column for the pie chart values
+            pie_values = row.drop("buff")
+            print(pie_values)
+            labels = pie_values.index
+            print(labels)
+            
+            # Create a pie chart and position it using offsets
+            wedges, texts, autotexts = ax.pie(pie_values, colors=colors, autopct=lambda pct: f"{int(round(pct/100.0 * sum(pie_values)))}", radius=1.0, center=(x_offset, 0))
 
-        #######################################
-        ## Load Figure 1c data
-        #../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        #../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv  
-        #../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        #./../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        EXP_Ess = f'{self.slug_path}/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv'
-        print(f'EXP_Ess: {EXP_Ess}')
-        EXP_Ess_df = pd.read_csv(EXP_Ess)
-        EXP_Ess_df['tag'] = 'EXP_Ess'
-        print(f'EXP_Ess_df:\n{EXP_Ess_df}')
-        EXP_NonEss = f'{self.slug_path}/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv'
-        print(f'EXP_NonEss: {EXP_NonEss}')
-        EXP_NonEss_df = pd.read_csv(EXP_NonEss)
-        EXP_NonEss_df['tag'] = 'EXP_NonEss'
-        print(f'EXP_NonEss_df:\n{EXP_NonEss_df}')
+            # Add label from "buff" below the corresponding pie chart
+            ax.text(x_offset, -1.2, row["buff"], ha="center", fontsize=7)
 
-        AF_Ess = f'{self.slug_path}/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv'
-        print(f'AF_Ess: {AF_Ess}')
-        AF_Ess_df = pd.read_csv(AF_Ess)
-        AF_Ess_df['tag'] = 'AF_Ess'
-        print(f'AF_Ess_df:\n{AF_Ess_df}')
-        AF_NonEss = f'{self.slug_path}/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv'
-        print(f'AF_NonEss: {AF_NonEss}')
-        AF_NonEss_df = pd.read_csv(AF_NonEss)
-        AF_NonEss_df['tag'] = 'AF_NonEss'
-        print(f'AF_NonEss_df:\n{AF_NonEss_df}')
+            x_offset += 2.1  # Increase x offset for next pie chart
 
-        self.Figure_1c_df = pd.concat((EXP_Ess_df, EXP_NonEss_df, AF_Ess_df, AF_NonEss_df))
-        print(f'self.Figure_1c_df:\n{self.Figure_1c_df}')
-        
+        # Remove axes for a clean look
+        # Add a single legend for all pie charts
+        ax.legend(labels, loc="upper left", bbox_to_anchor=(1, 1))
+        ax.set_xlim(-1, x_offset - 1)
+        ax.axis('off')
     #################################################################################################################
 
     #################################################################################################################
-    def plot_Figure_1a(self,):
+    def plot_Figure_2c(self, ax):
         """
-        Figure 1a: 
-            Association between non-refoldability and the presence of a native entanglement
-            C buffers at spa50 and LiPMScov 50
-            EXP, AF, and both EXP & AF
+        Figure 5c (row 1 column 1): 
+
         """
-        buff_tag = {'C': 'cyto-serum', 'CD': '+DnaK', 'CG': '+GroEL'}
 
-        ## Plot Figure 1a
-        Figure_1a_outfile = os.path.join(self.out_path, f'Figure_1a.png')
-        Figure_1a_outfile_csv = os.path.join(self.out_path, f'Figure_1a.csv')
-        print(f'Figure_1a_outfile: {Figure_1a_outfile}')
-        print(f'Figure_1a_outfile_csv: {Figure_1a_outfile_csv}')
-
-        Figure_1a_df = self.Figure_1a_df.copy()
-        Figure_1a_df = Figure_1a_df[Figure_1a_df['spa'] == 50]
-        Figure_1a_df['xlabel'] = [buff_tag[b] for b in Figure_1a_df['buff'].values]
-
-        # Define the custom order for the 'buff' column
-        custom_order = ['C', 'CD', 'CG']
-        Figure_1a_df['buff'] = pd.Categorical(Figure_1a_df['buff'], categories=custom_order, ordered=True)
-        Figure_1a_df = Figure_1a_df.sort_values('buff')
-
-        # Define the custom order for the 'label' column
-        custom_order = ['EXP', 'AF']
-        Figure_1a_df['label'] = pd.Categorical(Figure_1a_df['label'], categories=custom_order, ordered=True)
-        Figure_1a_df = Figure_1a_df.sort_values('label')
-        print(Figure_1a_df)
-
-        # Save the plot df
-        Figure_1a_df.to_csv(Figure_1a_outfile_csv)
-        print(f'SAVED: {Figure_1a_outfile_csv}')
-
-        # Set up the plot
-        fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(7, 3), sharey=True)
-        
-        # Iterate through the groups and plot each trace with error bars
-        maxy = 0
-        for i, (label, group) in enumerate(Figure_1a_df.groupby('label')):
-            
-            # Calculate error bars
-            yerr_lower = group['OR'] - group['OR_lb']
-            yerr_upper = group['OR_ub'] - group['OR']
-            yerr = [yerr_lower, yerr_upper]
-            
-            # Plot the trace with error bars
-            axes[i].errorbar(
-                group['xlabel'], 
-                group['OR'], 
-                yerr=yerr, 
-                fmt='o',  # Line and point markers
-                label=f"{label}",
-                capsize=4  # Add caps to the error bars
-            )
-
-            ## mark pvalue annotations
-            # Annotate significant p-values with '*'
-            for x, y, err, p in zip(group['xlabel'], group['OR'], yerr_upper, group['pvalue']):
-                if p > 0.05:
-                    p_annot = ""
-                elif p < 0.05 and p >= 0.01:
-                    p_annot = "*"
-                elif p < 0.01 and p >= 0.001:
-                    p_annot = "**"
-                elif p < 0.001:
-                    p_annot = "***" 
-
-                axes[i].text(
-                    x, 
-                    y + err + 0.1,  # Place the annotation slightly above the upper error bar
-                    p_annot, 
-                    fontsize=12, 
-                    ha='center', 
-                    color='red')                  
-                print(p_annot, y + err + 0.1)
-
-                if y + err + 0.1 > maxy:
-                    maxy = y + err + 0.1
-                
-            # Add a dashed black line at y=1    
-            axes[i].axhline(y=1, color='black', linestyle='--', linewidth=1)
-            axes[i].set_xlabel("Buffer")
-            axes[i].set_ylabel("Odds Ratio (OR)")
-            axes[i].set_xticklabels(group['xlabel'], rotation=45, ha='right')  # Rotate x-axis labels for better readability
-            #axes[i].legend()
-            axes[i].set_title(f"Association of Non-refoldability\nand Native Entanglements ({label})", fontsize=10)
-            axes[i].grid(alpha=0.3)
-            
-        # Customize the plot
-        print(f'Max(y) ceil: {maxy} {np.ceil(maxy)}')
-        plt.ylim(0,np.ceil(maxy) + 1)
-        
-        # Show the plot
-        plt.tight_layout()
-        plt.savefig(Figure_1a_outfile)
-        print(f'SAVED: Figure_1a_outfile: {Figure_1a_outfile}')
     #################################################################################################################
 
-    #################################################################################################################
-    def plot_Figure_1b(self,):
-        """
-        Figure 1b:
-            Association between change in proteolysis suseptibility and protein region (entangled versus non-entangled)
-            C, Cpsm, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement
-            EXP, AF, and both EXP & AF
-        """
-        buff_tag = {'C': 'cyto-serum', 'CD': '+DnaK', 'CG': '+GroEL'}
 
-        ## Plot Figure 1a
-        Figure_1b_outfile = os.path.join(self.out_path, f'Figure_1b.png')
-        Figure_1b_outfile_csv = os.path.join(self.out_path, f'Figure_1b.csv')
-        print(f'Figure_1b_outfile: {Figure_1b_outfile}')
-        print(f'Figure_1b_outfile_csv: {Figure_1b_outfile_csv}')
-        
-        Figure_1b_df = self.Figure_1b_df.copy()
-        print(Figure_1b_df)
-        Figure_1b_df = Figure_1b_df[Figure_1b_df['spa'] == 50]
-        xlabels = []
-        for ti, t in enumerate(Figure_1b_df['tag'].values):
-            b = Figure_1b_df['buff'].values[ti]
-            b = buff_tag[b]
-            if 'PSM' in t:
-                xlabels += [f"{b}(PSM)"]
-            else:
-                xlabels += [f"{b}"]
-        Figure_1b_df['xlabel'] = xlabels
-        Figure_1b_df['label'] = [t.split('_')[0] for t in Figure_1b_df['tag'].values]
+def mm_to_inches(mm):
+    return mm / 25.4
 
-        # Define the custom order for the 'buff' column
-        custom_order = ['C', 'CD', 'CG']
-        Figure_1b_df['buff'] = pd.Categorical(Figure_1b_df['buff'], categories=custom_order, ordered=True)
-        Figure_1b_df = Figure_1b_df.sort_values('buff')
+# Function to compute the CDF
+def compute_cdf(data):
+    sorted_data = np.sort(data)
+    cdf = np.arange(1, len(sorted_data) + 1) / len(sorted_data)
+    return sorted_data, cdf
 
-        # Define the custom order for the 'label' column
-        custom_order = ['EXP', 'AF']
-        Figure_1b_df['label'] = pd.Categorical(Figure_1b_df['label'], categories=custom_order, ordered=True)
-        Figure_1b_df = Figure_1b_df.sort_values('label')
-        print(Figure_1b_df)
+def format_scientific(number, precision=2):
+    # Split the number into mantissa and exponent
+    formatted = f"{number:.{precision}e}"
+    mantissa, exponent = formatted.split("e")
+    exponent = int(exponent)
+    #print(mantissa, exponent)
 
-        # Save the plot df
-        Figure_1b_df.to_csv(Figure_1b_outfile_csv)
-        print(f'SAVED: {Figure_1b_outfile_csv}')
-
-        # Set up the plot
-        fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(7, 3), sharey=True)
-        
-        # Iterate through the groups and plot each trace with error bars
-        maxy = 0
-        for i, (label, group) in enumerate(Figure_1b_df.groupby('label')):
-            
-            # Calculate error bars
-            yerr_lower = group['OR'] - group['OR_lb']
-            yerr_upper = group['OR_ub'] - group['OR']
-            yerr = [yerr_lower, yerr_upper]
-            
-            # Plot the trace with error bars
-            axes[i].errorbar(
-                group['xlabel'], 
-                group['OR'], 
-                yerr=yerr, 
-                fmt='o',  # Line and point markers
-                label=f"{label}",
-                capsize=4  # Add caps to the error bars
-            )
-
-            ## mark pvalue annotations
-            # Annotate significant p-values with '*'
-            for x, y, err, p in zip(group['xlabel'], group['OR'], yerr_upper, group['pvalues']):
-                if p > 0.05:
-                    p_annot = ""
-                elif p < 0.05 and p >= 0.01:
-                    p_annot = "*"
-                elif p < 0.01 and p >= 0.001:
-                    p_annot = "**"
-                elif p < 0.001:
-                    p_annot = "***" 
-
-                axes[i].text(
-                    x, 
-                    y + err + 0.1,  # Place the annotation slightly above the upper error bar
-                    p_annot, 
-                    fontsize=12, 
-                    ha='center', 
-                    color='red')                  
-                print(p_annot, y + err + 0.1)
-
-                if y + err + 0.1 > maxy:
-                    maxy = y + err + 0.1
-                
-            # Add a dashed black line at y=1    
-            axes[i].axhline(y=1, color='black', linestyle='--', linewidth=1)
-            axes[i].set_xlabel("Buffer")
-            axes[i].set_ylabel("Odds Ratio (OR)")
-            axes[i].set_xticklabels(group['xlabel'], rotation=45, ha='right')  # Rotate x-axis labels for better readability
-            #axes[i].legend()
-            axes[i].set_title(f"Association of change in prot. suseptibility\nand Entanglement region ({label})", fontsize=10)
-            axes[i].grid(alpha=0.3)
-            
-        # Customize the plot
-        print(f'Max(y) ceil: {maxy} {np.ceil(maxy)}')
-        plt.ylim(0,np.ceil(maxy) + 0.5)
-        
-        # Show the plot
-        plt.tight_layout()
-        plt.savefig(Figure_1b_outfile)
-        print(f'SAVED: Figure_1b_outfile: {Figure_1b_outfile}')
-    #################################################################################################################
-
-    #################################################################################################################
-    def plot_Figure_1c(self,):
-        """
-        Figure 1c: 
-            Association between change in proteolysis suseptibility and protein region (entangled versus non-entangled)
-            C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement and be essential
-            C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement and be non-essential   
-            EXP, AF, and both EXP & AF
-        """
-        buff_tag = {'C': 'cyto-serum', 'CD': '+DnaK', 'CG': '+GroEL'}
-
-        ## Plot Figure 1c
-        Figure_1c_outfile = os.path.join(self.out_path, f'Figure_1c.png')
-        Figure_1c_outfile_csv = os.path.join(self.out_path, f'Figure_1c.csv')
-        print(f'Figure_1c_outfile: {Figure_1c_outfile}')
-        print(f'Figure_1c_outfile_csv: {Figure_1c_outfile_csv}')
-        
-        Figure_1c_df = self.Figure_1c_df.copy()
-        Figure_1c_df = Figure_1c_df[Figure_1c_df['spa'] == 50]
-        print(Figure_1c_df)
-
-        xlabels = []
-        for ti, t in enumerate(Figure_1c_df['tag'].values):
-            b = Figure_1c_df['buff'].values[ti]
-            b = buff_tag[b]
-            xlabels += [f"{b}"]
-        Figure_1c_df['xlabel'] = xlabels
-        Figure_1c_df['label'] = [t.split('_')[0] for t in Figure_1c_df['tag'].values]
-        tags = []
-        for t in Figure_1c_df['tag'].values:
-            if 'NonEss' in t:
-                tags += ['NonEssential']
-            else:
-                tags += ['Essential']
-        Figure_1c_df['tag'] = tags
-
-        # Define the custom order for the 'label' column
-        custom_order = ['EXP', 'AF']
-        Figure_1c_df['label'] = pd.Categorical(Figure_1c_df['label'], categories=custom_order, ordered=True)
-        Figure_1c_df = Figure_1c_df.sort_values('label')
-        print(Figure_1c_df)
-
-        # Save the plot df
-        Figure_1c_df.to_csv(Figure_1c_outfile_csv)
-        print(f'SAVED: {Figure_1c_outfile_csv}')
-
-        # Set up the plot
-        fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(7, 7), sharey=True)
-        
-        # Iterate through the groups and plot each trace with error bars
-        maxy = 0
-        for i, (label, group) in enumerate(Figure_1c_df.groupby('label')):
-            for j, (tag, tag_group) in enumerate(group.groupby('tag')):
-                print(tag_group)
-            
-                # Calculate error bars
-                yerr_lower = tag_group['OR'] - tag_group['OR_lb']
-                yerr_upper = tag_group['OR_ub'] - tag_group['OR']
-                yerr = [yerr_lower, yerr_upper]
-                
-                # Plot the trace with error bars
-                axes[i, j].errorbar(
-                    tag_group['xlabel'], 
-                    tag_group['OR'], 
-                    yerr=yerr, 
-                    fmt='o',  # Line and point markers
-                    label=f"{tag}",
-                    capsize=4  # Add caps to the error bars
-                )
-
-                ## mark pvalue annotations
-                # Annotate significant p-values with '*'
-                for x, y, err, p in zip(tag_group['xlabel'], tag_group['OR'], yerr_upper, tag_group['pvalues']):
-                    if p > 0.05:
-                        p_annot = ""
-                    elif p < 0.05 and p >= 0.01:
-                        p_annot = "*"
-                    elif p < 0.01 and p >= 0.001:
-                        p_annot = "**"
-                    elif p < 0.001:
-                        p_annot = "***" 
-
-                    axes[i, j].text(
-                        x, 
-                        y + err + 0.1,  # Place the annotation slightly above the upper error bar
-                        p_annot, 
-                        fontsize=12, 
-                        ha='center', 
-                        color='red')                  
-                    print(p_annot, y + err + 0.1)
-
-                    if y + err + 0.1 > maxy:
-                        maxy = y + err + 0.1
-                    
-                # Add a dashed black line at y=1    
-                axes[i, j].axhline(y=1, color='black', linestyle='--', linewidth=1)
-                axes[i, j].set_xlabel("Buffer")
-                axes[i, j].set_ylabel("Odds Ratio (OR)")
-                axes[i, j].set_xticklabels(tag_group['xlabel'], rotation=45, ha='right')  # Rotate x-axis labels for better readability
-                axes[i, j].set_title(f"Association of change in prot. suseptibility\nand Entanglement region ({label}, {tag})", fontsize=10)
-                axes[i, j].grid(alpha=0.3)
-                #axes[i, j].legend()
-            
-        # Customize the plot
-        print(f'Max(y) ceil: {maxy} {np.ceil(maxy)}')
-        plt.ylim(0,np.ceil(maxy))
-        
-        # Show the plot
-        plt.tight_layout()
-        plt.savefig(Figure_1c_outfile)
-        print(f'SAVED: Figure_1c_outfile: {Figure_1c_outfile}')
-        #################################################################################################################
-
+    # Convert the exponent into superscript
+    superscript_map = str.maketrans("0123456789-", "⁰¹²³⁴⁵⁶⁷⁸⁹⁻")
+    exponent_superscript = str(exponent).translate(superscript_map)
+    # Return the formatted string
+    formatted_str = f"{mantissa} × $10^{{{exponent}}}$"
+    print(formatted_str)
+    return formatted_str
 
 def main():
     """
-    slug_path = ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/
-
-    Figure 1a: 
-        Association between non-refoldability and the presence of a native entanglement
-        C buffers at spa50 and LiPMScov 50
-        EXP, AF, and both EXP & AF
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Association_Native_Entanglements_and_Misfolding/EntanglementsAndNonrefoldability/Plot_EntanglementsAndNonrefoldability/entanglement_and_nonrefoldability_plot_data_all_genes.csv
-
-    
-    Figure 1b:
-        Association between change in proteolysis suseptibility and protein region (entangled versus non-entangled)
-        C, Cpsm, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement
-        EXP, AF, and both EXP & AF
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/PSM/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        
-    Figure 1c: 
-        Association between change in proteolysis suseptibility and protein region (entangled versus non-entangled)
-        C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement and be essential
-        C, CD, CG buffers at spa50 and LiPMScov 50 and has to have an entanglement and be non-essential   
-        EXP, AF, and both EXP & AF
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/EXP/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv  
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-        ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Modeling_Odds_of_Misfolding/Regressions/Plots/AF/whole_proteome/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.csv
-
+    Creates Figure 2
     """
     parser = argparse.ArgumentParser(description="Process regression data and generate plots.")
     parser.add_argument("-s", "--slug_path", type=str, required=True, help="Path to the slug containing all the raw data for this paper.")
@@ -492,10 +205,76 @@ def main():
         print(f'MADE: {args.out_path}')
 
     plotter = Plotter(args)
-    plotter.load_data()
-    plotter.plot_Figure_1a()
-    plotter.plot_Figure_1b()
-    plotter.plot_Figure_1c()
+
+    # Create a master figure and axes
+    fig_width_mm = 183  # Width in mm
+    fig_height_mm = 100  # Height in mm
+    #custom_font_path = "/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/fonts/Arial.ttf" # Path to your custom font
+    #arial_font = fm.FontProperties(fname=custom_font_path) # Create a FontProperties object
+    plt.rcParams['font.family'] = 'Arial'  # Change to your desired font, e.g., 'Times New Roman', 'DejaVu Sans', etc.
+    plt.rcParams['font.size'] = 6  # Default font size
+    plt.rcParams['pdf.fonttype'] = 42
+    fig = plt.figure(figsize=(mm_to_inches(fig_width_mm), mm_to_inches(fig_height_mm)))
+    gs = gridspec.GridSpec(2, 4, figure=fig)
+    # Add subplots
+    ax1 = fig.add_subplot(gs[0, :])  # First row, first column
+    ax2 = fig.add_subplot(gs[1, :2])  # First row, second column
+    ax3 = fig.add_subplot(gs[1, 2:])  # First row, second column
+    axs = [ax1, ax2, ax3]
+
+    ## make subplot figures 
+    plotter.plot_Figure_2a(axs[0])
+    plotter.plot_Figure_2b(axs[1])
+    plotter.plot_Figure_2c(axs[2])
+
+    #########################################################
+    # Get the current position of the subplots and adjust their positions manually
+    ## panel a
+    axs0_position = axs[0].get_position()
+    width0, height0 = axs0_position.extents[2] - axs0_position.extents[0], axs0_position.extents[3] - axs0_position.extents[1]
+    print('a', axs0_position, width0, height0)
+    #axs[0].set_position([0.005, 0.625, 0.5, 0.325])  # [left, bottom, width, height]
+    axs[0].axis('off')
+
+    bbox_in_fig_coords = axs[0].get_tightbbox(fig.canvas.get_renderer()).transformed(fig.transFigure.inverted())
+    fig.text(bbox_in_fig_coords.x0, 0.995, 'a', fontsize=8, fontweight='bold', va='top', ha='left')
+
+    ## panel b
+    axs1_position = axs[1].get_position()
+    width1, height1 = axs1_position.extents[2] - axs1_position.extents[0], axs1_position.extents[3] - axs1_position.extents[1]
+    print('b', axs1_position, width1, height1)
+    axs[1].set_position([-0.075, 0.05, 0.65, 0.325])
+
+    bbox_in_fig_coords = axs[1].get_tightbbox(fig.canvas.get_renderer()).transformed(fig.transFigure.inverted())
+    fig.text(bbox_in_fig_coords.x0, 0.5, 'b', fontsize=8, fontweight='bold', va='top', ha='left')
+
+    ## panel c
+    axs2_position = axs[2].get_position()
+    width2, height2 = axs2_position.extents[2] - axs2_position.extents[0], axs2_position.extents[3] - axs2_position.extents[1]
+    print('c', axs2_position, width2, height2)
+    axs[2].set_position([0.75, 0.1, 0.135, 0.325])
+
+    bbox_in_fig_coords = axs[2].get_tightbbox(fig.canvas.get_renderer()).transformed(fig.transFigure.inverted())
+    fig.text(bbox_in_fig_coords.x0, 0.5, 'c', fontsize=8, fontweight='bold', va='top', ha='left')
+    axs[2].axis('off')
+
+    #########################################################
+
+    # final formating and output
+    # Automatically adjust layout
+    #fig.tight_layout()  # 'pad' is the overall padding
+    figure_outpath = os.path.join(args.out_path, 'Figure2.pdf')
+    plt.savefig(figure_outpath)
+    print(f'SAVED: {figure_outpath}')
+
+    figure_outpath = os.path.join(args.out_path, 'Figure2.png')
+    plt.savefig(figure_outpath)
+    print(f'SAVED: {figure_outpath}')
+
+    figure_outpath = os.path.join(args.out_path, 'Figure2.svg')
+    plt.savefig(figure_outpath)
+    print(f'SAVED: {figure_outpath}')
+
 
     print('NORMAL TERMINATION')
 
