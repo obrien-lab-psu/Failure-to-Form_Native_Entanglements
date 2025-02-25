@@ -129,16 +129,6 @@ class DataAnalysis:
             print(k,v)
         self.coefficients = coefficients
 
-        ## calculate the odds from the fit holding either region or ent_present constant
-        if 'AA' in formula: 
-            odds = []
-            for value in df[self.hold_var].unique():
-                odds += [self.calculate_overall_odds_with_confidence_intervals(df, coefficients, cov_matrix, self.hold_var, value=value, confidence_level=0.95)]
-            odds = pd.DataFrame(odds)
-        else:
-            odds = None
-        print(f'odds:\n{odds}')
-
         ## recalculate the pvalue to add more digits as statsmodels truncates it to 0 if it is below 0.0001 for some reason. 
         print(result.summary())
         table = result.summary().tables[1]
@@ -154,7 +144,7 @@ class DataAnalysis:
 
         table_df['P>|z|'] = pvalues
         table_df = table_df.rename(columns={"": "var"})
-        return table_df, odds, cov_matrix
+        return table_df, cov_matrix
 
 
     def load_data(self):
@@ -188,67 +178,6 @@ class DataAnalysis:
         self.data = self.data.reset_index()
         print(f"Data loaded and filtered. Number of unique genes: {len(self.data['gene'].unique())}")
 
-
-    def calculate_overall_odds_with_confidence_intervals(self, dataframe, coefficients, cov_matrix, hold, value=1, confidence_level=0.95):
-        # Calculate the frequency of each AA in the sample data
-        #freq_AA = dataframe[dataframe[hold] == value]['AA'].value_counts(normalize=True)
-        freq_AA = dataframe['AA'].value_counts(normalize=True)
-
-        # Initialize variables to store weighted log-odds and variance
-        weighted_log_odds = 0
-        weighted_var_log_odds = 0
-
-        # Calculate z-score for the desired confidence level
-        z = norm.ppf(1 - (1 - confidence_level) / 2)
-        print(z, 1 - (1 - confidence_level) / 2)
-
-        #var_intercept = cov_matrix.loc['Intercept', 'Intercept']
-        for aa, freq in freq_AA.items():
-            # Intercept + coefficient for AA + coefficient for hold
-            coef_intercept = coefficients['Intercept']
-            #coef_aa = coefficients.get(aa, 0)
-            coef_aa = coefficients[aa]
-            coef_hold = coefficients[hold]
-
-            log_odds = coef_intercept + coef_aa + coef_hold * value
-
-            # Calculate standard error for log-odds
-            var_intercept = cov_matrix.loc['Intercept', 'Intercept']
-            var_aa = cov_matrix.loc[f'AA[T.{aa}]', f'AA[T.{aa}]'] if f'AA[T.{aa}]' in cov_matrix.index else 0
-            var_hold = cov_matrix.loc[hold, hold]
-            cov_ia = cov_matrix.loc['Intercept', f'AA[T.{aa}]'] if f'AA[T.{aa}]' in cov_matrix.index else 0
-            cov_ir = cov_matrix.loc['Intercept', hold]
-            cov_ar = cov_matrix.loc[f'AA[T.{aa}]', hold] if f'AA[T.{aa}]' in cov_matrix.index else 0
-
-            # Total variance for the log-odds
-            var_log_odds = var_intercept + var_aa + var_hold + 2 * (cov_ia + cov_ir + cov_ar)
-            if abs(var_log_odds) > 10:
-                var_log_odds = 10
-            #print(f'{aa} {var_intercept} {var_aa} {var_hold} {cov_ia} {cov_ir} {cov_ar}')
-            print(f'{aa} var_log_odds = {var_log_odds}')
-
-            # Weighted log-odds and variance
-            weighted_log_odds += freq * log_odds
-            weighted_var_log_odds += freq ** 2 * var_log_odds
-
-        # Standard error
-        se_weighted_log_odds = np.sqrt(weighted_var_log_odds)
-
-        # Confidence intervals for weighted log-odds
-        weighted_log_odds_lower = weighted_log_odds - z * se_weighted_log_odds
-        weighted_log_odds_upper = weighted_log_odds + z * se_weighted_log_odds
-
-        # Convert to odds
-        overall_odds = np.exp(weighted_log_odds)
-        overall_odds_lower = np.exp(weighted_log_odds_lower)
-        overall_odds_upper = np.exp(weighted_log_odds_upper)
-        print(f'overall_odds: {overall_odds} {overall_odds_lower} {overall_odds_upper}')
-        return {
-            'var': hold,
-            'hold_value': value,
-            'overall_odds': overall_odds,
-            'CI_lower': overall_odds_lower,
-            'CI_upper': overall_odds_upper}
 
     def get_cut_dist(self, ):
         print(f'Getting distribution of cut sites for this set of proteins')
@@ -344,7 +273,7 @@ class DataAnalysis:
         # Define output files and get gene list
         reg_outfile = os.path.join(self.outpath, f"regression_results_{self.hold_var}_{self.tag}_{self.buffer}_{self.timepoint}_spa{self.spa}_LiPMScov{self.cov}.csv")
         cov_matrix_outfile = os.path.join(self.outpath, f"regression_cov_matrix_{self.hold_var}_{self.tag}_{self.buffer}_{self.timepoint}_spa{self.spa}_LiPMScov{self.cov}.csv")
-        odds_outfile = os.path.join(self.outpath, f"regression_odds_holding-{self.hold_var}_{self.tag}_{self.buffer}_{self.timepoint}_spa{self.spa}_LiPMScov{self.cov}.csv")
+        #odds_outfile = os.path.join(self.outpath, f"regression_odds_holding-{self.hold_var}_{self.tag}_{self.buffer}_{self.timepoint}_spa{self.spa}_LiPMScov{self.cov}.csv")
 
         # Encode boolean columns
         encoded_df = self.encode_boolean_columns(self.data, bin_keys)
@@ -363,7 +292,7 @@ class DataAnalysis:
             print(f'Fisher exact: OR {OR} with pvalue {pvalue}')
 
         # Perform regression
-        reg, odds, cov_matrix = self.regression(encoded_df, self.reg_formula)
+        reg, cov_matrix = self.regression(encoded_df, self.reg_formula)
         reg['coef'] = reg['coef'].astype(float)
         reg['OR'] = np.exp(reg['coef'].astype(float))
         reg['std err'] = reg['std err'].astype(float)
@@ -389,18 +318,6 @@ class DataAnalysis:
         cov_matrix.to_csv(cov_matrix_outfile, index=False, sep='|')
         print(f'SAVED: {cov_matrix_outfile}')
 
-        if 'AA' in self.reg_formula:
-            odds['tag'] = self.tag
-            odds['buff'] = self.buffer
-            odds['timepoint'] = self.timepoint
-            odds['spa'] = self.spa
-            odds['cov'] = self.cov
-            odds['n'] = len(self.data['gene'].unique())
-            pval = reg[reg['var'] == self.hold_var]['P>|z|'].values
-            odds['P>|z|'] = pval[0]
-            print(f'odds:\n{odds}')
-            odds.to_csv(odds_outfile, index=False, sep='|')
-            print(f'SAVED: {odds_outfile}')
 
         print('NORMAL TERMINATION')
 

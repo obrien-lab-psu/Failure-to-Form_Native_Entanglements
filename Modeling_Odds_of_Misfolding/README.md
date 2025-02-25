@@ -144,15 +144,12 @@ If you have the [SLUG] then you can use the command files located [here](src/com
 ### Results of modeling log-odds of misfolding
 When considering only those proteins with native entanglements we observe a statistically significant greater odds of misfolding in the entangled region of proteins rather than not. Even in the presence of DnaK and GroEL.  
 ![All proteins with native entanglements](Figures/Regressions/whole_proteome/EXP/ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)    
-![All proteins with native entanglements](Figures/Odds/whole_proteome/EXP/ent_genes_Rall_binomial_regression_odds_results_var-region_LiPMScov50.png)    
 
 When we restrict ourselves to the set of essential proteins determined by knockout experiments reported in the [DEG](http://origin.tubic.org/deg/public/index.php) database we observe no statistical association in the presence of chaperones.  
 ![Essential proteins with native entanglements](Figures/Regressions/whole_proteome/EXP/essential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)  
-![Essential proteins with native entanglements](Figures/Odds/whole_proteome/EXP/essential_ent_genes_Rall_binomial_regression_odds_results_var-region_LiPMScov50.png)  
   
 While for the complimentary set of non-essential proteins we still observe the bias towards misfolding involving native entanglements in the presence of chaperones.  
 ![Non-Essential proteins with native entanglements](Figures/Regressions/whole_proteome/EXP/nonessential_ent_genes_Rall_binomial_regression_results_var-region_LiPMScov50.png)  
-![Non-Essential proteins with native entanglements](Figures/Odds/whole_proteome/EXP/nonessential_ent_genes_Rall_binomial_regression_odds_results_var-region_LiPMScov50.png)  
 
   
 Below is a table of all our results across both the sets of experimentally derived structures and Alphafold structures as well as at each individual time point observed in the LiPMS experiments.  
