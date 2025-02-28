@@ -19,9 +19,14 @@ import requests
 import mdtraj as md
 from scipy.spatial.distance import pdist, squareform
 from statsmodels.stats.multitest import fdrcorrection
+from sklearn.preprocessing import StandardScaler
 from scipy.stats import permutation_test, ttest_ind, false_discovery_control, fisher_exact, mannwhitneyu
 import matplotlib.pyplot as plt
 from math import comb
+import statsmodels.api as sm
+import scipy.stats as st
+
+
 #pd.set_option('display.max_rows', 500)
 
 class Analyzer:
@@ -134,7 +139,72 @@ class Analyzer:
 
         outdf.to_csv(outfile, sep="|", index=False)
         print(f'SAVED: {outfile}')
+    #################################################################################################################
 
+    #################################################################################################################
+    def Regression(self,):
+        print(f'Calculating the OR and pvalue for the association of entangled genes with being nonrefoldable using binomial regression to control for length')
+        outfile = f'{self.Outpath}Regression_stats_{self.tag}_{self.buff}_spa{self.spa}_LiPMScov{self.LiPMScov}.csv'
+        print(f'outfile: {outfile}')
+        print(self.df)
+
+        ## Get length
+        self.df = GetLength(self.df)
+        print(self.df)
+        Design_df = self.df[['entangled', 'nonrefolded', 'Length']].astype(int)
+        print(Design_df)
+
+        # standardize the df
+        #scaler = StandardScaler()
+        #Design_df['Length'] = scaler.fit_transform(Design_df[['Length']])
+        #print(Design_df)
+        
+        formula = 'nonrefolded ~ entangled + Length'
+        model = sm.GLM.from_formula(formula, family=sm.families.Binomial(), data=Design_df)
+        #model = smf.logit(formula=formula, data=df)
+        result = model.fit()
+
+        ## recalculate the pvalue to add more digits as statsmodels truncates it to 0 if it is below 0.0001 for some reason. 
+        #print(result.summary())
+        table = result.summary().tables[1]
+        table_df = pd.DataFrame(table.data[1:], columns=table.data[0])
+        pvalues = []
+        for z in table_df['z']:
+            z = float(z)
+            if z < 0:
+                p = st.norm.cdf(z)
+            else:
+                p = 1 - st.norm.cdf(z)
+            pvalues += [p*2]
+
+        table_df['P>|z|'] = pvalues
+        table_df = table_df.rename(columns={"": "var"})
+        print(table_df)
+        table_df['OR'] = [np.exp(float(x)) for x in table_df['coef'].values]
+        table_df['OR_lb'] = [np.exp(float(x)) for x in table_df['[0.025'].values]
+        table_df['OR_ub'] = [np.exp(float(x)) for x in table_df['0.975]'].values]
+        table_df = table_df.rename(columns={'P>|z|':'pvalue'})
+        table_df['tag'] = [self.tag]*3
+        table_df['buff'] = [self.buff]*3
+        table_df['spa'] = [self.spa]*3
+        table_df['LiPMScov'] = [self.LiPMScov]*3
+        table_df['n'] = [len(self.df)]*3
+        print(table_df)
+        table_df.to_csv(outfile, sep="|", index=False)
+        print(f'SAVED: {outfile}')
+    #################################################################################################################
+
+ 
+#################################################################################################################
+def GetLength(df):
+    lengths = pd.read_csv(f'data/uniprotkb_E_coli_AND_model_organism_833_2025_01_08.tsv', sep='\t')
+    lengths = lengths.rename(columns={'Entry':'gene'})
+    #print(lengths)
+
+    # Merging DataFrame B with the L column from DataFrame A based on the G column
+    df = df.merge(lengths[["gene", "Length"]], on="gene", how="left")
+    return df
+#################################################################################################################
 
 #################################################################################################################
 
@@ -177,6 +247,7 @@ def main():
     analysis = Analyzer(outpath, all_gene_list, ent_gene_list, nonrefold_gene_list, tag, buff, spa, LiPMScov)
 
     analysis.Fisher()
+    analysis.Regression()
 
 
 if __name__ == "__main__":
