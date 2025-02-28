@@ -205,7 +205,7 @@ class DataAnalysis:
                 for k,v in bcounts.items():
                     gene_overlap[k]['boot'] += [v]
 
-            outdf = {'buff':[], 'OverlapClass':[], 'Overlap':[], 'Bounds':[], 'pvalue':[]}
+            outdf = {'buff':[], 'OverlapClass':[], 'Overlap':[], 'Bounds':[], 'pvalue':[], 'count':[]}
             for setstr, set_data in gene_overlap.items():
                 if len(set_data['boot']) != 0:
                     lb = np.percentile(set_data['boot'], 2.5)
@@ -222,6 +222,7 @@ class DataAnalysis:
                 outdf['Overlap'] += [f'{GT:.3f}']
                 outdf['Bounds'] += [f'({lb:.3f}, {ub:.3f})']
                 outdf['pvalue'] += [f'{pvalue:.3e}']
+                outdf['count'] += [int(GT*total_elements)]
 
             for setstr, set_data in gene_overlap.items():
                 print(buff, setstr, set_data['GT'], set_data['bounds'], set_data['pvalue'])
@@ -230,7 +231,7 @@ class DataAnalysis:
             print(outdf)
 
             # Save the dataframe to the data path
-            outfile = os.path.join(self.data_path, f'GeneOverlapTable_{self.tag}_{buff}.csv')
+            outfile = os.path.join(self.data_path, f'GeneOverlapTableVenn3Diagram_{self.tag}_{buff}.csv')
             outdf.to_csv(outfile, index=False)
             print(f'SAVED: {outfile}')
 
@@ -252,7 +253,7 @@ class DataAnalysis:
             # Add the table to the right of the Venn diagram
             plt.subplots_adjust(left=0.3, right=0.8)
             ax = plt.gca()
-            ax_table = plt.table(cellText=outdf.values, colLabels=outdf.columns, colWidths=[0.2, 0.2, 0.2, 0.2, 0.2], cellLoc='center', loc='right')
+            ax_table = plt.table(cellText=outdf.values, colLabels=outdf.columns, colWidths=[0.15, 0.15, 0.15, 0.15, 0.15, 0.15], cellLoc='center', loc='right')
             
             # Increase font size
             ax_table.auto_set_font_size(False)  # Disable automatic font size scaling
@@ -262,7 +263,7 @@ class DataAnalysis:
             plt.suptitle(f'{self.tag} | {buff} | GeneOverlap')
             plt.tight_layout()
             #plt.show()
-            outfile = os.path.join(self.plots_path, f'GeneOverlapVenn3Diagram_{self.tag}_{buff}.png')
+            outfile = os.path.join(self.plots_path, f'GeneOverlapVenn3Diagram_{self.tag}_{buff}.pdf')
             plt.savefig(outfile)
             print(f'SAVED: {outfile}')
             plt.close()
@@ -351,7 +352,7 @@ class DataAnalysis:
                 for k,v in bcounts.items():
                     gene_overlap[k]['boot'] += [v]
 
-            outdf = {'buff':[], 'OverlapClass':[], 'Overlap':[], 'Bounds':[], 'pvalue':[]}
+            outdf = {'buff':[], 'OverlapClass':[], 'Overlap':[], 'Bounds':[], 'pvalue':[], 'count':[]}
             for setstr, set_data in gene_overlap.items():
                 if len(set_data['boot']) != 0:
                     lb = np.percentile(set_data['boot'], 2.5)
@@ -368,6 +369,7 @@ class DataAnalysis:
                 outdf['Overlap'] += [f'{GT:.3f}']
                 outdf['Bounds'] += [f'({lb:.3f}, {ub:.3f})']
                 outdf['pvalue'] += [f'{pvalue:.3e}']
+                outdf['count'] += [int(GT*total_elements)]
 
             for setstr, set_data in gene_overlap.items():
                 print(buff, setstr, set_data['GT'], set_data['bounds'], set_data['pvalue'])
@@ -376,7 +378,7 @@ class DataAnalysis:
             print(outdf)
 
             # Save the dataframe to the data path
-            outfile = os.path.join(self.data_path, f'GeneOverlapTable_{self.tag}_{buff}.csv')
+            outfile = os.path.join(self.data_path, f'GeneOverlapTableVenn2Diagram_{self.tag}_{buff}.csv')
             outdf.to_csv(outfile, index=False)
             print(f'SAVED: {outfile}')
 
@@ -398,7 +400,7 @@ class DataAnalysis:
             # Add the table to the right of the Venn diagram
             plt.subplots_adjust(left=0.3, right=0.8)
             ax = plt.gca()
-            ax_table = plt.table(cellText=outdf.values, colLabels=outdf.columns, colWidths=[0.2, 0.2, 0.2, 0.2, 0.2], cellLoc='center', loc='right')
+            ax_table = plt.table(cellText=outdf.values, colLabels=outdf.columns, colWidths=[0.15, 0.15, 0.15, 0.15, 0.15, 0.15], cellLoc='center', loc='right')
             
             # Increase font size
             ax_table.auto_set_font_size(False)  # Disable automatic font size scaling
@@ -408,7 +410,7 @@ class DataAnalysis:
             plt.suptitle(f'{self.tag} | {buff} | GeneOverlap')
             plt.tight_layout()
             #plt.show()
-            outfile = os.path.join(self.plots_path, f'GeneOverlapVenn2Diagram_{self.tag}_{buff}.png')
+            outfile = os.path.join(self.plots_path, f'GeneOverlapVenn2Diagram_{self.tag}_{buff}.pdf')
             plt.savefig(outfile)
             print(f'SAVED: {outfile}')
             plt.close()
@@ -708,7 +710,7 @@ class DataAnalysis:
             plt.suptitle(f'{self.tag} | {buff} | GeneOverlap')
 
             # Save the figure
-            outfile = os.path.join(self.plots_path, f'PKsiteOverlapVenn3Diagram_{self.tag}_{buff}.png')
+            outfile = os.path.join(self.plots_path, f'PKsiteOverlapVenn3Diagram_{self.tag}_{buff}.pdf')
             plt.savefig(outfile)
             print(f'SAVED: {outfile}')
 
@@ -969,7 +971,7 @@ class DataAnalysis:
             plt.suptitle(f'{self.tag} | {buff} | GeneOverlap')
 
             # Save the figure
-            outfile = os.path.join(self.plots_path, f'PKsiteOverlapVenn2Diagram_{self.tag}_{buff}.png')
+            outfile = os.path.join(self.plots_path, f'PKsiteOverlapVenn2Diagram_{self.tag}_{buff}.pdf')
             plt.savefig(outfile)
             print(f'SAVED: {outfile}')
 
@@ -1000,8 +1002,8 @@ def main():
     print(Analyzer)
 
     # threshold SPA data
-    Analyzer.gene_overlap_3timepoint()
-    Analyzer.PKsite_overlap_3timepoint()
+    #Analyzer.gene_overlap_3timepoint()
+    #Analyzer.PKsite_overlap_3timepoint()
     Analyzer.gene_overlap_2timepoint()
     Analyzer.PKsite_overlap_2timepoint()
     print('NORMAL TERMINATION')
