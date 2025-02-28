@@ -71,30 +71,107 @@ class Analysis:
         """
 
         ### Load candidate set 1 collected OP data
-        set1_OPfile = os.path.join(self.CollectedOPpath, f'setID1/DATA/Quench_Collected_GQK.csv')
-        print(f'set1_OPfile: {set1_OPfile}')
-        if not os.path.exists(set1_OPfile):
-            raise ValueError(f'No set 1 OP file!')
-        else:
-            self.set1_OP = pd.read_csv(set1_OPfile)
-            self.set1_OP = self.set1_OP[self.set1_OP['Mirror'] == False]
-            print(f'set1_OP:\n{self.set1_OP}')
-
+        set1_OPfiles = glob.glob(os.path.join(self.CollectedOPpath, f'setID1/DATA/*_Quench_Collected_GQK.csv'))
+        #print(f'set1_OPfiles: {set1_OPfiles}')
+        self.set1_OP = []
+        for f in set1_OPfiles:
+            df = pd.read_csv(f)
+            df = df[df['Mirror'] == False]
+            self.set1_OP += [df]
+        self.set1_OP = pd.concat(self.set1_OP)
+        print(f'set1_OP:\n{self.set1_OP}')
         
         ### Load candidate set 1 collected OP data
-        set2_OPfile = os.path.join(self.CollectedOPpath, f'setID2/DATA/Quench_Collected_GQK.csv')
-        print(f'set2_OPfile: {set2_OPfile}')
-        if not os.path.exists(set2_OPfile):
-            raise ValueError(f'No set 1 OP file!')
-        else:
-            self.set2_OP = pd.read_csv(set2_OPfile)
-            self.set2_OP = self.set2_OP[self.set2_OP['Mirror'] == False]
-            print(f'set2_OP:\n{self.set2_OP}')
+        set2_OPfiles = glob.glob(os.path.join(self.CollectedOPpath, f'setID2/DATA/*_Quench_Collected_GQK.csv'))
+        #print(f'set2_OPfiles: {set2_OPfiles}')
+        self.set2_OP = []
+        for f in set2_OPfiles:
+            df = pd.read_csv(f)
+            df = df[df['Mirror'] == False]
+            self.set2_OP += [df]
+        self.set2_OP = pd.concat(self.set2_OP)
+        print(f'set2_OP:\n{self.set2_OP}')
 
     #######################################################################################  
 
     #######################################################################################
-    def CalcFractMisfolded(self, NativeBy='MSM', scope='full'):
+    def FracTrajFolded(self, NativeBy = 'NativeFolded'):
+        """
+        Calculate the ratio of misfolded and native frames in each trajectory 
+        Do it for the full trajectory and every 10% percentile buckets
+        Apply a blanket Q threshold and only consider structures with Q > 0.6
+        NativeBy: can be MSM, Ref, or None
+            MSM = using the metastable state with the highest <Q> and lowest <G> as the native state. Will examine all frames outside this native meta stable state.
+            Ref = using <Qref> - 3*sigma and <Gref> + 3*sigma as thresholds for selecting native frames. Will examine all frames with Q greater than the threshold and G less than. 
+            None = No native defined frames. examine all frames. 
+        scope: defines the scope of the analysis. full analyzes the whole GQ data and last10 only uses the last 10% of the traj
+        """
+
+        num_chunks = 10
+        #print(f'num_chunks: {num_chunks}')
+        #################################################
+        ## Determine the scope of the analysis
+        scope = 'last10'
+        scope_dict = {0:'full', 10:'90-100%'}
+        fractTraj_folded_df = {'tag':[], 'setID':[], 'traj':[], 'NativeBy':[], 'Metric':[],
+            'full':[], '90-100%':[]}
+
+
+        #####################################################
+        ## Get the frame chunks to split the analysis on
+        FrameEnd = 26666
+        print(f'FrameEnd: {FrameEnd}')
+        # Split the array into 10 equal chunks
+        frame_chunks = [np.arange(0, FrameEnd + 1)] + np.array_split(np.arange(0, FrameEnd + 1), 10)
+        print(f'frame_chunks: {frame_chunks}')
+
+        ####################################################
+        # Calculate R for each traj in sets 1 and 2
+        for gene, pdb, chain, setID, set_name in self.candidates.values:
+
+            tag = f'{gene}_{pdb}_{chain}'
+            print(gene, pdb, chain, setID, set_name)
+
+            if setID == 1:
+                loc_df = self.set1_OP[self.set1_OP['gene'] == gene]
+            elif setID == 2:
+                loc_df = self.set2_OP[self.set2_OP['gene'] == gene]
+            else:
+                continue
+            #print(f'loc_df:\n{loc_df}')
+
+            for traj, traj_df in loc_df.groupby('traj'):
+                #print(traj_df)
+                fractTraj_folded_df['tag'] += [tag]
+                fractTraj_folded_df['setID'] += [setID]
+                fractTraj_folded_df['traj'] += [traj]
+                fractTraj_folded_df['NativeBy'] += [NativeBy]
+                fractTraj_folded_df['Metric'] += [f'FracTraj{NativeBy}']
+
+                for i,label in scope_dict.items():
+                    # Calculate the percentile range
+                    lower_bound = frame_chunks[i][0]
+                    upper_bound = frame_chunks[i][-1]
+                    lower_bound, upper_bound = int(lower_bound), int(upper_bound)
+                    #print(i, lower_bound, upper_bound)
+                    
+                    # Filter the DataFrame for rows within this percentile range
+                    chunk = traj_df[(traj_df['frame'] >= lower_bound) & (traj_df['frame'] < upper_bound)]
+                    #print(chunk)
+                    R = np.mean(chunk[NativeBy].values)
+                    #print(f'R: {R}')
+                    fractTraj_folded_df[label] += [R]
+
+        fractTraj_folded_df = pd.DataFrame(fractTraj_folded_df)           
+        logging.info(f'FracTraj{NativeBy}_df:\n{fractTraj_folded_df}')
+        outfile = os.path.join(self.data_path, f'FracTraj{NativeBy}_Scope-{scope}.csv')
+        fractTraj_folded_df.to_csv(outfile, index=False)
+        logging.info(f'SAVED: {outfile}')
+        return fractTraj_folded_df
+    ########################################################################################
+
+    #######################################################################################
+    def CalcFractMisfolded(self, NativeBy='Ref', scope='full'):
         """
         Calculate the ratio of misfolded and native frames in each trajectory 
         Do it for the full trajectory and every 10% percentile buckets
@@ -241,7 +318,7 @@ class Analysis:
             df_stats[f'pvalue'] += [p_value]
 
         df_stats = pd.DataFrame(df_stats)
-        print(f'{label} df_stats:\n{df_stats}')
+        logging.info(f'{label} df_stats:\n{df_stats}')
         outfile = os.path.join(self.data_path, f'{label}_setID{setID}_OneSampleStats_{scope}_NativeBy{NativeBy}.csv')
         df_stats.to_csv(outfile, index=False)
         logging.info(f'SAVED: {outfile}')  
@@ -285,9 +362,11 @@ class Analysis:
 
             data1 = df[df['setID'] == setIDs[0]][key].values
             data2 = df[df['setID'] == setIDs[1]][key].values
+            #print(key, f'\n{data1} {np.mean(data1)}', f'\n{data2} {np.mean(data2)}')
+            #quit()
             
             if test == 'permutation':
-                res = permutation_test((data1, data2), statistic, vectorized=True, alternative='greater')
+                res = permutation_test((data1, data2), statistic, vectorized=True, alternative='less')
             elif test == 'ttest':
                 res = ttest_ind(data1, data2, alternative='greater', equal_var=False)
             statistic_val = res.statistic
@@ -301,7 +380,7 @@ class Analysis:
             df_stats['pvalue'] += [pvalue]
 
         df_stats = pd.DataFrame(df_stats)
-        print(df_stats)
+        logging.info(f'{label} df_stats:\n{df_stats}')
         outfile = os.path.join(self.data_path, f'{label}_{test}_TwoSampleStats_Scope-{scope}_NativeBy{NativeBy}.csv')
         df_stats.to_csv(outfile, index=False)
         logging.info(f'SAVED: {outfile}')  
@@ -515,20 +594,36 @@ def main():
     anal = Analysis(args)
     anal.load_OP()
     
+
+    ###############################################################################
+    # calculate the fraction of trajectories folded
+    for NativeBy in ['NativeFolded']:
+        FractTraj_Folded_df = anal.FracTrajFolded(NativeBy=NativeBy)
+        print(f'FractTraj_{NativeBy}_df:\n{FractTraj_Folded_df.to_string()}')
+
+        Fract_misfolded_set1_stats = anal.OneSampleStats(FractTraj_Folded_df, setID=1, NativeBy=NativeBy, test_mean=None, label=f'FractTraj_{NativeBy}', scope='last10')
+        Fract_misfolded_set2_stats = anal.OneSampleStats(FractTraj_Folded_df, setID=2, NativeBy=NativeBy, test_mean=None, label=f'FractTraj_{NativeBy}', scope='last10')
+        anal.Plot_OneSampleStats(Fract_misfolded_set1_stats, outfiletag=f'FractTraj_{NativeBy}_set1', scope='last10')
+        anal.Plot_OneSampleStats(Fract_misfolded_set2_stats, outfiletag=f'FractTraj_{NativeBy}_set2', scope='last10')
+
+        perm_df = anal.TwoSampleStats(FractTraj_Folded_df, setIDs=(1,2), NativeBy=NativeBy, test='permutation', label=f'FractTraj_{NativeBy}', scope='last10')
+        anal.Plot_TwoSampleStats(Fract_misfolded_set1_stats, Fract_misfolded_set2_stats, perm_df, outfiletag=f'FractTraj_{NativeBy}_set1V2_NativeBy{NativeBy}', scope='last10')
+  
+
     # Step 4: Calculate metrics, get stats, and plot
     for NativeBy in ['Ref', 'MSS']:
 
         ###############################################################################
         # Fraction of misfolded frames and compare the distributions from set 1 and 2
         Fract_misfolded_df = anal.CalcFractMisfolded(NativeBy=NativeBy, scope='full') 
-        print(f'Fract_misfolded_df:\n{Fract_misfolded_df}')
+        print(f'Fract_misfolded_df:\n{Fract_misfolded_df.to_string()}')
         Fract_misfolded_set1_stats = anal.OneSampleStats(Fract_misfolded_df, setID=1, NativeBy=NativeBy, test_mean=None, label='Fract_misfolded', scope='full')
         Fract_misfolded_set2_stats = anal.OneSampleStats(Fract_misfolded_df, setID=2, NativeBy=NativeBy, test_mean=None, label='Fract_misfolded', scope='full')
         anal.Plot_OneSampleStats(Fract_misfolded_set1_stats, outfiletag=f'Fract_misfolded_set1_NativeBy{NativeBy}', scope='full')
         anal.Plot_OneSampleStats(Fract_misfolded_set2_stats, outfiletag=f'Fract_misfolded_set2_NativeBy{NativeBy}', scope='full')
 
         perm_df = anal.TwoSampleStats(Fract_misfolded_df, setIDs=(1,2), NativeBy=NativeBy, test='permutation', label='Fract_misfolded', scope='full')
-        ttest_df = anal.TwoSampleStats(Fract_misfolded_df, setIDs=(1,2), NativeBy=NativeBy, test='ttest', label='Fract_misfolded', scope='full')
+        #ttest_df = anal.TwoSampleStats(Fract_misfolded_df, setIDs=(1,2), NativeBy=NativeBy, test='ttest', label='Fract_misfolded', scope='full')
         anal.Plot_TwoSampleStats(Fract_misfolded_set1_stats, Fract_misfolded_set2_stats, perm_df, outfiletag=f'Fract_misfolded_set1V2_NativeBy{NativeBy}', scope='full')
         ###############################################################################
 

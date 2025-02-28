@@ -261,9 +261,10 @@ class Analysis:
             if len(frame_df) != 0:
 
                 frame_df = self.agg_method(frame_df, ref_df)
-                #print(frame_df.to_string())
+                print(frame_df.to_string())
 
-                frame_N = len(frame_df)
+                frame_N = len(frame_df) # get the new number of native contacts with changes after phantom removal
+                
                 clustered_dfs += [frame_df]
 
             newG = frame_N/ref_N

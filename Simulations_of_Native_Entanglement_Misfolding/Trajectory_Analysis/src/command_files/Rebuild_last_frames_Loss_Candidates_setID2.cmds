@@ -1,0 +1,7 @@
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A790_4CRZ_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A790_t27_f-2515_Q0.927.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A790_4CRZ_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A790_t9_f-314_Q0.942.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A790_4CRZ_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A790_t29_f-575_Q0.956.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A790_4CRZ_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A790_t38_f-794_Q0.922.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A6I0_1KDO_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A6I0_t46_f-1356_Q0.941.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A790_4CRZ_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A790_t4_f-2003_Q0.927.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A790_4CRZ_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A790_t26_f-1963_Q0.937.pdb -p 1

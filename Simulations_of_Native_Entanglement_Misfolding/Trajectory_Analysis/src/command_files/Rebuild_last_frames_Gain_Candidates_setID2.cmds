@@ -1,0 +1,5 @@
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A7J3_6XZ7_H_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A7J3_t20_f-2107_Q0.982.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P65556_2FKB_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P65556_t11_f-2232_Q0.938.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P0A790_4CRZ_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P0A790_t28_f-1543_Q0.922.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P65556_2FKB_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P65556_t1_f-2212_Q0.919.pdb -p 1
+python src/data/backmap.py --aa_pdb ../Rebuild_AllAtom_structures/data/post_rebuilt/P65556_2FKB_A_rebuilt.pdb --cg_pdb ./highQ_Misfoled_Candidates/P65556_t30_f-96_Q0.929.pdb -p 1

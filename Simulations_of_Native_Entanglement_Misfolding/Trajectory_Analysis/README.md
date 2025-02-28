@@ -90,7 +90,7 @@ options:
 #### Output files  
 1. The .Q file contains the fraction of native contacts time series.  
 2. The .G file contains the fraction of native contacts with a change in entanglement time series.  
-3. the .EntInfo file cotnains the change in entanglement information for the time series.    
+3. the .EntInfo file cotnains the change in entanglement information for the time series. *(NOTE: in this file i and j and the crossings are indexed from 0 not 1)*
 
 
 ## Clustering of change on entanglement in CG trajectories 
@@ -320,29 +320,6 @@ options:
 #### Output files  
 The one and two sample statistics are generated in the DATA/ directory of the outpath. And plots are made in the Plots/ directory of the outpath. 
 
-## Calculate the probability of a given unique change in entanglement having overlap with another
-### Basic theory
-For each trajectory and each frame the fraction of unique changes that have overlap with a change of a different nature (i.e. loss overlap with gain) is calculated. The the statistics of the overall distribution of fractions is calculated. We also calcualte the marginal probabilities as well given we only consider loss or gains of entanglement. 
-
-### Usage of [CompareMisfoldingChangeOverlap.py](src/data/CompareMisfoldingChangeOverlap.py)
-
-```
-usage: CompareMisfoldingChangeOverlap.py [-h] --outpath OUTPATH --candidates CANDIDATES --CollectedOPpath COLLECTEDOPPATH --outname OUTNAME --setID SETID
-
-Process user specified arguments
-
-options:
-  -h, --help            show this help message and exit
-  --outpath OUTPATH     Path to output directory
-  --candidates CANDIDATES
-                        A file containing two columns. The candidate tag and the groupID
-  --CollectedOPpath COLLECTEDOPPATH
-                        path to the CollectAndProcessesOP DATA/ folder
-  --outname OUTNAME     base name for output files
-  --setID SETID         setID to analyze (2 or 3)
-```
-#### Output files  
-The one and two sample statistics are generated in the DATA/ directory of the outpath. And plots are made in the Plots/ directory of the outpath. 
 
 #### References
 <a id="1">[1]</a>: Kwiecińska, J. I., & Cieplak, M. (2005). Chirality and protein folding. Journal of Physics: Condensed Matter, 17(18), S1565. https://doi.org/10.1088/0953-8984/17/18/013

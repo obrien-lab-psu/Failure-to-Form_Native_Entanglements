@@ -1,11 +1,14 @@
 import pandas as pd
 import glob
-from scipy.stats import bootstrap, permutation_test
+from scipy.stats import permutation_test, mode
 import numpy as np
 import time
 import argparse
 import sys, os, logging
 from multiprocessing import Pool, cpu_count
+import matplotlib.pyplot as plt
+from scipy.ndimage import label
+from types import SimpleNamespace
 
 class Analysis:
     """
@@ -71,387 +74,447 @@ class Analysis:
         2. Load the collected GQK dataframe
         3. 
         """
+        logging.info('Load data')
 
         ###############################################################################################
-        ## Load the collected GQ data
-        #set2_OPfile: ../../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Simulations_of_Native_Entanglement_Misfolding/Trajectory_Analysis/CollectAndProcessOP/setID2/DATA/Quench_Collected_GQK.csv
-        GQdata_f = os.path.join(self.CollectedOPpath, f'setID3/DATA/Quench_Collected_GQK.csv')
-        print(GQdata_f)
-        GQdata = pd.read_csv(GQdata_f)
-        GQdata = GQdata[GQdata['gene'].isin(self.candidates['gene'])]
-        GQdata = GQdata[GQdata['Mirror'] == False]
-        print(GQdata)
-        print(GQdata['gene'].value_counts())
-        ###############################################################################################
+        ## Load the Quench Trajectory stats
+        set3_files = glob.glob(os.path.join(self.CollectedOPpath, f'setID3/DATA/*_Quench_Collected_Traj_GQK_STATS.csv'))
+        #print(f'set3_files: {set3_files}')
+        self.Traj_GQK_STATS = []
+        for f in set3_files:
+            df = pd.read_csv(f)
+            self.Traj_GQK_STATS += [df]
+        self.Traj_GQK_STATS = pd.concat(self.Traj_GQK_STATS)
+        self.Traj_GQK_STATS = self.Traj_GQK_STATS[self.Traj_GQK_STATS['NativeFolded'] == False]
+        print(f'Traj_GQK_STATS:\n{self.Traj_GQK_STATS}')
 
-
-        ###############################################################################################
-        ## Get the thresholding metrics for later 
-        self.threshold_metrics = {'gene':[], 'traj':[], '<Q>':[], 'MisfoldingProp':[], 'num_frames':[], 'num_misfolded_frames':[]}
-        for gene, gene_df in GQdata.groupby('gene'):
-            for traj, traj_df in gene_df.groupby('traj'):
-                #print(traj_df)
-                avgQ = np.mean(traj_df['Q'].values)
-                MisfoldingProp = 1 - np.mean(traj_df['NativeByRef'].values)
-                print(f'{gene} {traj} <Q> = {avgQ} and MisfoldingProp = {MisfoldingProp}')
-                self.threshold_metrics['gene'] += [gene]
-                self.threshold_metrics['traj'] += [traj]
-                self.threshold_metrics['<Q>'] += [avgQ]
-                self.threshold_metrics['MisfoldingProp'] += [MisfoldingProp]
-                self.threshold_metrics['num_frames'] += [len(traj_df)]
-                self.threshold_metrics['num_misfolded_frames'] += [np.sum(~traj_df['NativeByRef'])]
-
-        threshold_metrics_outfile = os.path.join(self.data_path, f'Combined_and_Processed_threshold_metrics_setID{self.setID}.csv')
-        self.threshold_metrics = pd.DataFrame(self.threshold_metrics)
-        self.threshold_metrics = self.threshold_metrics.sort_values(by=['MisfoldingProp'])
-        print(self.threshold_metrics.to_string())
-        self.threshold_metrics.to_csv(threshold_metrics_outfile, index=False)
-        print(f'SAVED: {threshold_metrics_outfile}')               
+        traj_stats_outfile = os.path.join(self.data_path, f'Combined_Quench_Collected_Traj_GQK_STATS.csv')
+        self.Traj_GQK_STATS.to_csv(traj_stats_outfile, index=False)
+        print(f'SAVED: {traj_stats_outfile}')
         ###############################################################################################
 
         ###############################################################################################
-        ### Get the combine EntInfo file
-        ## only get those frames that are from non Mirror traj and considered misfolded by Ref
-        combined_EntInfo_f = os.path.join(self.CollectedOPpath, f'setID3/DATA/Collected_EntInfo.csv')
-        print(combined_EntInfo_f)
-        self.combined_EntInfo = pd.read_csv(combined_EntInfo_f, low_memory=False)
-        print(self.combined_EntInfo)
-        new_dfs = []
-        for gene, gene_df in GQdata.groupby('gene'):
-            for traj, traj_df in gene_df.groupby('traj'):
-                #print(traj_df)
-                misfolded_frames = GQdata[(GQdata['NativeByRef'] == False)]['frame'].values
-                #print(f'misfolded_frames: {misfolded_frames} {misfolded_frames.shape}')
+        ## Load the Quench Trajectory Lifetime info and get only the misfolded traj
+        set3_files = glob.glob(os.path.join(self.CollectedOPpath, f'setID3/DATA/*_ChangeType_Lifetimes_summary_setID3.csv'))
+        #print(f'set3_files: {set3_files}')
+        self.ChangeType_Lifetimes = []
+        for f in set3_files:
+            df = pd.read_csv(f)
+            self.ChangeType_Lifetimes += [df]
+        self.ChangeType_Lifetimes = pd.concat(self.ChangeType_Lifetimes)
+        print(f'ChangeType_Lifetimes:\n{self.ChangeType_Lifetimes}')
 
-                EntInfo_df = self.combined_EntInfo[(self.combined_EntInfo['gene'] == gene) & (self.combined_EntInfo['traj'] == traj)]
-                #EntInfo_df = EntInfo_df[EntInfo_df['Frame'].isin(misfolded_frames)]
-                #print(EntInfo_df)
-                new_dfs += [EntInfo_df]
+        misfolded_dfs = []
+        for gene, traj in self.Traj_GQK_STATS[['gene', 'traj']].values:
+            tmp = self.ChangeType_Lifetimes[(self.ChangeType_Lifetimes['gene'] == gene) & (self.ChangeType_Lifetimes['traj'] == traj)]
+            if len(tmp) == 0:
+                raise ValueError('empty lifetime traj but GQK stats say it is misfolded!')
+            
+            misfolded_dfs += [tmp]
+        self.ChangeType_Lifetimes = pd.concat(misfolded_dfs)
+        print(f'ChangeType_Lifetimes:\n{self.ChangeType_Lifetimes}')
 
-        self.combined_EntInfo = pd.concat(new_dfs, ignore_index=True)
-        print(f'combined_EntInfo:\n{self.combined_EntInfo}')
+        ChangeType_Lifetimes_summary_outfile = os.path.join(self.data_path, f'Combined_ChangeType_Lifetimes_summary_setID3.csv')
+        self.ChangeType_Lifetimes.to_csv(ChangeType_Lifetimes_summary_outfile, index=False)
+        print(f'SAVED: {ChangeType_Lifetimes_summary_outfile}') 
         ###############################################################################################
 
-        self.combined_EntInfo['crossingsN'] = self.combined_EntInfo['crossingsN'].astype(str)
-        self.combined_EntInfo['crossingsC'] = self.combined_EntInfo['crossingsC'].astype(str)
-    #######################################################################################  
+        ###############################################################################################
+        ## Load the structure summary for onlyLoss, onlyGain, and BothLoss,Gain info
+        set3_files = glob.glob(os.path.join(self.CollectedOPpath, f'setID3/DATA/*_StructureCategory_summary_setID3.csv'))
+        #print(f'set3_files: {set3_files}')
+        self.StructureCategory = []
+        for f in set3_files:
+            df = pd.read_csv(f)
+            self.StructureCategory += [df]
+        self.StructureCategory = pd.concat(self.StructureCategory)
+        print(f'StructureCategory:\n{self.StructureCategory}')
+
+        misfolded_dfs = []
+        for gene, traj in self.Traj_GQK_STATS[['gene', 'traj']].values:
+            tmp = self.StructureCategory[(self.StructureCategory['gene'] == gene) & (self.StructureCategory['traj'] == traj)]
+            if len(tmp) == 0:
+                print(gene, traj)
+                continue
+            
+            misfolded_dfs += [tmp]
+        self.StructureCategory = pd.concat(misfolded_dfs)
+        print(f'StructureCategory:\n{self.StructureCategory}')   
+
+        StructureCategory_summary_outfile = os.path.join(self.data_path, f'Combined_StructureCategory_summary_setID3.csv')
+        self.StructureCategory.to_csv(StructureCategory_summary_outfile, index=False)
+        print(f'SAVED: {StructureCategory_summary_outfile}') 
+        quit()
+        ###############################################################################################
 
     #######################################################################################
-    def Mechanism_stats(self,):
 
-        PerTraj_Mechanism_summary_outfile = os.path.join(self.data_path, f'PerTraj_Mechanism_summary_setID{self.setID}.csv')
-        if not os.path.exists(PerTraj_Mechanism_summary_outfile):
-            # quick and dirty counts and stats for Loss and Gain fractions
-            Loss_dist = []
-            Gain_dist = []
-            summary_df = {'gene':[], 'traj':[], 'num_frames':[], 'Loss':[], 'Gain':[], 'Total':[], 'LossOverlap':[], 'GainOverlap':[], 'Total_Overlap':[]}
+    #######################################################################################  
+    def plot_lifetimes_cdf(self,):
+        """
+        Plot the CDF for the change in entanglement life times
+        """
+        Lifetimes = self.ChangeType_Lifetimes[self.ChangeType_Lifetimes['ChangeType'] == 'TotalChanges']
+        print(Lifetimes)
 
-            #for gene, gene_df in self.combined_EntInfo.groupby('gene'):
-            #    for traj, traj_df in gene_df.groupby('traj'):
-            #        for frame, frame_df in traj_df.groupby('Frame'):
-            #            print(frame_df)
-            #            Loss, Gain, LossOverlap, GainOverlap = find_overlap(frame_df)
-            #            print(f'{gene} {traj} {frame} || Loss: {Loss} | Gain: {Gain} | LossOverlap: {LossOverlap} | GainOverlap: {GainOverlap}')
-            #        quit()
+        output_file_png = os.path.join(self.plot_path, f'TotalChanges_Lifetimes_CDF.png')
+        output_file_svg = os.path.join(self.plot_path, f'TotalChanges_Lifetimes_CDF.svg')
+        output_file_csv = os.path.join(self.plot_path, f'TotalChanges_Lifetimes_CDF.csv')
 
-            results = parallel_process_genes(self.combined_EntInfo, self.toplevel)
-            for gene, traj, num_frames, traj_Loss, traj_Gain, Total, traj_LossOverlap, traj_GainOverlap, Total_Overlap in results:
+        sorted_data = np.sort(Lifetimes['meanLifetime'].values)
+        # Calculate the CDF values
+        cdf_y = np.arange(1, len(sorted_data) + 1) / len(sorted_data)
+        cdf_x = sorted_data
+        
+        # Plot the CDF
+        plt.figure(figsize=(8, 6))
+        plt.plot(cdf_x, cdf_y, marker='.', linestyle='none', label='CDF')
+        plt.xlabel('Lifetime, (ns)')
+        plt.ylabel('Cumulative Probability (CDF)')
+        #plt.title('Cumulative Distribution Function (CDF)')
+        plt.grid(True)
+        #plt.legend()
+        
+        # Save the plot
+        plt.savefig(output_file_png)
+        plt.savefig(output_file_svg)
+        plt.close()  # Close the figure to free memory
+        print(f'SAVED: {output_file_png}')
 
-                print(f'Gene: {gene} | Traj: {traj} | num_frames: {num_frames} | traj_Loss: {traj_Loss} | traj_Gain: {traj_Gain} | Total: {Total} | traj_LossOverlap: {traj_LossOverlap} | traj_GainOverlap: {traj_GainOverlap} | Total_Overlap: {Total_Overlap}')
+        df = pd.DataFrame({'x':cdf_x, 'y':cdf_y})
+        self.lifetimes_cdf = df
+        df.to_csv(output_file_csv, index=False)
+        print(f'SAVED: {output_file_csv}')
+    ##########################################################################################
 
-                summary_df['gene'] += [gene]
-                summary_df['traj'] += [traj]
-                summary_df['num_frames'] += [num_frames]
-                summary_df['Loss'] += [traj_Loss]
-                summary_df['Gain'] += [traj_Gain]
-                summary_df['Total'] += [Total]
-                summary_df['LossOverlap'] += [traj_LossOverlap]
-                summary_df['GainOverlap'] += [traj_GainOverlap]
-                summary_df['Total_Overlap'] += [Total_Overlap]
+    #######################################################################################
+    def calc_thresholding_metrics(self,):
+        """
+        get the percentiles of the lifetimes and scan 
+        for each percentile calculate the following
+        <Qmode>
+        <Zeta>
+        <FractionTotalLoss>
+        <FractionTotalGain>
+        and all its components
+        """
+        change_keys = ['TotalChanges', 'TotalLoss', 'TotalGain', 'TrueLoss', 'PartialLoss', 'TrueGain', 'PartialGain', 'TrueLossOverlap', 'PartialLossOverlap', 'TrueGainOverlap', 'PartialGainOverlap']
+        overlap_keys = ['TotalChanges', 'TotalLoss', 'TotalGain', 'TrueLoss', 'PartialLoss', 'TrueGain', 'PartialGain', 'TrueLossOverlap', 'PartialLossOverlap', 'TrueGainOverlap', 'PartialGainOverlap']
 
-            for k,v in summary_df.items():
-                print(k, len(v))
-            summary_df = pd.DataFrame(summary_df)
-            print(summary_df.to_string())
-            summary_df.to_csv(PerTraj_Mechanism_summary_outfile)
-            print(f'SAVED: {PerTraj_Mechanism_summary_outfile}')
-        else:
-            summary_df = pd.read_csv(PerTraj_Mechanism_summary_outfile)
-            print(f'LOADED: {PerTraj_Mechanism_summary_outfile}')
-            print(summary_df.to_string())
-        ##########################################################################################
- 
-
-        ##########################################################################################
-        ## filter for those that meet the threshold for sturcutre content and misfolding propensity
-        print(f'Filter for <Q> >= 0.6 and MisfoldingProp > 0.8')
-        newdf = []
-        for rowi, row in self.threshold_metrics.iterrows():
-            gene, traj, avgQ, MisfoldingProp = row['gene'], row['traj'], row['<Q>'], row['MisfoldingProp']
-            if avgQ >= 0.6:
-                #if MisfoldingProp >= 0.8:
-                if MisfoldingProp >= 0.8:
-                    newdf += [summary_df[(summary_df['gene'] == gene) & (summary_df['traj'].astype(str) == str(traj))]]
-        summary_df = pd.concat(newdf)
-        print(summary_df.to_string())
-        ##########################################################################################
-
-
-        ##########################################################################################
-        stats_df = {'type':[], 'mean':[], 'lb':[], 'ub':[], 'perm_stat':[], 'pvalue':[]}
-        ## make the fraction of Loss and Gain columns
-        summary_df['FracLoss'] = summary_df['Loss']/summary_df['Total']
-        summary_df['FracGain'] = summary_df['Gain']/summary_df['Total']
-
-        ## get the statistics for the Loss and Gain
-        median, mean, std, lb, ub = get_stats(summary_df['FracLoss'].values)
-        print(f'FracLoss stats: {mean} ({lb}, {ub})')
-        stats_df['type'] += ['FracLoss']
-        stats_df['mean'] += [mean]
-        stats_df['lb'] += [lb]
-        stats_df['ub'] += [ub]
-
-        median, mean, std, lb, ub = get_stats(summary_df['FracGain'].values)
-        print(f'FracGain stats: {mean} ({lb}, {ub})')
-        stats_df['type'] += ['FracGain']
-        stats_df['mean'] += [mean]
-        stats_df['lb'] += [lb]
-        stats_df['ub'] += [ub]
-
-        perm_res = permutation_test((summary_df['FracLoss'].values, summary_df['FracGain'].values), statistic)
-        pvalue = perm_res.pvalue
-        perm_stat = perm_res.statistic
-        print(f'Permutation test: stat = {perm_stat} with p-value {pvalue}')
-        stats_df['perm_stat'] += [perm_stat, perm_stat]
-        stats_df['pvalue'] += [pvalue, pvalue]
-
-
-        ## Get the stats for the probaility of overlap and the conditional probability of overlap
-        summary_df['FracOverlap'] = summary_df['Total_Overlap']/summary_df['Total']
-        median, mean, std, lb, ub = get_stats(summary_df['FracOverlap'].values)
-        print(f'FracOverlap stats: {mean} ({lb}, {ub})')
-        stats_df['type'] += ['FracOverlap']
-        stats_df['mean'] += [mean]
-        stats_df['lb'] += [lb]
-        stats_df['ub'] += [ub]
-        stats_df['perm_stat'] += [np.nan]
-        stats_df['pvalue'] += [np.nan]
-
-        summary_df['CondLossOverlap'] = summary_df['LossOverlap']/summary_df['Loss']
-        CondLossOverlap = summary_df['CondLossOverlap'].values
-        median, mean, std, lb, ub = get_stats(CondLossOverlap[~np.isnan(CondLossOverlap)])
-        print(f'CondLossOverlap stats: {mean} ({lb}, {ub})')
-        stats_df['type'] += ['CondLossOverlap']
-        stats_df['mean'] += [mean]
-        stats_df['lb'] += [lb]
-        stats_df['ub'] += [ub]
-        stats_df['perm_stat'] += [np.nan]
-        stats_df['pvalue'] += [np.nan]
-
-        summary_df['CondGainOverlap'] = summary_df['GainOverlap']/summary_df['Gain']
-        median, mean, std, lb, ub = get_stats(summary_df['CondGainOverlap'].values)
-        print(f'CondGainOverlap stats: {mean} ({lb}, {ub})')
-        stats_df['type'] += ['CondGainOverlap']
-        stats_df['mean'] += [mean]
-        stats_df['lb'] += [lb]
-        stats_df['ub'] += [ub]
-        stats_df['perm_stat'] += [np.nan]
-        stats_df['pvalue'] += [np.nan]
-
-        print(summary_df.to_string())
-
-        stats_df = pd.DataFrame(stats_df)
-        print(f'stats_df:\n{stats_df}')
-
+        #print(f'Calculating thresholds and metrics df:\n{self.ChangeType_Lifetimes}')
         Mechanism_stats_summary_outfile = os.path.join(self.data_path, f'Mechanism_stats_summary_setID{self.setID}.csv')
-        stats_df.to_csv(Mechanism_stats_summary_outfile)
-        print(f'SAVED: {Mechanism_stats_summary_outfile}')
+        print(f'Mechanism_stats_summary_outfile: {Mechanism_stats_summary_outfile}')
+        if not os.path.exists(Mechanism_stats_summary_outfile):
+            column = 'meanLifetime'
+            stats_df = {'lower_bound':[], 'upper_bound':[], 'type':[], 'mean':[], 'lb':[], 'ub':[], 'n':[]}
+            Lifetimes = self.ChangeType_Lifetimes[self.ChangeType_Lifetimes['ChangeType'] == 'TotalChanges']
+            Lifetimes[column] = Lifetimes[column].fillna(0.0)
+            Lifetimes = Lifetimes[column].values
+
+            bounds = [(0,100), (100, 200.025)]
+            print(f'bounds: {bounds}')
+            logging.info(f'bounds: {bounds}')
+
+            n_resamples = 10000
+
+            # Loop through each 10th percentile
+            pvalues = []
+            for i, (lower_bound, upper_bound) in enumerate(bounds):
+
+                ################################################################################
+                # Filter rows within this percentile range
+                Mech_chunk = []
+                QZ_chunk = []
+                Struct_chunk = []
+                n = 0
+                for rowi, row in self.ChangeType_Lifetimes.iterrows():
+                    if row['ChangeType'] == 'TotalChanges':
+                        if row['meanLifetime'] > lower_bound and row['meanLifetime'] <= upper_bound:
+                            gene = row['gene']
+                            traj = row['traj']
+                            n += 1
+
+                            tmp = self.ChangeType_Lifetimes[(self.ChangeType_Lifetimes['gene'] == gene) & (self.ChangeType_Lifetimes['traj'] == traj)]
+                            Mech_chunk += [tmp]
+
+                            tmp = self.Traj_GQK_STATS[(self.Traj_GQK_STATS['gene'] == gene) & (self.Traj_GQK_STATS['traj'] == traj)]
+                            QZ_chunk += [tmp]
+
+                            tmp = self.StructureCategory[(self.StructureCategory['gene'] == gene) & (self.StructureCategory['traj'] == traj)]
+                            Struct_chunk += [tmp]                            
+             
+                Mech_chunk = pd.concat(Mech_chunk)
+                QZ_chunk = pd.concat(QZ_chunk)
+                Struct_chunk = pd.concat(Struct_chunk)
+
+                # Process the chunk (e.g., print or perform operations)
+                print(f"\nChunk {i + 1}: {lower_bound:.6f} to {upper_bound:.6f}")
+                logging.info(f"\nChunk {i + 1}: {lower_bound:.6f} to {upper_bound:.6f}")
+                print(Mech_chunk)
+                print(QZ_chunk)
+                print(Struct_chunk)
+
+                ################################################################################
+                ## get stats for each change type fraction
+                change_keys = ['TotalChanges', 'TotalLoss', 'TotalGain', 'TrueLoss', 'PartialLoss', 'TrueGain', 'PartialGain']
+                for key in change_keys:
+                    key_chunk = Mech_chunk[Mech_chunk['ChangeType'] == key]
+                    key_chunk.loc[:, 'meanFract'] = key_chunk['meanFract'].fillna(0.0)
+                    #print(key_chunk)
+                    key_chunk_vals = key_chunk['meanFract'].values
+                    median, mean, std, lb, ub = get_stats(key_chunk_vals, n_resamples=n_resamples)
+                    logging.info(f'Fraction {key} stats: {mean} ({lb}, {ub})')
+                    print(f'Fraction {key} stats: {mean} ({lb}, {ub})')
+                    #stats_df = {'lower_bound':[], 'upper_bound':[], 'type':[], 'mean':[], 'lb':[], 'ub':[]}
+                    stats_df['lower_bound'] += [lower_bound]
+                    stats_df['upper_bound'] += [upper_bound]
+                    stats_df['type'] += [key]
+                    stats_df['mean'] += [mean]
+                    stats_df['lb'] += [lb]
+                    stats_df['ub'] += [ub]
+                    stats_df['n'] += [n] 
+
+                ## get stats for Loss overlap fraction and 1 minus that
+                overlap_keys = ['TrueLossOverlap']
+                for key in overlap_keys:
+                    key_chunk = Mech_chunk[Mech_chunk['ChangeType'] == key]
+                    key_chunk.loc[:, 'meanFract'] = key_chunk['meanFract'].fillna(0.0)
+                    #print(key_chunk)
+                    key_chunk_vals = key_chunk['meanFract'].values
+                    median, mean, std, lb, ub = get_stats(key_chunk_vals, n_resamples=n_resamples)
+                    logging.info(f'Fraction {key} stats: {mean} ({lb}, {ub})')
+                    print(f'Fraction {key} stats: {mean} ({lb}, {ub})')
+                    #stats_df = {'lower_bound':[], 'upper_bound':[], 'type':[], 'mean':[], 'lb':[], 'ub':[]}
+                    stats_df['lower_bound'] += [lower_bound]
+                    stats_df['upper_bound'] += [upper_bound]
+                    stats_df['type'] += [key]
+                    stats_df['mean'] += [mean]
+                    stats_df['lb'] += [lb]
+                    stats_df['ub'] += [ub]
+                    stats_df['n'] += [n] 
+
+                    key_chunk_vals_minus = 1 - key_chunk_vals
+                    median, mean, std, lb, ub = get_stats(key_chunk_vals_minus, n_resamples=n_resamples)
+                    logging.info(f'Fraction 1 - {key} stats: {mean} ({lb}, {ub})')
+                    print(f'Fraction 1 - {key} stats: {mean} ({lb}, {ub})')
+                    #stats_df = {'lower_bound':[], 'upper_bound':[], 'type':[], 'mean':[], 'lb':[], 'ub':[]}
+                    stats_df['lower_bound'] += [lower_bound]
+                    stats_df['upper_bound'] += [upper_bound]
+                    stats_df['type'] += [f'{key}_minusOne']
+                    stats_df['mean'] += [mean]
+                    stats_df['lb'] += [lb]
+                    stats_df['ub'] += [ub]
+                    stats_df['n'] += [n]                 
+
+                for key in ['meanQmode', 'meanZmode']:
+                    key_chunk_vals = QZ_chunk[key].values
+                    median, mean, std, lb, ub = get_stats(key_chunk_vals, n_resamples=n_resamples)
+                    logging.info(f'Fraction {key} stats: {mean} ({lb}, {ub})')
+                    print(f'Fraction {key} stats: {mean} ({lb}, {ub})')
+                    stats_df['lower_bound'] += [lower_bound]
+                    stats_df['upper_bound'] += [upper_bound]
+                    stats_df['type'] += [key]
+                    stats_df['mean'] += [mean]
+                    stats_df['lb'] += [lb]
+                    stats_df['ub'] += [ub]   
+                    stats_df['n'] += [n]     
+
+                for key in ['LossOnly', 'GainOnly', 'BothLossGain']:
+                    key_chunk = Struct_chunk[Struct_chunk['ChangeType'] == key]
+                    #key_chunk.loc[:, 'mean'] = key_chunk['mean'].fillna(0.0)
+                    #print(key_chunk)
+                    key_chunk_vals = key_chunk['mean'].values
+                    median, mean, std, lb, ub = get_stats(key_chunk_vals, n_resamples=n_resamples)
+                    logging.info(f'Fraction {key} stats: {mean} ({lb}, {ub})')
+                    print(f'Fraction {key} stats: {mean} ({lb}, {ub})')
+                    #stats_df = {'lower_bound':[], 'upper_bound':[], 'type':[], 'mean':[], 'lb':[], 'ub':[]}
+                    stats_df['lower_bound'] += [lower_bound]
+                    stats_df['upper_bound'] += [upper_bound]
+                    stats_df['type'] += [key]
+                    stats_df['mean'] += [mean]
+                    stats_df['lb'] += [lb]
+                    stats_df['ub'] += [ub]
+                    stats_df['n'] += [n] 
+        
+                ## Permutations
+                pvalues += [np.nan]*14
+                for (x, y) in [('LossOnly', 'GainOnly')]:
+                    x_vals = Struct_chunk[Struct_chunk['ChangeType'] == x]['mean'].values
+                    y_vals = Struct_chunk[Struct_chunk['ChangeType'] == y]['mean'].values
+                    res = permutation_testing((x_vals,y_vals))
+                    print(res)
+                    pvalues[-3] = res.pvalue
+                    pvalues[-2] = res.pvalue
+
+            stats_df['pvalue'] = pvalues
+            stats_df = pd.DataFrame(stats_df)
+            logging.info(f'stats_df:\n{stats_df.to_string()}')
+            print(f'stats_df:\n{stats_df.to_string()}')
+            ## save the Mechanism stats summary file
+            Mechanism_stats_summary_outfile = os.path.join(self.data_path, f'Mechanism_stats_summary_setID{self.setID}.csv')
+            stats_df.to_csv(Mechanism_stats_summary_outfile, index=False)
+            logging.info(f'SAVED: {Mechanism_stats_summary_outfile}')
+            print(f'SAVED: {Mechanism_stats_summary_outfile}')
+
+        else:
+            Mechanism_stats_summary_outfile = os.path.join(self.data_path, f'Mechanism_stats_summary_setID{self.setID}.csv')
+            stats_df = pd.read_csv(Mechanism_stats_summary_outfile)
+            logging.info(f'LOADED: {Mechanism_stats_summary_outfile}')
+            print(f'LOADED: {Mechanism_stats_summary_outfile}')
+        return stats_df
         #######################################################################################
+    #######################################################################################
+
+    #######################################################################################
+    def plot_thresholding_metrics(self, df):
+        """
+        Create a two-row plot of 'mean' vs. 'type' with error bars using [lb, ub].
+        The first row uses rows where lower_bound == 0, and the second where lower_bound == 100.
+
+        Parameters:
+            df (pd.DataFrame): The input DataFrame.
+        
+        Plot 1 row by 
+        """
+        # Filter rows based on lower_boun
+        # Setup the figure and axes
+        print(df)
+        mapper = {0:'Short', 100:'Long'}
+        df['xlables'] = [mapper[i] for i in df['lower_bound'].values]
+        print(df)
+        plt.rcParams.update({'font.size': 7})
+        fig, axes = plt.subplots(1, 3, figsize=(7, 3))
+
+        # Plot the CDF
+        axes[0].plot(self.lifetimes_cdf['x'], self.lifetimes_cdf['y'], marker='.', linestyle='none', label='CDF')
+        axes[0].set_xlabel('Lifetime, (ns)')
+        axes[0].set_ylabel('Cumulative Probability (CDF)')
+        axes[0].tick_params(axis='y', labelsize=6)
+        axes[0].tick_params(axis='x', labelsize=6)
+        axes[0].spines['right'].set_visible(False)
+        axes[0].spines['top'].set_visible(False)
+        axs_position = axes[0].get_position()
+        bbox_in_fig_coords = axes[0].get_tightbbox(fig.canvas.get_renderer()).transformed(fig.transFigure.inverted())
+        fig.text(bbox_in_fig_coords.x0, 1, 'a', fontsize=8, fontweight='bold', va='top', ha='left')
+
+
+        meanQmode = df[df['type'].isin(['meanQmode'])]
+        meanQmode_yerr=[meanQmode['mean'] - meanQmode['lb'], meanQmode['ub'] - meanQmode['mean']]
+        axes[1].errorbar(x=meanQmode['xlables'], y=meanQmode['mean'], yerr=meanQmode_yerr,fmt='o', capsize=5)
+        axes[1].set_ylabel(r"$\langle Q_{\mathrm{mode}} \rangle$")
+        axes[1].set_xlim(-0.5, 1.5)
+        axes[1].tick_params(axis='y', labelsize=6)
+        axes[1].tick_params(axis='x', labelsize=6)
+        axes[1].spines['right'].set_visible(False)
+        axes[1].spines['top'].set_visible(False)
+        axs_position = axes[1].get_position()
+        bbox_in_fig_coords = axes[1].get_tightbbox(fig.canvas.get_renderer()).transformed(fig.transFigure.inverted())
+        fig.text(bbox_in_fig_coords.x0, 1, 'b', fontsize=8, fontweight='bold', va='top', ha='left')
+
+        meanZmode = df[df['type'].isin(['meanZmode'])]
+        meanZmode_yerr=[meanZmode['mean'] - meanZmode['lb'], meanZmode['ub'] - meanZmode['mean']]
+        axes[2].errorbar(x=meanZmode['xlables'], y=meanZmode['mean'], yerr=meanZmode_yerr,fmt='o', capsize=5)
+        axes[2].set_ylabel(r"$\langle \zeta_{\mathrm{mode}} \rangle$")
+        axes[2].set_xlim(-0.5, 1.5)
+        axes[2].tick_params(axis='y', labelsize=6)
+        axes[2].tick_params(axis='x', labelsize=6)
+        axes[2].spines['right'].set_visible(False)
+        axes[2].spines['top'].set_visible(False)
+        axs_position = axes[2].get_position()
+        bbox_in_fig_coords = axes[2].get_tightbbox(fig.canvas.get_renderer()).transformed(fig.transFigure.inverted())
+        fig.text(bbox_in_fig_coords.x0, 1, 'c', fontsize=8, fontweight='bold', va='top', ha='left')
+
+        plt.tight_layout()
+        Mechanism_stats_summary_outfile_png = os.path.join(self.data_path, f'Mechanism_stats_summary_setID{self.setID}.svg')
+        plt.savefig(Mechanism_stats_summary_outfile_png)
+        print(f'SAVED: {Mechanism_stats_summary_outfile_png}')
+
+        Mechanism_stats_summary_outfile_png = os.path.join(self.data_path, f'Mechanism_stats_summary_setID{self.setID}.png')
+        plt.savefig(Mechanism_stats_summary_outfile_png)
+        print(f'SAVED: {Mechanism_stats_summary_outfile_png}')
+        quit()
+    #######################################################################################
 
 #######################################################################################
-def find_overlap(df):
-    #print(df)
-    #df['crossingsN'] = df['crossingsN'].astype(str)
-    #df['crossingsC'] = df['crossingsC'].astype(str)
-
-    ## if there is only a single unique ent then determine if its a loss or gain and return
-    Loss = 0
-    Gain = 0
-    LossOverlap = 0
-    GainOverlap = 0
-    if len(df['cID'].unique()) == 1:
-
-        if df['NchangeType'].str.contains('Loss').any():
-            Loss += 1
-        if df['CchangeType'].str.contains('Loss').any():
-            Loss += 1
-            
-        if df['NchangeType'].str.contains('Gain').any():
-            Gain += 1
-        if df['CchangeType'].str.contains('Gain').any():
-            Gain += 1
-            
-
-    else:
-        ## else find overlaps
-        cID_res = {}
-        for cID, cID_df in df.groupby('cID'):
-            #print(cID_df)
-            ijres = []
-            Nres = []
-            Cres = []
-            for rowi, row in cID_df.iterrows():
-                i, j = row['i'], row['j']
-                ijres += [np.arange(i - 3, i + 4)]
-                ijres += [np.arange(j - 3, j + 4)]
-
-                NchangeType, CchangeType = row['NchangeType'], row['CchangeType']
-
-                if NchangeType != 'NoChange':
-                    Nres += [np.arange(abs(float(c)) - 3, abs(float(c)) + 4) for c in row['crossingsN'].split(',')]
-
-                if CchangeType != 'NoChange':
-                    Cres += [np.arange(abs(float(c)) - 3, abs(float(c)) + 4) for c in row['crossingsC'].split(',')]    
-
-            ijres = np.hstack(ijres)
-            ijres = set([int(r) for r in ijres if r > 0])
-            
-            if len(Nres) != 0:
-                Nres = np.hstack(Nres)
-                Nres = set([int(r) for r in Nres if r > 0])
-                Nres = Nres.union(ijres)
-            else:
-                Nres = set()
-
-            if len(Cres) != 0:
-                Cres = np.hstack(Cres)
-                Cres = set([int(r) for r in Cres if r > 0])
-                Cres = Cres.union(ijres)
-            else:
-                Cres = set()
-            
-            cID_res[cID] = {'ijres':ijres, 'Nres':Nres, 'Ntype':NchangeType, 'Cres':Cres, 'Ctype':CchangeType}
-
-        ################################
-        # determine if there is overlap
-        for cID, cID_info in cID_res.items():
-            #print('\n', cID, cID_info)
-
-            # count if the change is a loss or a gain
-            if 'Loss' in cID_info['Ntype']:
-                Loss += 1
-            if 'Loss' in cID_info['Ctype']:
-                Loss += 1
-                
-            if 'Gain' in cID_info['Ntype']:
-                Gain += 1
-            if 'Gain' in cID_info['Ctype']:
-                Gain += 1
-
-            ### Check if the N term has overlap with anything 
-            if cID_info['Ntype'] != 'NoChange':
-
-                for Comp_cID, Comp_cID_info in cID_res.items():
-
-                    if Comp_cID == cID:
-                        continue
-
-                    # is there overlap
-                    if cID_info[f'Nres'].intersection(Comp_cID_info[f'Nres']):
-                        if ('Loss' in cID_info[f'Ntype'] and 'Gain' in Comp_cID_info[f'Ntype']):
-                            LossOverlap += 1
-                            break
-                        
-                        if ('Gain' in cID_info[f'Ntype'] and 'Loss' in Comp_cID_info[f'Ntype']):
-                            GainOverlap += 1   
-                            break
-
-
-            if cID_info['Ctype'] != 'NoChange':
-
-                for Comp_cID, Comp_cID_info in cID_res.items():
-
-                    if Comp_cID == cID:
-                        continue
-
-                    # is there overlap
-                    if cID_info[f'Cres'].intersection(Comp_cID_info[f'Cres']):
-                        if ('Loss' in cID_info[f'Ctype'] and 'Gain' in Comp_cID_info[f'Ctype']):
-                            LossOverlap += 1
-                            break
-                        
-                        if ('Gain' in cID_info[f'Ctype'] and 'Loss' in Comp_cID_info[f'Ctype']):
-                            GainOverlap += 1   
-                            break
-
-    return  Loss, Gain, LossOverlap, GainOverlap
-#######################################################################################
-
-#######################################################################################
-def process_gene(args):
-    gene, gene_df, toplevel = args
-    results = []
-
-    for traj, traj_df in gene_df.groupby('traj'):
-        traj_Loss = 0
-        traj_Gain = 0
-        traj_LossOverlap = 0
-        traj_GainOverlap = 0
-        num_frames = 0
-
-        for frame, frame_df in traj_df.groupby('Frame'):
-            num_frames += 1
-
-            ## determine the overlap stats for the frame
-            Loss, Gain, LossOverlap, GainOverlap = find_overlap(frame_df)
-
-            traj_Loss += Loss
-            traj_Gain += Gain
-            traj_LossOverlap += LossOverlap
-            traj_GainOverlap += GainOverlap
-
-        Total = traj_Loss + traj_Gain
-        Total_Overlap = traj_LossOverlap + traj_GainOverlap
-        if Total > 0:
-            results.append((gene, traj, num_frames, traj_Loss, traj_Gain, Total, traj_LossOverlap, traj_GainOverlap, Total_Overlap))
-
-    return results
-
-    
-####################################################
-def parallel_process_genes(combined_EntInfo, toplevel):
-    # Prepare arguments for parallel processing
-    args = [(gene, gene_df, toplevel) for gene, gene_df in combined_EntInfo.groupby('gene')]
-
-    # Use multiprocessing to parallelize the processing
-    num_cpu = cpu_count()
-    #num_cpu = 1
-    print(f'cpu_count: {num_cpu}')
-    with Pool(num_cpu) as pool:
-        results = pool.map(process_gene, args)
-
-    # Flatten the list of results
-    flattened_results = [item for sublist in results for item in sublist]
-    return flattened_results
-#######################################################################################
-
-#######################################################################################
-def get_stats(arr):
+def get_stats(arr, n_resamples=100, metric='mean'):
     """
     Get the <> and 95% ci for a stats array
     """
-    mean = np.mean(arr)
-    std = np.std(arr)
-    res = bootstrap((arr,), np.mean)
-    lb = res.confidence_interval.low
-    ub = res.confidence_interval.high
-    median = np.median(arr)
-    return (median, mean, std, lb, ub)
+    if metric == 'mean':
+        mean = np.mean(arr)
+        std = np.std(arr)
+        (lb, ub) = bootstrap(arr, n_resamples=100)
+        median = np.median(arr)
+        return (median, mean, std, lb, ub)
+    
+    elif metric == 'sum':
+        sum = np.sum(arr)
+        std = np.std(arr)
+        (lb, ub) = bootstrap(arr, n_resamples=100, metric='sum')
+        median = np.median(arr)
+        return (median, sum, std, lb, ub)       
+#######################################################################################
+
+#######################################################################################
+def bootstrap(data, n_resamples=10000, metric='mean'):
+    boot_vals = []
+    for b in range(n_resamples):
+        boot_samp = np.random.choice(data, size=len(data))
+
+        if metric == 'mean':
+            boot_metric = np.mean(boot_samp)
+        elif metric == 'sum':
+            boot_metric = np.sum(boot_samp)
+
+        #print(b, boot_metric)
+        boot_vals += [boot_metric]
+
+    lb = np.percentile(boot_vals, 2.5)
+    ub = np.percentile(boot_vals, 97.5)
+    return (lb, ub)
+#######################################################################################
+
+#######################################################################################
+def permutation_testing(data, n_resamples=10000):
+    perm_vals = []
+    combined = np.hstack(data)
+    d1N = len(data[0])
+    d2N = len(data[1])
+    GT = statistic(data[0], data[1], 0)
+    #print(f'd1 shape: {d1N} | d2 shape: {d2N} | GT: {GT} | combdined: {combined.shape}')
+    rng = np.random.default_rng()
+    pvalue = 1
+    for p in range(n_resamples):
+        permute_samp = rng.permutation(combined)
+        p1 = permute_samp[:d1N]
+        p2 = permute_samp[d1N:]
+
+        perm_val = statistic(p1, p2, 0)
+
+        if GT > 0:
+            if perm_val >= GT:
+                pvalue += 1
+        
+        if GT < 0:
+            if perm_val <= GT:
+                pvalue += 1 
+
+    pvalue /= n_resamples 
+    
+    # Create a namespace object
+    results = SimpleNamespace(pvalue=pvalue, statistic=GT)
+    
+    return results
 #######################################################################################
 
 #######################################################################################
 def statistic(x, y, axis):
     return np.mean(x, axis=axis) - np.mean(y, axis=axis)
+#######################################################################################
+
+#######################################################################################
+def statistic_sum(x, y, axis):
+    return np.sum(x, axis=axis) - np.sum(y, axis=axis)
 #######################################################################################
 
 ############## MAIN #################
@@ -487,8 +550,9 @@ def main():
 
     anal = Analysis(args)
     anal.load_OP()
-    anal.Mechanism_stats()
-
+    anal.plot_lifetimes_cdf()
+    stats_df = anal.calc_thresholding_metrics()
+    anal.plot_thresholding_metrics(stats_df)
 
 if __name__ == "__main__":
     start_time = time.time()
