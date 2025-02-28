@@ -1,0 +1,2 @@
+chain|ijr|gn|gc|num_contacts|contacts|CCBond
+Chain K|(11, 63, '-84')|0.00000|-0.60890|2|11-63;11-64|False

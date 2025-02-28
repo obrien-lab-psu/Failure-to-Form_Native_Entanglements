@@ -1,0 +1,2 @@
+chain|ijr|gn|gc|num_contacts|contacts|CCBond
+Chain S|(9, 80, '-101')|0.00000|-0.60061|1|9-80|False
