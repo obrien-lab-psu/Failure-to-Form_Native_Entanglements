@@ -2,7 +2,7 @@
 
 The repository contains all code necessary to reproduce the results in [PAPER PLACEHOLDER].   
 As many of the source data files are very large this repo only contains the code and knowledge to run the analysis.  
-To recreate the data from the paper please download the tar-ball located here [TARBALL PLACEHOLDER] and place it in a directory that will be sourced by each script.  
+To recreate the data from the paper please email ims86@psu.edu to obtain the raw data tar-ball and place it in a directory that will be sourced by each script.  
 
 ## Environment setup
 Please install a new Miniconda environment using the provided [environment.yml](environment.yml) file.

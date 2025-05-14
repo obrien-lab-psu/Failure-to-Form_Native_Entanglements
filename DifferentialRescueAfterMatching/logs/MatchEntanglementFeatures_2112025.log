@@ -1,0 +1,240 @@
+Made output directories MatchEntanglementFeatures/
+Number of gene_lists: 6
+Number of uentFeat feature files: 1294
+
+Number of genes in gene_list: data/NonMatched/EXP_0.6g_CD_Rall_spa50_LiPMScov50_essential_ent_genes.txt 44
+buffer: CD essential: essential
+Number of genes in self.gene_list_uentFeat: 44
+
+Number of genes in gene_list: data/NonMatched/EXP_0.6g_CD_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 97
+buffer: CD essential: nonessential
+Number of genes in self.gene_list_uentFeat: 97
+
+Number of genes in gene_list: data/NonMatched/EXP_0.6g_CG_Rall_spa50_LiPMScov50_essential_ent_genes.txt 55
+buffer: CG essential: essential
+Number of genes in self.gene_list_uentFeat: 55
+
+Number of genes in gene_list: data/NonMatched/EXP_0.6g_CG_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 137
+buffer: CG essential: nonessential
+Number of genes in self.gene_list_uentFeat: 137
+
+Number of genes in gene_list: data/NonMatched/EXP_0.6g_C_Rall_spa50_LiPMScov50_essential_ent_genes.txt 81
+buffer: C essential: essential
+Number of genes in self.gene_list_uentFeat: 81
+
+Number of genes in gene_list: data/NonMatched/EXP_0.6g_C_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 183
+buffer: C essential: nonessential
+Number of genes in self.gene_list_uentFeat: 183
+
+Matching essential to nonessential for buffer C
+Quality check for pre-matching: Gc 0.3373777595628415 0.2938996296296297
+Quality check for pre-matching: ent_coverage 0.25850850519099344 0.25132149167333234
+Quality check for pre-matching: min_N_prot_depth_left 0.42062985112585005 0.31207068391743475
+Quality check for pre-matching: min_C_prot_depth_right 0.3080444246733072 0.360591962602024
+Quality check for pre-matching: min_C_thread_slippage_right 129.89617486338798 168.62962962962962
+Quality check for pre-matching: RCO 0.45735530814372977 0.4313818370429365
+matched_df:
+          Gc  ent_coverage  ...  category  propensity_score
+0    0.02617      0.147436  ...         1          0.740693
+1    0.74084      0.196868  ...         1          0.700428
+2    0.00000      0.334951  ...         1          0.815959
+3    0.30963      0.227273  ...         1          0.716570
+4    0.10330      0.101220  ...         1          0.526880
+..       ...           ...  ...       ...               ...
+178 -0.73112      0.352273  ...         0          0.568660
+179  0.49050      0.221675  ...         0          0.836267
+180  0.83897      0.334545  ...         0          0.671034
+181  0.12464      0.225694  ...         0          0.794716
+182  0.68739      0.457895  ...         0          0.726030
+
+[366 rows x 10 columns]
+Quality check for matching: category
+1    183
+0    183
+Name: count, dtype: int64
+Quality check for matching: Gc 0.3373777595628415 0.37885163934426225
+Quality check for matching: ent_coverage 0.25850850519099344 0.25169356857835495
+Quality check for matching: min_N_prot_depth_left 0.42062985112585005 0.4086580833770151
+Quality check for matching: min_C_prot_depth_right 0.3080444246733072 0.2816117420802319
+Quality check for matching: min_C_thread_slippage_right 129.89617486338798 121.5464480874317
+Quality check for matching: RCO 0.45735530814372977 0.4589763857076596
+Made output directories MatchEntanglementFeatures/essential_matched2_nonessential
+SAVED: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_C_Rall_spa50_LiPMScov50_essential_ent_genes.txt
+SAVED: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_C_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt
+
+Matching essential to nonessential for buffer CD
+Quality check for pre-matching: Gc 0.3690255670103093 0.23145749999999995
+Quality check for pre-matching: ent_coverage 0.2734569559969871 0.2800803770453422
+Quality check for pre-matching: min_N_prot_depth_left 0.3986821656639173 0.2751785121442383
+Quality check for pre-matching: min_C_prot_depth_right 0.3011245550996268 0.3342499128422717
+Quality check for pre-matching: min_C_thread_slippage_right 128.2164948453608 146.27272727272728
+Quality check for pre-matching: RCO 0.4463238587374556 0.44648030244450027
+matched_df:
+         Gc  ent_coverage  ...  category  propensity_score
+0   0.02617      0.147436  ...         1          0.743003
+1   0.00000      0.334951  ...         1          0.771708
+2   0.30963      0.227273  ...         1          0.674212
+3  -0.03910      0.124429  ...         1          0.383662
+4   0.22266      0.216216  ...         1          0.786132
+..      ...           ...  ...       ...               ...
+92  0.68739      0.457895  ...         0          0.734501
+93 -0.60890      0.552846  ...         0          0.513402
+94 -0.00857      0.330097  ...         0          0.695074
+95  0.14760      0.182628  ...         0          0.648924
+96  0.07211      0.206687  ...         0          0.613152
+
+[194 rows x 10 columns]
+Quality check for matching: category
+1    97
+0    97
+Name: count, dtype: int64
+Quality check for matching: Gc 0.3690255670103093 0.27405329896907216
+Quality check for matching: ent_coverage 0.2734569559969871 0.2888647929067806
+Quality check for matching: min_N_prot_depth_left 0.3986821656639173 0.3766768455162508
+Quality check for matching: min_C_prot_depth_right 0.3011245550996268 0.24833926731459255
+Quality check for matching: min_C_thread_slippage_right 128.2164948453608 79.77319587628865
+Quality check for matching: RCO 0.4463238587374556 0.47597708957579615
+SAVED: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_CD_Rall_spa50_LiPMScov50_essential_ent_genes.txt
+SAVED: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_CD_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt
+
+Matching essential to nonessential for buffer CG
+Quality check for pre-matching: Gc 0.3351434306569343 0.27597563636363637
+Quality check for pre-matching: ent_coverage 0.27414291485335684 0.2691602583056313
+Quality check for pre-matching: min_N_prot_depth_left 0.3720660676208766 0.32575365181901395
+Quality check for pre-matching: min_C_prot_depth_right 0.28535318224819084 0.32069759230327116
+Quality check for pre-matching: min_C_thread_slippage_right 117.8905109489051 160.01818181818183
+Quality check for pre-matching: RCO 0.46340440407696887 0.4348105476355533
+matched_df:
+          Gc  ent_coverage  ...  category  propensity_score
+0    0.02617      0.147436  ...         1          0.740350
+1    0.00000      0.334951  ...         1          0.786737
+2    0.30963      0.227273  ...         1          0.746470
+3   -0.03910      0.124429  ...         1          0.369058
+4   -0.73415      0.327273  ...         1          0.563968
+..       ...           ...  ...       ...               ...
+132  0.04225      0.167797  ...         0          0.626668
+133  0.01591      0.152589  ...         0          0.727722
+134 -0.10780      0.471154  ...         0          0.693099
+135  0.88436      0.418519  ...         0          0.711861
+136  0.66331      0.191038  ...         0          0.672315
+
+[274 rows x 10 columns]
+Quality check for matching: category
+1    137
+0    137
+Name: count, dtype: int64
+Quality check for matching: Gc 0.3351434306569343 0.3088572262773723
+Quality check for matching: ent_coverage 0.27414291485335684 0.2907211256154262
+Quality check for matching: min_N_prot_depth_left 0.3720660676208766 0.36963446597039523
+Quality check for matching: min_C_prot_depth_right 0.28535318224819084 0.2395634593923156
+Quality check for matching: min_C_thread_slippage_right 117.8905109489051 97.96350364963503
+Quality check for matching: RCO 0.46340440407696887 0.4100373795640778
+SAVED: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_CG_Rall_spa50_LiPMScov50_essential_ent_genes.txt
+SAVED: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_CG_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt
+
+Matching nonessential to essential for buffer C
+Quality check for pre-matching: Gc 0.2938996296296297 0.3373777595628415
+Quality check for pre-matching: ent_coverage 0.25132149167333234 0.25850850519099344
+Quality check for pre-matching: min_N_prot_depth_left 0.31207068391743475 0.42062985112585005
+Quality check for pre-matching: min_C_prot_depth_right 0.360591962602024 0.3080444246733072
+Quality check for pre-matching: min_C_thread_slippage_right 168.62962962962962 129.89617486338798
+Quality check for pre-matching: RCO 0.4313818370429365 0.45735530814372977
+matched_df:
+         Gc  ent_coverage  ...  category  propensity_score
+0   0.64255      0.124077  ...         1          0.477876
+1   0.89267      0.138989  ...         1          0.231860
+2   0.74764      0.260073  ...         1          0.243834
+3   0.02689      0.270161  ...         1          0.233741
+4  -0.10654      0.069364  ...         1          0.337501
+..      ...           ...  ...       ...               ...
+76  0.92570      0.239437  ...         0          0.431225
+77  0.80274      0.198454  ...         0          0.441028
+78 -0.64179      0.265403  ...         0          0.418722
+79 -0.70836      0.452555  ...         0          0.404882
+80  0.04130      0.280156  ...         0          0.224877
+
+[162 rows x 10 columns]
+Quality check for matching: category
+1    81
+0    81
+Name: count, dtype: int64
+Quality check for matching: Gc 0.2938996296296297 0.31542320987654315
+Quality check for matching: ent_coverage 0.25132149167333234 0.2495658780964368
+Quality check for matching: min_N_prot_depth_left 0.31207068391743475 0.30434129214239053
+Quality check for matching: min_C_prot_depth_right 0.360591962602024 0.38415668950354886
+Quality check for matching: min_C_thread_slippage_right 168.62962962962962 163.88888888888889
+Quality check for matching: RCO 0.4313818370429365 0.41861691356559033
+Made output directories MatchEntanglementFeatures/nonessential_matched2_essential
+SAVED: MatchEntanglementFeatures/nonessential_matched2_essential/EXP_0.6g_C_Rall_spa50_LiPMScov50_essential_ent_genes.txt
+SAVED: MatchEntanglementFeatures/nonessential_matched2_essential/EXP_0.6g_C_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt
+
+Matching nonessential to essential for buffer CD
+Quality check for pre-matching: Gc 0.23145749999999995 0.3690255670103093
+Quality check for pre-matching: ent_coverage 0.2800803770453422 0.2734569559969871
+Quality check for pre-matching: min_N_prot_depth_left 0.2751785121442383 0.3986821656639173
+Quality check for pre-matching: min_C_prot_depth_right 0.3342499128422717 0.3011245550996268
+Quality check for pre-matching: min_C_thread_slippage_right 146.27272727272728 128.2164948453608
+Quality check for pre-matching: RCO 0.44648030244450027 0.4463238587374556
+matched_df:
+         Gc  ent_coverage  ...  category  propensity_score
+0   0.60333      0.349112  ...         1          0.372045
+1   0.08411      0.212329  ...         1          0.343658
+2   0.63887      0.183746  ...         1          0.379706
+3   1.11510      0.273148  ...         1          0.204324
+4   0.85782      0.246479  ...         1          0.323823
+..      ...           ...  ...       ...               ...
+39 -0.62982      0.418605  ...         0          0.478974
+40 -0.01334      0.293269  ...         0          0.337229
+41 -0.70836      0.452555  ...         0          0.484414
+42 -0.85851      0.504505  ...         0          0.500916
+43  0.15143      0.232044  ...         0          0.364551
+
+[88 rows x 10 columns]
+Quality check for matching: category
+1    44
+0    44
+Name: count, dtype: int64
+Quality check for matching: Gc 0.23145749999999995 0.21562409090909093
+Quality check for matching: ent_coverage 0.2800803770453422 0.3218003424569429
+Quality check for matching: min_N_prot_depth_left 0.2751785121442383 0.2777992750569484
+Quality check for matching: min_C_prot_depth_right 0.3342499128422717 0.3465164479856697
+Quality check for matching: min_C_thread_slippage_right 146.27272727272728 133.95454545454547
+Quality check for matching: RCO 0.44648030244450027 0.5321309545875218
+SAVED: MatchEntanglementFeatures/nonessential_matched2_essential/EXP_0.6g_CD_Rall_spa50_LiPMScov50_essential_ent_genes.txt
+SAVED: MatchEntanglementFeatures/nonessential_matched2_essential/EXP_0.6g_CD_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt
+
+Matching nonessential to essential for buffer CG
+Quality check for pre-matching: Gc 0.27597563636363637 0.3351434306569343
+Quality check for pre-matching: ent_coverage 0.2691602583056313 0.27414291485335684
+Quality check for pre-matching: min_N_prot_depth_left 0.32575365181901395 0.3720660676208766
+Quality check for pre-matching: min_C_prot_depth_right 0.32069759230327116 0.28535318224819084
+Quality check for pre-matching: min_C_thread_slippage_right 160.01818181818183 117.8905109489051
+Quality check for pre-matching: RCO 0.4348105476355533 0.46340440407696887
+matched_df:
+         Gc  ent_coverage  ...  category  propensity_score
+0   0.64255      0.124077  ...         1          0.420131
+1   0.89267      0.138989  ...         1          0.257369
+2  -0.77295      0.355263  ...         1          0.386417
+3   0.77559      0.152326  ...         1          0.512242
+4   0.08411      0.212329  ...         1          0.266344
+..      ...           ...  ...       ...               ...
+50  0.69364      0.208103  ...         0          0.276084
+51 -0.85851      0.504505  ...         0          0.390898
+52 -0.77312      0.300654  ...         0          0.389377
+53 -0.23476      0.338710  ...         0          0.290511
+54  0.01325      0.494737  ...         0          0.245545
+
+[110 rows x 10 columns]
+Quality check for matching: category
+1    55
+0    55
+Name: count, dtype: int64
+Quality check for matching: Gc 0.27597563636363637 0.255386
+Quality check for matching: ent_coverage 0.2691602583056313 0.29672686610424626
+Quality check for matching: min_N_prot_depth_left 0.32575365181901395 0.2853670778634385
+Quality check for matching: min_C_prot_depth_right 0.32069759230327116 0.3373918713335319
+Quality check for matching: min_C_thread_slippage_right 160.01818181818183 139.78181818181818
+Quality check for matching: RCO 0.4348105476355533 0.42587850515829173
+SAVED: MatchEntanglementFeatures/nonessential_matched2_essential/EXP_0.6g_CG_Rall_spa50_LiPMScov50_essential_ent_genes.txt
+SAVED: MatchEntanglementFeatures/nonessential_matched2_essential/EXP_0.6g_CG_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt
+NORMAL TERMINATION 1.8355371952056885 seconds

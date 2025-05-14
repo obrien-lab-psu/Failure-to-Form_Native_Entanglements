@@ -2,8 +2,8 @@
 #SBATCH -J 
 #SBATCH --partition=open
 #SBATCH -N 1
-#SBATCH -n 1
-#SBATCH -t 45:00:00
+#SBATCH -n 10
+#SBATCH -t 40:00:00
 #SBATCH --account=open
 #SBATCH --mem=10G
 

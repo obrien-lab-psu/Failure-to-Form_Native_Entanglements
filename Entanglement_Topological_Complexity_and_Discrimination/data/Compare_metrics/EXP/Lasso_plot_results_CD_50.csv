@@ -1,0 +1,14 @@
+C|<BA>|BA_lb|BA_ub|pvalue|num_nonzero|num_nonzero_and_robust|robust_features
+0.01|0.5|0.5|0.5|1.0|0|0|
+0.1|0.5|0.5|0.5|1.0|0|0|
+0.15|0.5|0.5|0.5|1.0|3|3|min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left
+0.2|0.5043478260869565|0.5009391304347826|0.5077565217391304|0.9902819052773753|2|2|min_N_prot_depth_left,min_N_thread_slippage_left
+0.25|0.5170289855072464|0.5136875291162614|0.5203704418982315|0.4118596649561834|3|3|min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left
+0.5|0.5410294852573714|0.5297642694515567|0.552294701063186|0.004473585158817167|6|6|Gc,Gn,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors
+1.0|0.5449689628869775|0.5335930442300499|0.556344881543905|0.03280469167473251|8|7|C_term_thread,Gc,ent_coverage,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors
+1.5|0.5413092795707409|0.5278921957834246|0.5547263633580573|0.07031849364223758|8|7|C_term_thread,Gc,ent_coverage,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors
+2.0|0.5510254741050528|0.5422229600104449|0.5598279881996606|0.027339665830847147|10|9|C_term_thread,Gc,N_term_thread,RCO,ent_coverage,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors
+2.5|0.558851495304979|0.5482738125578633|0.5694291780520947|0.022572745588171374|12|10|ACO,C_term_thread,Gc,N_term_thread,RCO,ent_coverage,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors
+5.0|0.5630786580394014|0.555593736101368|0.5705635799774348|0.014242689268099804|14|10|C_term_thread,Gc,Gn,N_term_thread,RCO,ent_coverage,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,perc_bb_loop
+7.5|0.5583895552223888|0.5478365153121548|0.5689425951326227|0.013435839259954563|18|14|ACO,C_term_thread,Gc,Gn,N_term_thread,RCO,ent_coverage,loopsize,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res,perc_bb_loop
+10.0|0.5704364922801757|0.5602335448936148|0.5806394396667366|0.0005479380282804639|18|13|ACO,C_term_thread,Gc,Gn,N_term_thread,RCO,ent_coverage,loopsize,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,perc_bb_loop

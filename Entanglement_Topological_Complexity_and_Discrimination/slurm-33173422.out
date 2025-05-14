@@ -1,0 +1,556 @@
+/storage/group/epo2/default/ims86/git_repos/Failure-to-Form_Native_Entanglements/Entanglement_Topological_Complexity_and_Discrimination/src/data/Compare_ent_complexity_metrics.py:584: DeprecationWarning: the `interpolation=` argument to percentile was renamed to `method=`, which has additional options.
+Users of the modes 'nearest', 'lower', 'higher', or 'midpoint' are encouraged to review the method they used. (Deprecated NumPy 1.22)
+  Ess_stats = Analyzer.DistStats(Ess_ent_data, Analyzer.keys, 'Ess', n_resamples=num_permute)
+/storage/group/epo2/default/ims86/git_repos/Failure-to-Form_Native_Entanglements/Entanglement_Topological_Complexity_and_Discrimination/src/data/Compare_ent_complexity_metrics.py:164: DeprecationWarning: the `interpolation=` argument to percentile was renamed to `method=`, which has additional options.
+Users of the modes 'nearest', 'lower', 'higher', or 'midpoint' are encouraged to review the method they used. (Deprecated NumPy 1.22)
+  median_ci = calculate_bootstrap_ci(col_data, 'median')
+/storage/group/epo2/default/ims86/git_repos/Failure-to-Form_Native_Entanglements/Entanglement_Topological_Complexity_and_Discrimination/src/data/Compare_ent_complexity_metrics.py:602: DeprecationWarning: the `interpolation=` argument to percentile was renamed to `method=`, which has additional options.
+Users of the modes 'nearest', 'lower', 'higher', or 'midpoint' are encouraged to review the method they used. (Deprecated NumPy 1.22)
+  NonEss_stats = Analyzer.DistStats(NonEss_ent_data, Analyzer.keys, 'NonEss', n_resamples=num_permute)
+/storage/group/epo2/default/ims86/git_repos/Failure-to-Form_Native_Entanglements/Entanglement_Topological_Complexity_and_Discrimination/src/data/Compare_ent_complexity_metrics.py:164: DeprecationWarning: the `interpolation=` argument to percentile was renamed to `method=`, which has additional options.
+Users of the modes 'nearest', 'lower', 'higher', or 'midpoint' are encouraged to review the method they used. (Deprecated NumPy 1.22)
+  median_ci = calculate_bootstrap_ci(col_data, 'median')
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+/storage/group/epo2/default/ims86/miniconda3/envs/FtoF/lib/python3.11/site-packages/scipy/stats/_stats_py.py:9690: RuntimeWarning: divide by zero encountered in log
+  statistic = -2 * np.sum(np.log(pvalues))
+Analyzer: <__main__.DataAnalysis object at 0x14835331d150>
+Ess_gene_mask: ['P00954' 'P00959' 'P00960' 'P00962' 'P02359' 'P04805' 'P06968' 'P07118'
+ 'P07395' 'P07813' 'P08312' 'P0A6L2' 'P0A6M8' 'P0A6P1' 'P0A6P9' 'P0A705'
+ 'P0A707' 'P0A715' 'P0A717' 'P0A799' 'P0A7A9' 'P0A7C2' 'P0A7E5' 'P0A7K6'
+ 'P0A7S3' 'P0A7V0' 'P0A7V3' 'P0A7W1' 'P0A7Z4' 'P0A8L1' 'P0A8M0' 'P0A8M3'
+ 'P0A8T7' 'P0A8V2' 'P0A953' 'P0A9A6' 'P0A9D8' 'P0A9Q9' 'P0A9R7' 'P0A9X4'
+ 'P0AA10' 'P0AAI9' 'P0AB71' 'P0ACB2' 'P0ACC3' 'P0ADY3' 'P0AE18' 'P0AEK2'
+ 'P0AEK4' 'P0AEZ3' 'P0AFF6' 'P0AFG0' 'P0AGJ9' 'P11875' 'P16659' 'P17169'
+ 'P18843' 'P21889' 'P23882' 'P24182' 'P45748' 'P60422' 'P60624' 'P60723'
+ 'P60906' 'P61316' 'P61517' 'P61714' 'P61949' 'P62399' 'P62617' 'P62620'
+ 'Q46893'] 73
+Ess_ent_data:          Gn  N_term_thread       Gc  ...       RCO    gene  Essential
+0   0.60765              1      NaN  ...  0.581961  P00954          1
+1       NaN              0  0.68398  ...  0.208583  P00954          1
+2   0.60255              3      NaN  ...  0.718563  P00954          1
+0   0.62888              1      NaN  ...  0.100443  P00959          1
+1       NaN              0  0.65328  ...  0.104013  P00959          1
+..      ...            ...      ...  ...       ...     ...        ...
+0       NaN              0  0.61994  ...  0.037736  P62617          1
+0       NaN              0  0.71482  ...  0.537634  P62620          1
+1   1.06891              1      NaN  ...  0.534156  P62620          1
+0   0.69675              1      NaN  ...  0.439700  Q46893          1
+1   0.65696              1      NaN  ...  0.190678  Q46893          1
+
+[254 rows x 20 columns]
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/Ess_uent_data_CG_50.csv
+df_copy:
+         Gn  N_term_thread  ...         ACO       RCO
+0   0.60765              1  ...  194.375000  0.581961
+1       NaN              0  ...   69.666667  0.208583
+2   0.60255              3  ...  240.000000  0.718563
+0   0.62888              1  ...   68.000000  0.100443
+1       NaN              0  ...   70.416667  0.104013
+..      ...            ...  ...         ...       ...
+0       NaN              0  ...    6.000000  0.037736
+0       NaN              0  ...  200.000000  0.537634
+1   1.06891              1  ...  198.705882  0.534156
+0   0.69675              1  ...  103.769231  0.439700
+1   0.65696              1  ...   45.000000  0.190678
+
+[254 rows x 18 columns]
+column: Gn
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_Gn_CG_50.png
+column: N_term_thread
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_N_term_thread_CG_50.png
+column: Gc
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_Gc_CG_50.png
+column: C_term_thread
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_C_term_thread_CG_50.png
+column: loopsize
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_loopsize_CG_50.png
+column: num_zipper_nc
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_num_zipper_nc_CG_50.png
+column: perc_bb_loop
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_perc_bb_loop_CG_50.png
+column: num_loop_contacting_res
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_num_loop_contacting_res_CG_50.png
+column: num_cross_nearest_neighbors
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_num_cross_nearest_neighbors_CG_50.png
+column: ent_coverage
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_ent_coverage_CG_50.png
+column: min_N_prot_depth_left
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_min_N_prot_depth_left_CG_50.png
+column: min_N_thread_depth_left
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_min_N_thread_depth_left_CG_50.png
+column: min_N_thread_slippage_left
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_min_N_thread_slippage_left_CG_50.png
+column: min_C_prot_depth_right
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_min_C_prot_depth_right_CG_50.png
+column: min_C_thread_depth_right
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_min_C_thread_depth_right_CG_50.png
+column: min_C_thread_slippage_right
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_min_C_thread_slippage_right_CG_50.png
+column: ACO
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_ACO_CG_50.png
+column: RCO
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/Ess_RCO_CG_50.png
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/Ess_stats_uent_data_CG_50.csv
+Ess_stats:
+                         metric        mean  ...  median_lb   median_ub
+0                            Gn    0.779080  ...   0.603150    1.100430
+1                 N_term_thread    1.192593  ...   1.000000    3.000000
+2                            Gc    0.830031  ...   0.608050    1.664450
+3                 C_term_thread    1.251852  ...   1.000000    3.000000
+4                      loopsize  112.688976  ...  14.000000  620.000000
+5                 num_zipper_nc   13.968504  ...   1.000000   53.000000
+6                  perc_bb_loop    0.212246  ...   0.016347    0.746269
+7       num_loop_contacting_res  167.070866  ...  42.000000  715.000000
+8   num_cross_nearest_neighbors   40.255906  ...  26.000000   78.000000
+9                  ent_coverage    0.161520  ...   0.042474    0.459677
+10        min_N_prot_depth_left    0.322206  ...   0.014679    0.867508
+11      min_N_thread_depth_left    0.720216  ...   0.136364    0.982955
+12   min_N_thread_slippage_left  216.570370  ...   8.000000  817.000000
+13       min_C_prot_depth_right    0.371797  ...   0.043210    0.861628
+14     min_C_thread_depth_right    0.789473  ...   0.237037    0.989781
+15  min_C_thread_slippage_right  241.637037  ...  14.000000  878.000000
+16                          ACO  132.042968  ...  21.333333  505.797753
+17                          RCO    0.261258  ...   0.022034    0.729452
+
+[18 rows x 7 columns]
+NonEss_gene_mask: ['P00350' 'P00448' 'P00509' 'P00579' 'P00946' 'P00956' 'P00957' 'P00961'
+ 'P00963' 'P02358' 'P02925' 'P04079' 'P04128' 'P04425' 'P04825' 'P05055'
+ 'P06715' 'P06959' 'P06999' 'P07012' 'P08200' 'P08839' 'P09030' 'P09373'
+ 'P09832' 'P0A6A3' 'P0A6B7' 'P0A6D7' 'P0A6F3' 'P0A6F5' 'P0A6H1' 'P0A6H5'
+ 'P0A6J5' 'P0A6J8' 'P0A6K6' 'P0A6L0' 'P0A6R0' 'P0A6T1' 'P0A6T9' 'P0A6U5'
+ 'P0A6W5' 'P0A6Y5' 'P0A6Y8' 'P0A6Z1' 'P0A6Z3' 'P0A746' 'P0A763' 'P0A786'
+ 'P0A790' 'P0A794' 'P0A796' 'P0A7A5' 'P0A7D4' 'P0A7F3' 'P0A7F6' 'P0A7G6'
+ 'P0A7I4' 'P0A7L0' 'P0A7N1' 'P0A7X6' 'P0A7Z0' 'P0A825' 'P0A836' 'P0A847'
+ 'P0A850' 'P0A855' 'P0A858' 'P0A862' 'P0A870' 'P0A8A2' 'P0A8A4' 'P0A8F0'
+ 'P0A8F4' 'P0A8G3' 'P0A8J4' 'P0A8N3' 'P0A8R0' 'P0A8W5' 'P0A910' 'P0A912'
+ 'P0A955' 'P0A959' 'P0A998' 'P0A9C5' 'P0A9K9' 'P0A9L3' 'P0A9L5' 'P0A9M2'
+ 'P0A9M5' 'P0A9M8' 'P0A9P0' 'P0A9P4' 'P0A9P6' 'P0A9R4' 'P0A9S3' 'P0A9V1'
+ 'P0A9W3' 'P0A9Z1' 'P0AA25' 'P0AA43' 'P0AAB6' 'P0AAC8' 'P0AAI5' 'P0AAT9'
+ 'P0AAX8' 'P0AB43' 'P0AB77' 'P0AB91' 'P0ABB0' 'P0ABB4' 'P0ABH7' 'P0ABK5'
+ 'P0ABP8' 'P0ABT2' 'P0ABU2' 'P0ABZ4' 'P0ABZ6' 'P0AC33' 'P0AC69' 'P0AC84'
+ 'P0ACA3' 'P0ACF8' 'P0ACG1' 'P0ACP1' 'P0ACY1' 'P0AD61' 'P0AD96' 'P0ADE8'
+ 'P0ADF6' 'P0ADG7' 'P0ADI7' 'P0ADV5' 'P0AE08' 'P0AE52' 'P0AEG4' 'P0AEI1'
+ 'P0AEM9' 'P0AEP3' 'P0AET8' 'P0AF12' 'P0AF24' 'P0AF93' 'P0AFC7' 'P0AFD1'
+ 'P0AFG6' 'P0AFG8' 'P0AFK9' 'P0AFL3' 'P0AFQ7' 'P0AFR4' 'P0AG30' 'P0AG82'
+ 'P0AGD3' 'P0AGE9' 'P0AGG4' 'P0AGK4' 'P0C8J8' 'P0CE48' 'P11458' 'P13035'
+ 'P16456' 'P21367' 'P23721' 'P23843' 'P23847' 'P23857' 'P23869' 'P25553'
+ 'P25745' 'P26602' 'P26616' 'P27302' 'P27306' 'P27829' 'P30859' 'P31057'
+ 'P31663' 'P31697' 'P31979' 'P33136' 'P33602' 'P35340' 'P36683' 'P36879'
+ 'P37051' 'P37095' 'P37689' 'P37744' 'P37759' 'P37902' 'P38489' 'P39172'
+ 'P39377' 'P45523' 'P45565' 'P45577' 'P45578' 'P45799' 'P60716' 'P61889'
+ 'P62707' 'P63020' 'P63224' 'P63284' 'P63386' 'P64483' 'P64554' 'P65556'
+ 'P67095' 'P67603' 'P67910' 'P69503' 'P69783' 'P76034' 'P76055' 'P76177'
+ 'P76344' 'P76373' 'P76472' 'P76536' 'P76569' 'P76658' 'P77395' 'P77580'
+ 'P77581' 'P77608' 'P77690'] 227
+NonEss_ent_data:          Gn  N_term_thread       Gc  ...       RCO    gene  Essential
+0   0.61188              1      NaN  ...  0.261930  P00350          0
+0   0.79174              1      NaN  ...  0.305825  P00448          0
+1       NaN              0  0.67709  ...  0.642575  P00448          0
+0       NaN              0  1.63614  ...  0.467312  P00509          0
+1   1.09551              1      NaN  ...  0.244242  P00509          0
+..      ...            ...      ...  ...       ...     ...        ...
+0       NaN              0  0.77271  ...  0.812987  P77690          0
+1       NaN              0  1.18904  ...  0.374545  P77690          0
+2   1.15014              1  0.90401  ...  0.444783  P77690          0
+3   0.81848              1  0.71993  ...  0.432468  P77690          0
+4   0.60768              1      NaN  ...  0.124675  P77690          0
+
+[713 rows x 20 columns]
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/NonEss_uent_data_CG_50.csv
+df_copy:
+         Gn  N_term_thread  ...         ACO       RCO
+0   0.61188              1  ...  122.583333  0.261930
+0   0.79174              1  ...   63.000000  0.305825
+1       NaN              0  ...  132.370370  0.642575
+0       NaN              0  ...  185.055556  0.467312
+1   1.09551              1  ...   96.720000  0.244242
+..      ...            ...  ...         ...       ...
+0       NaN              0  ...  313.000000  0.812987
+1       NaN              0  ...  144.200000  0.374545
+2   1.15014              1  ...  171.241379  0.444783
+3   0.81848              1  ...  166.500000  0.432468
+4   0.60768              1  ...   48.000000  0.124675
+
+[713 rows x 18 columns]
+column: Gn
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_Gn_CG_50.png
+column: N_term_thread
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_N_term_thread_CG_50.png
+column: Gc
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_Gc_CG_50.png
+column: C_term_thread
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_C_term_thread_CG_50.png
+column: loopsize
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_loopsize_CG_50.png
+column: num_zipper_nc
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_num_zipper_nc_CG_50.png
+column: perc_bb_loop
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_perc_bb_loop_CG_50.png
+column: num_loop_contacting_res
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_num_loop_contacting_res_CG_50.png
+column: num_cross_nearest_neighbors
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_num_cross_nearest_neighbors_CG_50.png
+column: ent_coverage
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_ent_coverage_CG_50.png
+column: min_N_prot_depth_left
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_min_N_prot_depth_left_CG_50.png
+column: min_N_thread_depth_left
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_min_N_thread_depth_left_CG_50.png
+column: min_N_thread_slippage_left
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_min_N_thread_slippage_left_CG_50.png
+column: min_C_prot_depth_right
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_min_C_prot_depth_right_CG_50.png
+column: min_C_thread_depth_right
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_min_C_thread_depth_right_CG_50.png
+column: min_C_thread_slippage_right
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_min_C_thread_slippage_right_CG_50.png
+column: ACO
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_ACO_CG_50.png
+column: RCO
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/DataAnalysisOutput/Dist_plots/NonEss_RCO_CG_50.png
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/NonEss_stats_uent_data_CG_50.csv
+NonEss_stats:
+                         metric        mean  ...  median_lb   median_ub
+0                            Gn    0.808842  ...   0.605310    1.286511
+1                 N_term_thread    1.225000  ...   1.000000    3.000000
+2                            Gc    0.842738  ...   0.612310    1.601190
+3                 C_term_thread    1.203647  ...   1.000000    3.000000
+4                      loopsize  104.869565  ...  17.000000  332.000000
+5                 num_zipper_nc   15.321178  ...   1.000000   73.000000
+6                  perc_bb_loop    0.267999  ...   0.039746    0.783784
+7       num_loop_contacting_res  165.862553  ...  51.000000  442.175000
+8   num_cross_nearest_neighbors   43.245442  ...  27.000000  105.000000
+9                  ent_coverage    0.208715  ...   0.072100    0.473684
+10        min_N_prot_depth_left    0.325467  ...   0.020000    0.786164
+11      min_N_thread_depth_left    0.716801  ...   0.079545    0.980456
+12   min_N_thread_slippage_left  144.936364  ...   8.000000  554.000000
+13       min_C_prot_depth_right    0.308617  ...   0.033755    0.748954
+14     min_C_thread_depth_right    0.714502  ...   0.120000    0.973373
+15  min_C_thread_slippage_right  140.379939  ...  10.000000  495.000000
+16                          ACO  127.404381  ...  26.000000  352.315789
+17                          RCO    0.327918  ...   0.052464    0.795964
+
+[18 rows x 7 columns]
+MWU_EssVNonEss_pvalues:
+[0.35136449667436603, 0.008569664095443179, 0.05296759370513755, 0.032331862898389886, 0.9936467062357467, 0.3243490966950222, 2.0781927732477336e-08, 0.9980812451179631, 0.011284670301910788, 7.553217265074258e-15, 0.29384671073154084, 0.2754638632742172, 0.039671131409481815, 0.016994181559798874, 0.0005642697781251865, 1.1595092332451721e-05, 0.9683120685871748, 5.6179136213046495e-08]
+Perm_EssVNonEss_pvalues:
+[0.131986801319868, 0.0395960403959604, 0.5937406259374063, 0.0527947205279472, 0.34796520347965204, 0.33056694330566944, 0.0005999400059994001, 0.8821117888211178, 0.028597140285971403, 0.00019998000199980003, 0.8887111288871112, 0.9047095290470953, 0.00019998000199980003, 0.007399260073992601, 0.0005999400059994001, 0.00019998000199980003, 0.5421457854214579, 0.00019998000199980003]
+merged_df:
+                         metric    Ess_mean  ...   MWU_pvalues  Perm_pvalues
+0                            Gn    0.779080  ...  3.513645e-01      0.131987
+1                 N_term_thread    1.192593  ...  8.569664e-03      0.039596
+2                            Gc    0.830031  ...  5.296759e-02      0.593741
+3                 C_term_thread    1.251852  ...  3.233186e-02      0.052795
+4                      loopsize  112.688976  ...  9.936467e-01      0.347965
+5                 num_zipper_nc   13.968504  ...  3.243491e-01      0.330567
+6                  perc_bb_loop    0.212246  ...  2.078193e-08      0.000600
+7       num_loop_contacting_res  167.070866  ...  9.980812e-01      0.882112
+8   num_cross_nearest_neighbors   40.255906  ...  1.128467e-02      0.028597
+9                  ent_coverage    0.161520  ...  7.553217e-15      0.000200
+10        min_N_prot_depth_left    0.322206  ...  2.938467e-01      0.888711
+11      min_N_thread_depth_left    0.720216  ...  2.754639e-01      0.904710
+12   min_N_thread_slippage_left  216.570370  ...  3.967113e-02      0.000200
+13       min_C_prot_depth_right    0.371797  ...  1.699418e-02      0.007399
+14     min_C_thread_depth_right    0.789473  ...  5.642698e-04      0.000600
+15  min_C_thread_slippage_right  241.637037  ...  1.159509e-05      0.000200
+16                          ACO  132.042968  ...  9.683121e-01      0.542146
+17                          RCO    0.261258  ...  5.617914e-08      0.000200
+
+[18 rows x 15 columns]
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/merged_stats_uent_data_CG_50.csv
+combined_df:
+         Gn  N_term_thread       Gc  ...       RCO    gene  Essential
+0   0.60765              1      NaN  ...  0.581961  P00954          1
+1       NaN              0  0.68398  ...  0.208583  P00954          1
+2   0.60255              3      NaN  ...  0.718563  P00954          1
+0   0.62888              1      NaN  ...  0.100443  P00959          1
+1       NaN              0  0.65328  ...  0.104013  P00959          1
+..      ...            ...      ...  ...       ...     ...        ...
+0       NaN              0  0.77271  ...  0.812987  P77690          0
+1       NaN              0  1.18904  ...  0.374545  P77690          0
+2   1.15014              1  0.90401  ...  0.444783  P77690          0
+3   0.81848              1  0.71993  ...  0.432468  P77690          0
+4   0.60768              1      NaN  ...  0.124675  P77690          0
+
+[967 rows x 20 columns]
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/combined_uent_data_CG_50.csv
+balanced_accuracy: 0.5 with pvalue 1.0
+balanced_accuracy: 0.5 with pvalue 1.0
+balanced_accuracy: 0.5 with pvalue 1.0
+balanced_accuracy: 0.5 with pvalue 1.0
+balanced_accuracy: 0.5 with pvalue 1.0
+pvalues: [1.0, 1.0, 1.0, 1.0, 1.0] -> Bonf. correction: [1. 1. 1. 1. 1.] with a combined value of 1.0
+non_zero_columns: []
+same_sign_columns: []
+common_robust_features: []
+balanced_accuracy: 0.5259152612093788 with pvalue 0.0074
+balanced_accuracy: 0.5098039215686274 with pvalue 0.0008
+balanced_accuracy: 0.532173432753383 with pvalue 0.0
+balanced_accuracy: 0.5490196078431373 with pvalue 0.0
+balanced_accuracy: 0.5265034965034965 with pvalue 0.0
+pvalues: [0.0074, 0.0008, 0.0, 0.0, 0.0] -> Bonf. correction: [0.01689667 0.00228333 0.         0.         0.        ] with a combined value of 0.0
+non_zero_columns: ['num_cross_nearest_neighbors' 'ent_coverage' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['num_cross_nearest_neighbors' 'ent_coverage' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['RCO' 'ent_coverage' 'min_C_thread_slippage_right'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'num_cross_nearest_neighbors']
+balanced_accuracy: 0.5455231043466338 with pvalue 0.0
+balanced_accuracy: 0.5784313725490196 with pvalue 0.0
+balanced_accuracy: 0.5811930405965203 with pvalue 0.0
+balanced_accuracy: 0.5615851974592654 with pvalue 0.0
+balanced_accuracy: 0.523006993006993 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['loopsize' 'num_cross_nearest_neighbors' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_prot_depth_right'
+ 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['loopsize' 'num_cross_nearest_neighbors' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_prot_depth_right'
+ 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['RCO' 'loopsize' 'min_C_prot_depth_right' 'min_C_thread_slippage_right'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'num_cross_nearest_neighbors']
+balanced_accuracy: 0.5483340189222542 with pvalue 0.0
+balanced_accuracy: 0.5357191827780063 with pvalue 0.0
+balanced_accuracy: 0.5349351008008838 with pvalue 0.0
+balanced_accuracy: 0.5749102457884563 with pvalue 0.0
+balanced_accuracy: 0.5965034965034965 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['loopsize' 'perc_bb_loop' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['loopsize' 'perc_bb_loop' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['RCO' 'loopsize' 'min_C_thread_slippage_right' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'num_cross_nearest_neighbors' 'perc_bb_loop']
+balanced_accuracy: 0.5686274509803921 with pvalue 0.0
+balanced_accuracy: 0.5413410119292472 with pvalue 0.0
+balanced_accuracy: 0.56006628003314 with pvalue 0.0
+balanced_accuracy: 0.5811930405965203 with pvalue 0.0
+balanced_accuracy: 0.5595104895104895 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['C_term_thread' 'loopsize' 'perc_bb_loop' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['C_term_thread' 'loopsize' 'perc_bb_loop' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['C_term_thread' 'RCO' 'loopsize' 'min_C_prot_depth_right'
+ 'min_C_thread_slippage_right' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'num_cross_nearest_neighbors' 'perc_bb_loop']
+balanced_accuracy: 0.5679418620595091 with pvalue 0.0
+balanced_accuracy: 0.593857123268888 with pvalue 0.0
+balanced_accuracy: 0.5678679922673295 with pvalue 0.0
+balanced_accuracy: 0.590237503452085 with pvalue 0.0
+balanced_accuracy: 0.593006993006993 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'perc_bb_loop'
+ 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_prot_depth_right'
+ 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'perc_bb_loop'
+ 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['C_term_thread' 'Gc' 'N_term_thread' 'RCO' 'loopsize'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'num_cross_nearest_neighbors' 'num_loop_contacting_res' 'perc_bb_loop']
+balanced_accuracy: 0.6071575483340189 with pvalue 0.0
+balanced_accuracy: 0.5574523515699986 with pvalue 0.0
+balanced_accuracy: 0.5909969621651477 with pvalue 0.0
+balanced_accuracy: 0.6286937310135321 with pvalue 0.0
+balanced_accuracy: 0.5795104895104896 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'perc_bb_loop'
+ 'num_loop_contacting_res' 'num_cross_nearest_neighbors' 'ent_coverage'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'perc_bb_loop'
+ 'num_loop_contacting_res' 'num_cross_nearest_neighbors' 'ent_coverage'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['C_term_thread' 'Gc' 'N_term_thread' 'RCO' 'ent_coverage' 'loopsize'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'num_cross_nearest_neighbors' 'num_loop_contacting_res' 'perc_bb_loop']
+balanced_accuracy: 0.5840532017002605 with pvalue 0.0
+balanced_accuracy: 0.593171534348005 with pvalue 0.0
+balanced_accuracy: 0.6364954432477217 with pvalue 0.0
+balanced_accuracy: 0.5804335818834576 with pvalue 0.0
+balanced_accuracy: 0.573006993006993 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'num_zipper_nc'
+ 'perc_bb_loop' 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'ent_coverage' 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'perc_bb_loop'
+ 'num_loop_contacting_res' 'num_cross_nearest_neighbors' 'ent_coverage'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['C_term_thread' 'Gc' 'N_term_thread' 'RCO' 'ent_coverage' 'loopsize'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'num_cross_nearest_neighbors' 'num_loop_contacting_res' 'perc_bb_loop']
+balanced_accuracy: 0.6008501302618949 with pvalue 0.0
+balanced_accuracy: 0.593857123268888 with pvalue 0.0
+balanced_accuracy: 0.5937586302126485 with pvalue 0.0
+balanced_accuracy: 0.6427782380557857 with pvalue 0.0
+balanced_accuracy: 0.5885314685314685 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'num_zipper_nc'
+ 'perc_bb_loop' 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_prot_depth_right'
+ 'min_C_thread_depth_right' 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'perc_bb_loop'
+ 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['C_term_thread' 'Gc' 'N_term_thread' 'RCO' 'loopsize'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'num_cross_nearest_neighbors' 'num_loop_contacting_res' 'perc_bb_loop']
+balanced_accuracy: 0.586178527354998 with pvalue 0.0
+balanced_accuracy: 0.6106540518305225 with pvalue 0.0
+balanced_accuracy: 0.6035625517812759 with pvalue 0.0
+balanced_accuracy: 0.6231703949185308 with pvalue 0.0
+balanced_accuracy: 0.6160139860139859 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'num_zipper_nc'
+ 'perc_bb_loop' 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_prot_depth_right'
+ 'min_C_thread_depth_right' 'min_C_thread_slippage_right' 'RCO']
+same_sign_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'perc_bb_loop'
+ 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_depth_right'
+ 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['C_term_thread' 'Gc' 'N_term_thread' 'RCO' 'loopsize'
+ 'min_C_prot_depth_right' 'min_C_thread_depth_right'
+ 'min_C_thread_slippage_right' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'num_cross_nearest_neighbors'
+ 'num_loop_contacting_res' 'perc_bb_loop']
+balanced_accuracy: 0.6358837241190183 with pvalue 0.0
+balanced_accuracy: 0.5994789524201289 with pvalue 0.0
+balanced_accuracy: 0.6035625517812759 with pvalue 0.0
+balanced_accuracy: 0.6126070146368406 with pvalue 0.0
+balanced_accuracy: 0.6165034965034966 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['Gn' 'N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'num_zipper_nc'
+ 'perc_bb_loop' 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'ent_coverage' 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_depth_right'
+ 'min_C_thread_slippage_right' 'ACO' 'RCO']
+same_sign_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'num_zipper_nc'
+ 'perc_bb_loop' 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'ent_coverage' 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right']
+common_robust_features: ['C_term_thread' 'Gc' 'N_term_thread' 'ent_coverage' 'loopsize'
+ 'min_C_prot_depth_right' 'min_C_thread_slippage_right'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'num_cross_nearest_neighbors' 'num_loop_contacting_res' 'num_zipper_nc'
+ 'perc_bb_loop']
+balanced_accuracy: 0.6106540518305225 with pvalue 0.0
+balanced_accuracy: 0.6267653914712739 with pvalue 0.0
+balanced_accuracy: 0.5706296603148302 with pvalue 0.0
+balanced_accuracy: 0.6126070146368406 with pvalue 0.0
+balanced_accuracy: 0.6295104895104895 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'num_zipper_nc'
+ 'perc_bb_loop' 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_prot_depth_right'
+ 'min_C_thread_depth_right' 'min_C_thread_slippage_right' 'ACO' 'RCO']
+same_sign_columns: ['N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'num_zipper_nc'
+ 'perc_bb_loop' 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_depth_right'
+ 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['C_term_thread' 'Gc' 'N_term_thread' 'RCO' 'loopsize'
+ 'min_C_prot_depth_right' 'min_C_thread_depth_right'
+ 'min_C_thread_slippage_right' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'num_cross_nearest_neighbors'
+ 'num_loop_contacting_res' 'num_zipper_nc' 'perc_bb_loop']
+balanced_accuracy: 0.6624845742492801 with pvalue 0.0
+balanced_accuracy: 0.6337583984642808 with pvalue 0.0
+balanced_accuracy: 0.6070836785418393 with pvalue 0.0
+balanced_accuracy: 0.5894780447390223 with pvalue 0.0
+balanced_accuracy: 0.5755244755244755 with pvalue 0.0
+pvalues: [0.0, 0.0, 0.0, 0.0, 0.0] -> Bonf. correction: [0. 0. 0. 0. 0.] with a combined value of 0.0
+non_zero_columns: ['Gn' 'N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'num_zipper_nc'
+ 'perc_bb_loop' 'num_loop_contacting_res' 'num_cross_nearest_neighbors'
+ 'ent_coverage' 'min_N_prot_depth_left' 'min_N_thread_depth_left'
+ 'min_N_thread_slippage_left' 'min_C_prot_depth_right'
+ 'min_C_thread_depth_right' 'min_C_thread_slippage_right' 'ACO' 'RCO']
+same_sign_columns: ['Gn' 'N_term_thread' 'Gc' 'C_term_thread' 'loopsize' 'perc_bb_loop'
+ 'num_loop_contacting_res' 'num_cross_nearest_neighbors' 'ent_coverage'
+ 'min_N_prot_depth_left' 'min_N_thread_slippage_left'
+ 'min_C_prot_depth_right' 'min_C_thread_depth_right'
+ 'min_C_thread_slippage_right' 'RCO']
+common_robust_features: ['C_term_thread' 'Gc' 'Gn' 'N_term_thread' 'RCO' 'ent_coverage' 'loopsize'
+ 'min_C_prot_depth_right' 'min_C_thread_depth_right'
+ 'min_C_thread_slippage_right' 'min_N_prot_depth_left'
+ 'min_N_thread_slippage_left' 'num_cross_nearest_neighbors'
+ 'num_loop_contacting_res' 'perc_bb_loop']
+plot_df:
+        C  ...                                    robust_features
+0    0.01  ...                                                   
+1    0.10  ...  RCO,ent_coverage,min_C_thread_slippage_right,m...
+2    0.15  ...  RCO,loopsize,min_C_prot_depth_right,min_C_thre...
+3    0.20  ...  RCO,loopsize,min_C_thread_slippage_right,min_N...
+4    0.25  ...  C_term_thread,RCO,loopsize,min_C_prot_depth_ri...
+5    0.50  ...  C_term_thread,Gc,N_term_thread,RCO,loopsize,mi...
+6    1.00  ...  C_term_thread,Gc,N_term_thread,RCO,ent_coverag...
+7    1.50  ...  C_term_thread,Gc,N_term_thread,RCO,ent_coverag...
+8    2.00  ...  C_term_thread,Gc,N_term_thread,RCO,loopsize,mi...
+9    2.50  ...  C_term_thread,Gc,N_term_thread,RCO,loopsize,mi...
+10   5.00  ...  C_term_thread,Gc,N_term_thread,ent_coverage,lo...
+11   7.50  ...  C_term_thread,Gc,N_term_thread,RCO,loopsize,mi...
+12  10.00  ...  C_term_thread,Gc,Gn,N_term_thread,RCO,ent_cove...
+
+[13 rows x 8 columns]
+Lasso_results:
+        C  fold  ...       ACO       RCO
+0    0.01     0  ...  0.000000  0.000000
+1    0.01     1  ...  0.000000  0.000000
+2    0.01     2  ...  0.000000  0.000000
+3    0.01     3  ...  0.000000  0.000000
+4    0.01     4  ...  0.000000  0.000000
+..    ...   ...  ...       ...       ...
+60  10.00     0  ...  0.204003 -0.344832
+61  10.00     1  ... -0.089759 -0.222471
+62  10.00     2  ...  0.104090 -0.264063
+63  10.00     3  ...  0.046631 -0.117919
+64  10.00     4  ... -0.106562 -0.150972
+
+[65 rows x 23 columns]
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/Lasso_results_CG_50.csv
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/Lasso_plot_results_CG_50.csv
+SAVED: ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/Entanglement_Topological_Complexity_and_Discrimination/AF_022025/Lasso_results_CG_50.png
+NORMAL TERMINATION

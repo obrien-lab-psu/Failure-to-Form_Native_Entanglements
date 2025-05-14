@@ -29,7 +29,7 @@ import requests
 import mdtraj as md
 from scipy.spatial.distance import pdist, squareform
 from statsmodels.stats.multitest import fdrcorrection
-from scipy.stats import permutation_test, ttest_ind, false_discovery_control, mode, bootstrap, mannwhitneyu
+from scipy.stats import permutation_test, ttest_ind, false_discovery_control, mode, bootstrap, mannwhitneyu, combine_pvalues
 import matplotlib.pyplot as plt
 #pd.set_option('display.max_rows', 500)
 
@@ -96,27 +96,26 @@ class DataAnalysis:
         'min_C_prot_depth_right',
         'min_C_thread_depth_right', 
         'min_C_thread_slippage_right', 
-        'prot_size'
-
         """
         dfs = []
         for gene in mask:
-            print(gene)
+            #print(gene)
             gene_uent_file = [f for f in self.uent_files if gene in f][0]
 
             gene_uent = pd.read_csv(gene_uent_file, sep='|')
-            #print(gene, gene_uent_file)
-            #print(gene_uent)
             num_uent = len(gene_uent)
 
             if num_uent != 0:
+                gene_uent = gene_uent[self.keys]
                 gene_uent['gene'] = gene
                 dfs += [gene_uent]
 
+        
         uent_df = pd.concat(dfs) 
         return uent_df
+    ##########################################################################################################
 
-
+    ##########################################################################################################
     def DistStats(self, df, keys, dist_tag, n_resamples=10000, alpha=0.05):
         """
         Calculate various parameters of the data distributions
@@ -129,63 +128,75 @@ class DataAnalysis:
         print(f'df_copy:\n{df_copy}')
 
         results = {'metric':[], 'mean':[], 'mean_lb':[], 'mean_ub':[], 'median':[], 'median_lb':[], 'median_ub':[]}
+        stats_data_outfile = f'{self.outpath}{dist_tag}_stats_uent_data_{self.buff}_{self.spa}.csv'
 
-        def calculate_bootstrap_ci(data, statistic_func):
-            if statistic_func == 'mean':
-                res = bootstrap((data,), np.mean, confidence_level=1-alpha, n_resamples=n_resamples)
-                return res.confidence_interval.low, res.confidence_interval.high
+        if not os.path.exists(stats_data_outfile):
+            def calculate_bootstrap_ci(data, statistic_func):
+                if statistic_func == 'mean':
+                    res = bootstrap((data,), np.mean, confidence_level=1-alpha, n_resamples=n_resamples)
+                    return res.confidence_interval.low, res.confidence_interval.high
 
-            elif statistic_func == 'median':
-                medians = []
-                for b in range(n_resamples):
-                    boot = np.random.choice(data, replace=True)
-                    medians += [np.percentile(boot, 50, interpolation='nearest')]
-                lb = np.percentile(medians, 2.5)
-                ub = np.percentile(medians, 97.5)
-                return lb, ub
-
-
-        for column in df_copy.columns:
-            print(f'column: {column}')
-            col_data = df_copy[column].dropna().values
-
-            ## drop 0s if column == C_term_thread or N_term_thread
-            if column in ['N_term_thread', 'C_term_thread']:
-                col_data = col_data[np.where(col_data != 0)]
-            print(col_data)
-
-            mean_val = np.mean(col_data)
-            median_val = np.percentile(col_data, 50, interpolation='nearest')
-
-            mean_ci = calculate_bootstrap_ci(col_data, 'mean')
-            print('Mean', mean_val, mean_ci)
-            median_ci = calculate_bootstrap_ci(col_data, 'median')
-            print('Median', median_val, median_ci)
-
-            results['metric'] += [column]
-            results['mean'] += [mean_val]
-            results['mean_lb'] += [mean_ci[0]]
-            results['mean_ub'] += [mean_ci[1]]
-            results['median'] += [median_val]
-            results['median_lb'] += [median_ci[0]]
-            results['median_ub'] += [median_ci[1]]
-
-            # plot histogram
-            plot_filename = f'{self.DataAnalysisDistPlotsOutpath}{dist_tag}_{column}_{self.buff}_{self.spa}.png'
-            plt.hist(col_data, bins=100, color='blue', edgecolor='black', density=True)  # 100 bins
-            plt.xlabel(column)
-            plt.ylabel('PDF')
-            plt.title(dist_tag)
-            plt.savefig(plot_filename)
-            print(f'SAVED: {plot_filename}')
-            plt.close()
-
-        return pd.DataFrame(results)
+                elif statistic_func == 'median':
+                    medians = []
+                    for b in range(n_resamples):
+                        boot = np.random.choice(data, replace=True)
+                        medians += [np.percentile(boot, 50, interpolation='nearest')]
+                    lb = np.percentile(medians, 2.5)
+                    ub = np.percentile(medians, 97.5)
+                    return lb, ub
 
 
-    def Permutation(self, df1_full, df2_full, keys, n_resamples=10000):
+            for column in df_copy.columns:
+                print(f'column: {column}')
+                col_data = df_copy[column].dropna().values
+
+                ## drop 0s if column == C_term_thread or N_term_thread
+                if column in ['N_term_thread', 'C_term_thread']:
+                    col_data = col_data[np.where(col_data != 0)]
+                #print(col_data)
+
+                mean_val = np.mean(col_data)
+                median_val = np.percentile(col_data, 50, interpolation='nearest')
+
+                mean_ci = calculate_bootstrap_ci(col_data, 'mean')
+                #print('Mean', mean_val, mean_ci)
+                median_ci = calculate_bootstrap_ci(col_data, 'median')
+                #print('Median', median_val, median_ci)
+
+                results['metric'] += [column]
+                results['mean'] += [mean_val]
+                results['mean_lb'] += [mean_ci[0]]
+                results['mean_ub'] += [mean_ci[1]]
+                results['median'] += [median_val]
+                results['median_lb'] += [median_ci[0]]
+                results['median_ub'] += [median_ci[1]]
+
+                # plot histogram
+                plot_filename = f'{self.DataAnalysisDistPlotsOutpath}{dist_tag}_{column}_{self.buff}_{self.spa}.png'
+                plt.hist(col_data, bins=100, color='blue', edgecolor='black', density=True)  # 100 bins
+                plt.xlabel(column)
+                plt.ylabel('PDF')
+                plt.title(dist_tag)
+                plt.savefig(plot_filename)
+                print(f'SAVED: {plot_filename}')
+                plt.close()
+
+            stats_df = pd.DataFrame(results)
+            stats_df.to_csv(stats_data_outfile, index=False)
+            print(f'SAVED: {stats_data_outfile}')
+        
+        ## else load the df
+        else:
+            stats_df = pd.read_csv(stats_data_outfile)
+            print(f'LOADED: {stats_data_outfile}')
+
+        return stats_df
+
+    ##########################################################################################################
+    def Permutation(self, df1_full, df2_full, keys, n_resamples=10000, type='MWU'):
         """
         For the columns in the two dataframes calculate the pairwise pvalue by permutation. 
+        type can be either MWU for the Mann-Whitney U test or Perm for a classic permutation test
         """
 
         df1 = df1_full.copy()
@@ -205,21 +216,26 @@ class DataAnalysis:
             # Define the statistic function for the permutation test
             def statistic(x, y, axis):
                 return np.mean(x, axis=axis) - np.mean(y, axis=axis)
+            stat = statistic(data1, data2, 0)
 
             # Perform the permutation test
-            #res = permutation_test((data1, data2), statistic, vectorized=True, n_resamples=n_resamples)
-            stat = statistic(data1, data2, 0)
-            if stat > 0:
-                res = mannwhitneyu(data1, data2, alternative='greater')
-            elif stat < 0:
-                res = mannwhitneyu(data1, data2, alternative='less')
-            else:
-                res = mannwhitneyu(data1, data2)
+            if type == 'Perm':
+                if stat > 0:
+                    res = permutation_test((data1, data2), statistic, vectorized=True, n_resamples=n_resamples)
+                elif stat < 0:
+                    res = permutation_test((data1, data2), statistic, vectorized=True, n_resamples=n_resamples)
+                else:    
+                    res = permutation_test((data1, data2), statistic, vectorized=True, n_resamples=n_resamples)
 
-            #results[column] = res.pvalue
+            if type == 'MWU':
+                if stat > 0:
+                    res = mannwhitneyu(data1, data2, alternative='greater')
+                elif stat < 0:
+                    res = mannwhitneyu(data1, data2, alternative='less')
+                else:
+                    res = mannwhitneyu(data1, data2)
+
             results += [res.pvalue]
-
-            print(f'column: {res.pvalue}')
 
         return results
     ##########################################################################################################
@@ -245,19 +261,25 @@ class DataAnalysis:
         #print(f'y:\n{y}')
 
         logistic_regression =  LogisticRegression(penalty='l1', solver='liblinear')
-        Cs = np.linspace(0.00001, 10, 30)
+        #Cs = np.linspace(0.00001, 10, 30)
+        Cs = [0.01, 0.1, 0.15, 0.2, 0.25, 0.5, 1, 1.5, 2, 2.5, 5, 7.5, 10]
+        #Cs = [1]
+        #Cs = np.linspace(0.1, 10, 30)
         #Cs = np.linspace(0.0001, 10, 10)
 
-        fit_data = {'C':[], 'fold':[], 'balanced_accuracy':[], 'accuracy':[]}
-        plot_df = {'C':[], '<BA>':[], 'pvalue':[], 'num_nonzero':[], 'num_nonzero_and_robust':[]}
+        fit_data = {'C':[], 'fold':[], 'balanced_accuracy':[], 'accuracy':[], 'pvalue':[]}
+        plot_df = {'C':[], '<BA>':[], 'BA_lb':[] , 'BA_ub':[], 'pvalue':[], 'num_nonzero':[], 'num_nonzero_and_robust':[], 'robust_features':[]}
         for C in Cs:
-            print(f'{"#"*100}\nTESTING C: {C}')
+            logging.info(f'{"#"*100}\nTESTING C: {C}')
             plot_df['C'] += [C]
 
-            # Generate the null dist
-            C_null_BA = self.GenNullBA(X, y, C)
-            #print(f'C_null_BA: {C_null_BA}')
+            combined = np.hstack((y[:,None], X))
+            logging.info(f'y: {y.shape}, X: {X.shape}, combined: {combined.shape}')
 
+            # Generate 95% ci from boot
+            #C_Boot_BA_stats = self.C_Boot_BA_stats(combined, C)
+            #logging.info(f'C_Boot_BA_stats: {C_Boot_BA_stats}')
+      
             for col in X_keys:
                 if col not in fit_data:
                     fit_data[col] = []
@@ -265,8 +287,9 @@ class DataAnalysis:
             ## make folds and fit model
             skf = StratifiedKFold(n_splits=5, shuffle=True)
             #skf = StratifiedKFold(n_splits=5)
-            avg_BA = 0
+            BAs =[]
             CV_coefs = []
+            pvalues = []
             for i, (train_index, test_index) in enumerate(skf.split(X, y)):
                 #print(f"Fold {i}:")
                 #print(f"  Train: index={train_index} {len(train_index)}")
@@ -276,6 +299,11 @@ class DataAnalysis:
                 y_train = y[train_index]
                 X_test = X[test_index]
                 y_test = y[test_index]
+
+                # Generate the null dist
+                C_null_BA = self.GenNullBA(X_train, y_train, X_test, y_test, C)
+                logging.info(f'C_null_avg_BA: {np.mean(C_null_BA)}')
+                #print(f'C_null_avg_BA: {np.mean(C_null_BA)}')
 
                 # Get features for optimal regularization ceof
                 logistic_regression =  LogisticRegression(penalty='l1', solver='liblinear', C=C)
@@ -292,51 +320,68 @@ class DataAnalysis:
                 balanced_accuracy = balanced_accuracy_score(y_test, y_pred)
                 accuracy = accuracy_score(y_test, y_pred)
 
+                pvalue = np.mean(np.where(C_null_BA >= balanced_accuracy, 1, 0))
+                print(f'balanced_accuracy: {balanced_accuracy} with pvalue {pvalue}')
+                pvalues += [pvalue]
+
                 fit_data['C'] += [C]
                 fit_data['fold'] += [i]
                 fit_data['balanced_accuracy'] += [balanced_accuracy]
                 fit_data['accuracy'] += [accuracy]
+                fit_data['pvalue'] += [pvalue]
                 for col_i, col in enumerate(X_keys):
                     fit_data[col] += [coefs[col_i]]
-                avg_BA += balanced_accuracy
-            avg_BA /= 5
+                BAs += [balanced_accuracy]
 
-            # Calculate the pvalue
-            observed = abs(avg_BA - 0.5)
-            print(f'observed: {observed}')
-            C_null_BA -= 0.5
-            C_null_BA = np.abs(C_null_BA)
-            #print(f'C_null_BA: {C_null_BA}')
-            pvalue = np.mean(np.where(C_null_BA >= observed, 1, 0))
-            print(f'pvalue: {pvalue}')
+            qvalues = false_discovery_control(pvalues, method='by')
+            combined_qvalues = combine_pvalues(qvalues).pvalue
+            print(f'pvalues: {pvalues} -> Bonf. correction: {qvalues} with a combined value of {combined_qvalues}')
+
+            avg_BA = np.mean(BAs)
+            std_BA = np.std(BAs)
+            ci_BA = (std_BA/5)*1.96
+            logging.info(f'avg_BA: {avg_BA} +/- {ci_BA}')
+
+            logging.info(f'pvalue: {pvalue}')
             plot_df['<BA>'] += [avg_BA]
-            plot_df['pvalue'] += [pvalue]
+            plot_df['BA_lb'] += [avg_BA - ci_BA]
+            plot_df['BA_ub'] += [avg_BA + ci_BA]
+            plot_df['pvalue'] += [combined_qvalues]
 
             CV_coefs = np.asarray(CV_coefs)
-            print(f'CV_coefs:\n{CV_coefs}')
+            logging.info(f'CV_coefs:\n{CV_coefs}')
             # Check which columns have all non-zero values
             non_zero_columns = np.all(CV_coefs != 0, axis=0)
-            print(f'non_zero_columns: {non_zero_columns}')
+            logging.info(f'non_zero_columns: {non_zero_columns}')
+            non_zero_column_labels = np.asarray(X_keys, dtype=str)[non_zero_columns]
+            print(f'non_zero_columns: {non_zero_column_labels}')
 
             # Check if all values in each column have the same sign
             same_sign_columns = np.all(CV_coefs > 0, axis=0) | np.all(CV_coefs < 0, axis=0)
             same_sign_columns *= non_zero_columns
-            print(f'same_sign_columns: {same_sign_columns}')
+            logging.info(f'same_sign_columns: {same_sign_columns}')
+            same_sign_column_labels = np.asarray(X_keys, dtype=str)[same_sign_columns]
+            print(f'same_sign_columns: {same_sign_column_labels}')
+
+            common_robust_features = np.intersect1d(non_zero_column_labels, same_sign_column_labels)
+            print(f'common_robust_features: {common_robust_features}')
             
             plot_df['num_nonzero'] += [np.sum(non_zero_columns)]
-            plot_df['num_nonzero_and_robust'] += [np.sum(same_sign_columns)]
+            plot_df['num_nonzero_and_robust'] += [len(common_robust_features)]
+            plot_df['robust_features'] += [','.join(common_robust_features)]
             
         ## make plot_df
         plot_df = pd.DataFrame(plot_df)
+        logging.info(f'plot_df:\n{plot_df}')
         print(f'plot_df:\n{plot_df}')
 
         fit_data = pd.DataFrame(fit_data)
-        print(f'fit_data:\n{fit_data}')
+        logging.info(f'fit_data:\n{fit_data}')
         return fit_data, plot_df
     ##########################################################################################################
 
     ##########################################################################################################
-    def GenNullBA(self, X, y, C):
+    def GenNullBA(self, X_train, y_train, X_test, y_test, C):
         """
         Generate a null distribution of BA by randomly permuting the essential labels and fitting the model. 
         """
@@ -345,7 +390,7 @@ class DataAnalysis:
 
         fit_data = []
 
-        print(f'Gen null for C: {C}')
+        logging.info(f'Gen null for C: {C}')
 
         ## make folds and fit model
         skf = StratifiedKFold(n_splits=5, shuffle=True)
@@ -353,17 +398,63 @@ class DataAnalysis:
         rng = np.random.default_rng()
 
         for p in range(self.num_permute):
+            BA = 0
+
+            py_train = rng.permuted(y_train)
+
+            # Get features for optimal regularization ceof
+            logistic_regression =  LogisticRegression(penalty='l1', solver='liblinear', C=C)
+            logistic_regression.fit(X_train, py_train)
+
+            coefs = logistic_regression.coef_[0].tolist()
+            #print(f'coefs: {coefs}')
+
+            # Predict on the testing data
+            y_pred = logistic_regression.predict(X_test)
+            #print(f'y_pred: {y_pred}')
+            # Calculate balanced accuracy
+            balanced_accuracy = balanced_accuracy_score(y_test, y_pred)
+            #accuracy = accuracy_score(y_test, y_pred)
+            BA += balanced_accuracy
+ 
+            fit_data += [BA]
+        return np.asarray(fit_data)
+    ##########################################################################################################
+
+    ##########################################################################################################
+    def C_Boot_BA_stats(self, combined, C):
+        """
+        Generate a null distribution of BA by randomly permuting the essential labels and fitting the model. 
+        """
+
+        logistic_regression =  LogisticRegression(penalty='l1', solver='liblinear')
+
+        fit_data = []
+
+        logging.info(f'Gen Boot BA dist for C: {C}')
+
+        ## make folds and fit model
+        skf = StratifiedKFold(n_splits=5, shuffle=True)
+        #skf = StratifiedKFold(n_splits=5)
+        
+        #print(combined, combined.shape)
+        for p in range(self.num_permute):
             avg_BA = 0
-            py = rng.permuted(y)
-            for i, (train_index, test_index) in enumerate(skf.split(X, py)):
+            boot_idx = np.random.choice(np.arange(len(combined)), size=len(combined), replace=True)
+            boot = combined[boot_idx]
+            #print(boot, boot.shape)
+            booty = boot[:,0]
+            bootX = boot[:,1:]
+
+            for i, (train_index, test_index) in enumerate(skf.split(bootX, booty)):
                 #print(f"Fold {i}:")
                 #print(f"  Train: index={train_index} {len(train_index)}")
                 #print(f"  Test:  index={test_index} {len(test_index)}")
 
-                X_train = X[train_index]
-                y_train = y[train_index]
-                X_test = X[test_index]
-                y_test = y[test_index]
+                X_train = bootX[train_index]
+                y_train = booty[train_index]
+                X_test = bootX[test_index]
+                y_test = booty[test_index]
 
                 # Get features for optimal regularization ceof
                 logistic_regression =  LogisticRegression(penalty='l1', solver='liblinear', C=C)
@@ -381,39 +472,53 @@ class DataAnalysis:
                 avg_BA += balanced_accuracy
             avg_BA /= 5
             fit_data += [avg_BA]
-        return np.asarray(fit_data)
+        return (np.percentile(fit_data, 2.5), np.percentile(fit_data, 97.5))
     ##########################################################################################################
 
     ##########################################################################################################
     def Plot_Lasso(self, df, outfile):
-        
-        #        C  fold  balanced_accuracy  accuracy  
-        # Create subplots
+
+        """
+        make a figure with four subplots on a single row where the subplots are
+        1. the num_nonzero features as a function of C
+        2. the num_nonzero_and_robust as a function of C
+        3. the <BA> as a function of C with the confidence intervals (BA_lb, BA_ub) as a function of C
+        4. the permutation test pvalues as a function of C
+
+        make all points circle markers that are solid
+        """
         fig, axes = plt.subplots(1, 4, figsize=(12, 4))
 
         X = df['C']
         BA = df['<BA>']
+        BA_lb = df['BA_lb']
+        BA_ub = df['BA_ub']
         num_nonzero = df['num_nonzero']
         num_robust_nonzero = df['num_nonzero_and_robust']
         pvalue = df['pvalue']
 
-        axes[0].plot(X, num_nonzero)
+        axes[0].scatter(X, num_nonzero, marker='o')
         axes[0].set_ylabel('# non-zero ceof.')
         axes[0].set_xlabel('inverse regularization strength')
         axes[0].set_ylim(0, 20)
-        axes[1].plot(X, num_robust_nonzero)
+        axes[0].set_xscale('log')
+        axes[1].scatter(X, num_robust_nonzero, marker='o')
         axes[1].set_ylabel('# non-zero & robust ceof.')
         axes[1].set_xlabel('inverse regularization strength')
         axes[1].set_ylim(0, 20)
-        axes[2].plot(X, BA)
+        axes[1].set_xscale('log')
+        axes[2].errorbar(X, BA, yerr=[BA - BA_lb, BA_ub - BA], fmt='o', capsize=5)
         axes[2].set_ylabel('Balanced Accuracy')
         axes[2].set_xlabel('inverse regularization strength')
-        axes[2].set_ylim(0, 1)
-        axes[3].plot(X, pvalue)
+        axes[2].set_ylim(0.4, 1)
+        axes[2].axhline(y=0.5, color='black', ls='--')
+        axes[2].set_xscale('log')
+        axes[3].scatter(X, pvalue)
         axes[3].set_ylabel('permutation pvalue')
         axes[3].set_xlabel('inverse regularization strength')
         axes[3].set_ylim(0, 1)
         axes[3].axhline(y=0.05, color='black', linestyle='--', linewidth=1)
+        axes[3].set_xscale('log')
 
         plt.tight_layout()
         plt.savefig(outfile)
@@ -477,10 +582,6 @@ def main():
 
     Ess_stats = Analyzer.DistStats(Ess_ent_data, Analyzer.keys, 'Ess', n_resamples=num_permute)
     print(f'Ess_stats:\n{Ess_stats}')
-    Ess_stats_data_outfile = f'{Analyzer.outpath}Ess_stats_uent_data_{buff}_{spa}.csv'
-    Ess_stats.to_csv(Ess_stats_data_outfile, sep='|', index=False)
-    print(f'SAVED: {Ess_stats_data_outfile}')
-
 
     ## Get the Non-essential gene data and stats
     NonEss_gene_mask = np.loadtxt(NonEss_gene_list, dtype=str)
@@ -499,17 +600,16 @@ def main():
 
     NonEss_stats = Analyzer.DistStats(NonEss_ent_data, Analyzer.keys, 'NonEss', n_resamples=num_permute)
     print(f'NonEss_stats:\n{NonEss_stats}')
-    NonEss_stats_data_outfile = f'{Analyzer.outpath}NonEss_stats_uent_data_{buff}_{spa}.csv'
-    NonEss_stats.to_csv(NonEss_stats_data_outfile, sep='|', index=False)
-    print(f'SAVED: {NonEss_stats_data_outfile}')
-
 
     ## Compare the entanglement complexity between Essential and Nonessential data
-    EssVNonEss_pvalues = Analyzer.Permutation(Ess_ent_data, NonEss_ent_data, Analyzer.keys, n_resamples=num_permute)
-    print(f'EssVNonEss_pvalues:\n{EssVNonEss_pvalues}')
+    MWU_EssVNonEss_pvalues = Analyzer.Permutation(Ess_ent_data, NonEss_ent_data, Analyzer.keys, n_resamples=num_permute, type='MWU')
+    print(f'MWU_EssVNonEss_pvalues:\n{MWU_EssVNonEss_pvalues}')
+
+    Perm_EssVNonEss_pvalues = Analyzer.Permutation(Ess_ent_data, NonEss_ent_data, Analyzer.keys, n_resamples=num_permute, type='Perm')
+    print(f'Perm_EssVNonEss_pvalues:\n{Perm_EssVNonEss_pvalues}')
 
 
-    # Merge the DataFrames along axis=1
+    # Merge the DataFrames along axis=1 and add a prefix to the column names
     metrics = Ess_stats['metric']
     Ess_stats.drop(columns=['metric'])
     NonEss_stats.drop(columns=['metric'])
@@ -518,11 +618,14 @@ def main():
     NonEss_stats = NonEss_stats.add_prefix('NonEss_')
 
     merged_df = pd.concat([metrics, Ess_stats, NonEss_stats], axis=1)
-    merged_df['pvalues'] = EssVNonEss_pvalues
+    merged_df['MWU_pvalues'] = MWU_EssVNonEss_pvalues
+    merged_df['Perm_pvalues'] = Perm_EssVNonEss_pvalues
+    merged_df.drop(['Ess_metric', 'NonEss_metric'], axis=1, inplace=True)
     print(f'merged_df:\n{merged_df}')
     merged_data_outfile = f'{Analyzer.outpath}merged_stats_uent_data_{buff}_{spa}.csv'
-    merged_df.to_csv(merged_data_outfile, sep='|', index=False)
+    merged_df.to_csv(merged_data_outfile, index=False)
     print(f'SAVED: {merged_data_outfile}')
+
 
     # make the combined raw ent dataframes
     combined_df = pd.concat([Ess_ent_data, NonEss_ent_data])

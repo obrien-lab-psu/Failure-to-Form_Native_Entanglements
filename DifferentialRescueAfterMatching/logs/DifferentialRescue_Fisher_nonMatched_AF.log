@@ -1,0 +1,141 @@
+Made output directories DifferentialRescue/AF_nonMatched/
+Number of gene_lists: 6
+Number of residue feature files: 4215
+
+Number of genes in gene_list: data/AF_NonMatched/AF_0.6g_CD_Rall_spa50_LiPMScov50_essential_ent_genes.txt 59
+buffer: CD essential: essential
+       cut_CD_Rall  region AA    gene
+0                0       0  M  P00954
+1                0       0  T  P00954
+2                0       1  K  P00954
+3                0       1  P  P00954
+4                0       1  I  P00954
+...            ...     ... ..     ...
+20781            0       0  Q  P62620
+20782            0       0  Q  P62620
+20783            0       0  V  P62620
+20784            0       0  E  P62620
+20785            0       0  K  P62620
+
+[20786 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 59
+
+Number of genes in gene_list: data/AF_NonMatched/AF_0.6g_CD_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 151
+buffer: CD essential: nonessential
+       cut_CD_Rall  region AA    gene
+0                0       0  M  P00350
+1                0       0  S  P00350
+2                0       0  K  P00350
+3                0       0  Q  P00350
+4                0       0  Q  P00350
+...            ...     ... ..     ...
+49303            0       0  K  P77608
+49304            0       0  G  P77608
+49305            0       0  S  P77608
+49306            0       0  L  P77608
+49307            0       0  S  P77608
+
+[49308 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 151
+
+Number of genes in gene_list: data/AF_NonMatched/AF_0.6g_CG_Rall_spa50_LiPMScov50_essential_ent_genes.txt 73
+buffer: CG essential: essential
+       cut_CG_Rall  region AA    gene
+0                0       0  M  P00954
+1                1       0  T  P00954
+2                0       1  K  P00954
+3                0       1  P  P00954
+4                0       1  I  P00954
+...            ...     ... ..     ...
+27574            0       0  H  Q46893
+27575            0       0  Q  Q46893
+27576            0       0  E  Q46893
+27577            0       0  N  Q46893
+27578            0       0  T  Q46893
+
+[27579 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 73
+
+Number of genes in gene_list: data/AF_NonMatched/AF_0.6g_CG_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 227
+buffer: CG essential: nonessential
+       cut_CG_Rall  region AA    gene
+0                0       0  M  P00350
+1                0       0  S  P00350
+2                0       0  K  P00350
+3                0       0  Q  P00350
+4                0       0  Q  P00350
+...            ...     ... ..     ...
+76175            0       0  Q  P77690
+76176            0       0  L  P77690
+76177            0       1  A  P77690
+76178            0       0  G  P77690
+76179            0       0  Q  P77690
+
+[76180 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 227
+
+Number of genes in gene_list: data/AF_NonMatched/AF_0.6g_C_Rall_spa50_LiPMScov50_essential_ent_genes.txt 98
+buffer: C essential: essential
+       cut_C_Rall  region AA    gene
+0               0       0  M  P00954
+1               1       0  T  P00954
+2               0       1  K  P00954
+3               0       1  P  P00954
+4               0       1  I  P00954
+...           ...     ... ..     ...
+38048           0       0  H  Q46893
+38049           0       0  Q  Q46893
+38050           0       0  E  Q46893
+38051           0       0  N  Q46893
+38052           0       0  T  Q46893
+
+[38053 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 98
+
+Number of genes in gene_list: data/AF_NonMatched/AF_0.6g_C_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 302
+buffer: C essential: nonessential
+        cut_C_Rall  region AA    gene
+0                0       0  M  P00350
+1                1       0  S  P00350
+2                0       0  K  P00350
+3                0       0  Q  P00350
+4                0       0  Q  P00350
+...            ...     ... ..     ...
+106130           0       0  A  Q57261
+106131           0       0  H  Q57261
+106132           0       0  I  Q57261
+106133           0       1  A  Q57261
+106134           0       1  E  Q57261
+
+[106135 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 302
+GT_regression:
+  buffer     essential        OR     OR_lb     OR_ub        pvalue
+0     CD     essential  1.157312  0.821191  1.630685  4.042810e-01
+1     CD  nonessential  1.563614  1.256085  1.946436  6.496786e-05
+2     CG     essential  1.062368  0.811395  1.390968  6.599371e-01
+3     CG  nonessential  1.465798  1.227525  1.750673  2.357778e-05
+4      C     essential  1.466091  1.263644  1.702334  4.753606e-07
+5      C  nonessential  1.302910  1.181754  1.436199  1.170780e-07
+SAVED: DifferentialRescue/AF_nonMatched//AF_nonMatched_GT_regression.csv
+
+Determining if there is a significant rescue for the set of essential genes
+C_df: 38053 98 | CD_df: 20786 59 | CG_df: 27579 73
+GT_regression:
+  buffer  essential        OR     OR_lb     OR_ub        pvalue
+0     CD  essential  1.157312  0.821191  1.630685  4.042810e-01
+2     CG  essential  1.062368  0.811395  1.390968  6.599371e-01
+4      C  essential  1.466091  1.263644  1.702334  4.753606e-07
+GT diffs: delta(C - CD): 0.3087795627191954 | delta(C - CG): 0.40372387860464554
+FISHER AF_nonMatched| Essential: C2CD_pvalue: 0.0687 | C2CG_pvalue: 0.0133
+
+Determining if there is a significant rescue for the set of nonessential genes
+C_df: 106135 302 | CD_df: 49308 151 | CG_df: 76180 227
+GT_regression:
+  buffer     essential        OR     OR_lb     OR_ub        pvalue
+1     CD  nonessential  1.563614  1.256085  1.946436  6.496786e-05
+3     CG  nonessential  1.465798  1.227525  1.750673  2.357778e-05
+5      C  nonessential  1.302910  1.181754  1.436199  1.170780e-07
+GT diffs: delta(C - CD): -0.2607045916377846 | delta(C - CG): -0.1628885795509769
+FISHER AF_nonMatched| NonEssential: C2CD_pvalue: 0.9708 | C2CG_pvalue: 0.9038
+NORMAL TERMINATION 2113.2114202976227 seconds

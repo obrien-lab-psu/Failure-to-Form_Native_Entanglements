@@ -1,0 +1,14 @@
+C|<BA>|BA_lb|BA_ub|pvalue|num_nonzero|num_nonzero_and_robust|robust_features
+0.01|0.5|0.5|0.5|1.0|0|0|
+0.1|0.5113123885918004|0.5090332422747929|0.5135915349088079|0.015028515091370594|2|2|ent_coverage,min_C_thread_slippage_right
+0.15|0.5155610460524831|0.5121027299215444|0.5190193621834218|0.006865394191684493|3|3|min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left
+0.2|0.5275931316139804|0.5251147645535859|0.5300714986743749|6.0952889992922724e-05|4|4|Gc,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left
+0.25|0.5240055619485999|0.5141190541342785|0.5338920697629214|0.0|5|5|Gc,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors
+0.5|0.5566089318351045|0.5453006132674433|0.5679172504027657|0.0|9|9|C_term_thread,Gc,Gn,N_term_thread,RCO,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors
+1.0|0.5735249272321126|0.5675172932821233|0.5795325611821018|0.0|13|12|ACO,C_term_thread,Gn,N_term_thread,RCO,loopsize,min_C_prot_depth_right,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res
+1.5|0.5877310239400708|0.5790070374550138|0.5964550104251278|0.0|14|13|C_term_thread,Gc,Gn,N_term_thread,RCO,loopsize,min_C_prot_depth_right,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res,perc_bb_loop
+2.0|0.593382099099709|0.5857554441494226|0.6010087540499953|0.0|14|12|ACO,C_term_thread,Gn,N_term_thread,RCO,min_C_prot_depth_right,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res,perc_bb_loop
+2.5|0.5749487240235565|0.5577856715334614|0.5921117765136515|0.0|14|13|ACO,C_term_thread,Gc,Gn,N_term_thread,RCO,min_C_prot_depth_right,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res,num_zipper_nc
+5.0|0.5785082018998624|0.5652410229590759|0.591775380840649|0.0|17|13|ACO,C_term_thread,Gc,Gn,N_term_thread,RCO,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res,perc_bb_loop
+7.5|0.5734449107606219|0.5607172217670039|0.5861725997542399|7.727053006456852e-06|15|14|ACO,C_term_thread,Gc,Gn,N_term_thread,RCO,min_C_prot_depth_right,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res,perc_bb_loop
+10.0|0.5835556702542928|0.5707324904171479|0.5963788500914377|0.0|16|12|ACO,C_term_thread,Gn,N_term_thread,RCO,ent_coverage,min_C_thread_slippage_right,min_N_prot_depth_left,min_N_thread_slippage_left,num_cross_nearest_neighbors,num_loop_contacting_res,perc_bb_loop

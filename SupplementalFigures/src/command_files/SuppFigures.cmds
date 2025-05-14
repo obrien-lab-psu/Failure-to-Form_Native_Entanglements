@@ -1,0 +1,7 @@
+python src/data/MainTextFigure1_Supp.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o MainTextFigure1_Supp
+python src/data/MainTextFigure2.1_Supp.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o MainTextFigure2.1_Supp
+python src/data/MainTextFigure3_Supp.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o MainTextFigure3_Supp
+python src/data/MainTextFigure4_Supp.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o MainTextFigure4_Supp
+python src/data/MainTextFigure5.2_Supp.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o MainTextFigure5.2_Supp
+
+python src/data/MainTextFigure6_Supp.py -s ../../../git_slugs/Failure-to-Form_Native_Entanglements_slug/ -o MainTextFigure6_Supp

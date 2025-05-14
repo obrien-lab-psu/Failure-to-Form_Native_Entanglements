@@ -1,0 +1,140 @@
+Number of gene_lists: 6
+Number of residue feature files: 1294
+
+Number of genes in gene_list: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_CD_Rall_spa50_LiPMScov50_essential_ent_genes.txt 97
+buffer: CD essential: essential
+       cut_CD_Rall  region AA    gene
+0                0       0  A  P0A817
+1                0       0  K  P0A817
+2                0       1  H  P0A817
+3                0       1  L  P0A817
+4                0       1  F  P0A817
+...            ...     ... ..     ...
+27186            0       0  V  P0A7Z4
+27187            0       0  D  P0A7Z4
+27188            0       0  L  P0A7Z4
+27189            0       0  R  P0A7Z4
+27190            0       0  D  P0A7Z4
+
+[27191 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 29
+
+Number of genes in gene_list: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_CD_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 97
+buffer: CD essential: nonessential
+       cut_CD_Rall  region AA    gene
+0                0       0  S  P00350
+1                0       0  K  P00350
+2                0       0  Q  P00350
+3                0       0  Q  P00350
+4                0       0  I  P00350
+...            ...     ... ..     ...
+31107            0       0  A  P77608
+31108            0       0  T  P77608
+31109            0       0  F  P77608
+31110            0       0  S  P77608
+31111            0       0  S  P77608
+
+[31112 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 97
+
+Number of genes in gene_list: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_CG_Rall_spa50_LiPMScov50_essential_ent_genes.txt 137
+buffer: CG essential: essential
+       cut_CG_Rall  region AA    gene
+0                0       0  S  P23882
+1                0       0  E  P23882
+2                0       0  S  P23882
+3                0       0  L  P23882
+4                0       0  R  P23882
+...            ...     ... ..     ...
+41149            0       0  L  P0AGJ9
+41150            0       0  I  P0AGJ9
+41151            0       0  C  P0AGJ9
+41152            0       0  W  P0AGJ9
+41153            0       0  K  P0AGJ9
+
+[41154 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 45
+
+Number of genes in gene_list: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_CG_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 137
+buffer: CG essential: nonessential
+       cut_CG_Rall  region AA    gene
+0                0       0  S  P00350
+1                0       0  K  P00350
+2                0       0  Q  P00350
+3                0       0  Q  P00350
+4                0       0  I  P00350
+...            ...     ... ..     ...
+43588            0       0  A  P77608
+43589            0       0  T  P77608
+43590            0       0  F  P77608
+43591            0       0  S  P77608
+43592            0       0  S  P77608
+
+[43593 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 137
+
+Number of genes in gene_list: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_C_Rall_spa50_LiPMScov50_essential_ent_genes.txt 183
+buffer: C essential: essential
+       cut_C_Rall  region AA    gene
+0               0       0  S  P23882
+1               0       0  E  P23882
+2               0       0  S  P23882
+3               0       0  L  P23882
+4               0       0  R  P23882
+...           ...     ... ..     ...
+60237           0       0  G  P45748
+60238           0       0  E  P45748
+60239           0       0  L  P45748
+60240           0       1  F  P45748
+60241           0       0  R  P45748
+
+[60242 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 61
+
+Number of genes in gene_list: MatchEntanglementFeatures/essential_matched2_nonessential/EXP_0.6g_C_Rall_spa50_LiPMScov50_nonessential_ent_genes.txt 183
+buffer: C essential: nonessential
+       cut_C_Rall  region AA    gene
+0               1       0  S  P00350
+1               0       0  K  P00350
+2               0       0  Q  P00350
+3               0       0  Q  P00350
+4               0       0  I  P00350
+...           ...     ... ..     ...
+60002           0       1  E  Q57261
+60003           0       1  L  Q57261
+60004           0       0  I  Q57261
+60005           0       0  N  Q57261
+60006           0       0  T  Q57261
+
+[60007 rows x 4 columns]
+Number of genes in self.gene_list_resFeat: 183
+GT_regression:
+  buffer     essential        OR     OR_lb     OR_ub        pvalue
+0     CD     essential  1.779620  1.349859  2.346676  4.407682e-05
+1     CD  nonessential  1.350669  1.047074  1.741941  2.066772e-02
+2     CG     essential  1.293562  1.055485  1.585659  1.317513e-02
+3     CG  nonessential  1.305649  1.069295  1.595201  9.001425e-03
+4      C     essential  1.509834  1.336427  1.704037  3.011658e-11
+5      C  nonessential  1.432040  1.272521  1.611233  2.416554e-09
+SAVED: DifferentialRescue/essential_matched2_nonessential//essential_matched2_nonessential_GT_regression.csv
+
+Determining if there is a significant rescue for the set of essential genes
+C_df: 60242 61 | CD_df: 27191 29 | CG_df: 41154 45
+GT_regression:
+  buffer  essential        OR     OR_lb     OR_ub        pvalue
+0     CD  essential  1.779620  1.349859  2.346676  4.407682e-05
+2     CG  essential  1.293562  1.055485  1.585659  1.317513e-02
+4      C  essential  1.509834  1.336427  1.704037  3.011658e-11
+GT diffs: delta(C - CD): -0.26978581572391525 | delta(C - CG): 0.21627198806128334
+FISHER essential_matched2_nonessential| Essential: C2CD_pvalue: 0.9076 | C2CG_pvalue: 0.0854
+
+Determining if there is a significant rescue for the set of nonessential genes
+C_df: 60007 183 | CD_df: 31112 97 | CG_df: 43593 137
+GT_regression:
+  buffer     essential        OR     OR_lb     OR_ub        pvalue
+1     CD  nonessential  1.350669  1.047074  1.741941  2.066772e-02
+3     CG  nonessential  1.305649  1.069295  1.595201  9.001425e-03
+5      C  nonessential  1.432040  1.272521  1.611233  2.416554e-09
+GT diffs: delta(C - CD): 0.08137103252780209 | delta(C - CG): 0.12639130544883992
+FISHER essential_matched2_nonessential| NonEssential: C2CD_pvalue: 0.3112 | C2CG_pvalue: 0.1928
+NORMAL TERMINATION 1866.4575080871582 seconds
